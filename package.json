@@ -1,0 +1,39 @@
+{
+  "name": "open_bracket",
+  "version": "0.0.1",
+  "description": "an open community for lady developers",
+  "author": "Jenn Creighton",
+  "license": "MIT",
+  "scripts": {
+    "watch": "watchify app.js -o public/js/bundle.js -v",
+    "browserify": "browserify app.js | uglifyjs > public/js/bundle.js",
+    "build": "npm run browserify ",
+    "start": "npm run watch & nodemon server.js"
+  },
+  "dependencies": {
+    "express": "~4.9.7",
+    "express-handlebars": "~1.1.0",
+    "handlebars": "~3.0.0",
+    "node-jsx": "~0.11.0",
+    "react": "0.12.2"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.0",
+    "gulp-connect": "^2.2.0",
+    "gulp-less": "^3.0.0",
+    "gulp-react": "^2.0.0",
+    "gulp-uglify": "^1.1.0",
+    "react-tools": "^0.12.2",
+    "browserify": "~6.0.3",
+    "nodemon": "^1.2.1",
+    "reactify": "~0.14.0",
+    "uglify-js": "~2.4.15",
+    "watchify": "~2.0.0"
+  },
+  "browserify": {
+    "transform": [
+      "reactify"
+    ]
+  }
+}

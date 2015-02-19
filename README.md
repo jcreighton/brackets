@@ -1,2 +1,5 @@
 # brackets
-App connecting lady engineers
+An open community for lady developers
+
+# sample_config.js
+Add your stuff here
