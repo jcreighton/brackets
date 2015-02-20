@@ -13,7 +13,7 @@ var router = {
 
     res.render('home', {
       markup: markup,
-      initialState: path
+      state: JSON.stringify(path)
     });
   },
   sign_up: function(req, res) {
