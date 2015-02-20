@@ -1,33 +1,28 @@
 var JSX = require('node-jsx').install();
 var React = require('react');
-var Home = require('./components/Home.react');
+var App = React.createFactory(require('./components/app.js'));
 var config = require('./config');
 var Firebase = require('firebase');
 var Ref = new Firebase(config.FIREBASE_URL);
 
 var router = {
   index: function(req, res) {
-    var msg = { initialMsg: 'Hello' };
-    var markup = React.renderToString(
-      Home()
-    );
+    var path = {path: '/'};
+    var app = App(path);
+    var markup = React.renderToString(app);
 
     res.render('home', {
       markup: markup,
-      state: JSON.stringify(msg)
+      initialState: path
     });
   },
   sign_up: function(req, res) {
-    // var msg = { initialMsg: 'Hello' };
-    // var markup = React.renderToString(
-    //   TestApp(
-    //     msg
-    //   )
-    // );
+    // var app = App();
+    // var markup = React.renderToString(app);
 
     // res.render('home', {
-    //   markup: markup,
-    //   state: JSON.stringify(msg)
+    //   markup: markup
+    //   // state: JSON.stringify(msg)
     // });
   },
   profile: function(req, res) {

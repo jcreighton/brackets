@@ -3,6 +3,14 @@ var connect = require('gulp-connect');
 var uglify = require('gulp-uglify');
 var less = require('gulp-less');
 var concat = require('gulp-concat');
+var jshint = require('gulp-jshint');
+
+
+gulp.task('lint', function() {
+  return gulp.src('./components/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
+});
 
 
 gulp.task('less', function() {
@@ -20,6 +28,6 @@ gulp.task('less', function() {
 // });
 
 
-gulp.task('default', ['less']);
+gulp.task('default', ['less', 'lint']);
 
 // gulp.task('serve', []);
