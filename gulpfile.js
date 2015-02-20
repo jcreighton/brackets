@@ -12,9 +12,15 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('default'));
 });
 
+var cssFiles = [
+'shared/styles/variables.less',
+'shared/styles/global.less',
+'shared/styles/button.less',
+'shared/styles/signup.less',
+];
 
 gulp.task('less', function() {
-  gulp.src(['shared/styles/variables.less', 'shared/styles/global.less'])
+  gulp.src(cssFiles)
     .pipe(concat('app.css'))
     .pipe(less({compress: true}))
     .pipe(gulp.dest('./public/css'));

@@ -17,13 +17,14 @@ var router = {
     });
   },
   sign_up: function(req, res) {
-    // var app = App();
-    // var markup = React.renderToString(app);
+    var path = {path: '/sign-up'};
+    var app = App(path);
+    var markup = React.renderToString(app);
 
-    // res.render('home', {
-    //   markup: markup
-    //   // state: JSON.stringify(msg)
-    // });
+    res.render('home', {
+      markup: markup,
+      state: JSON.stringify(path)
+    });
   },
   profile: function(req, res) {
     // Profile page

@@ -1,3 +1,4 @@
+// Global Styles
 body{
   font-family: @khula;
   background-color: @app-color;
@@ -7,13 +8,59 @@ body{
     font-size: 32px;
   }
 
-  section{
-    h2{
-      color: @blue;
+  ul{
+    li{
+      list-style: none;
     }
+  }
 
-    button{
-      background-color: @slate-blue;
-    }
+  span{
+    font-size: 12px;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus,
+  button:focus {
+    outline: none;
+  }
+
+  ::-webkit-input-placeholder {
+    font-size: 12px;
+    padding: 2px 0 0 10px;
+  }
+
+// Errors & Questions
+  .ob-error{
+    font-size: 16px;
+    font-weight: bold;
+    color: @pink-red;
+  }
+
+  .ob-question{
+    position: relative;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+    background-color: @pink-red;
+    color: @white;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .ob-answer{
+    display: block;
+    background-color: @blue;
+    color: @white;
+  }
+
+// States
+  .ob-state-hidden{
+    display: none;
+  }
+
+  .ob-state-visible{
+    display: block;
   }
 }
