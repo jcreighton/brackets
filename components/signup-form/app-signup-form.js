@@ -1,11 +1,12 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Email = React.createFactory(require('../inputs/app-email.js'));
-var Username = React.createFactory(require('../inputs/app-username.js'));
-var Password = React.createFactory(require('../inputs/app-password.js'));
-var ZipCode = React.createFactory(require('../inputs/app-zipcode.js'));
-var Submit = React.createFactory(require('../buttons/app-event-button.js'));
+var Firebase = require('firebase');
+var Email = require('../inputs/app-email.js');
+var Username = require('../inputs/app-username.js');
+var Password = require('../inputs/app-password.js');
+var ZipCode = require('../inputs/app-zipcode.js');
+var Submit = require('../buttons/app-event-button.js');
 
 var SignUpForm = React.createClass({
   getInitialState: function() {
@@ -15,6 +16,7 @@ var SignUpForm = React.createClass({
     };
   },
   submitForm: function() {
+    e.preventDefault();
     console.log('submitting form');
   },
   render: function() {
@@ -26,7 +28,7 @@ var SignUpForm = React.createClass({
         <Password />
         <ZipCode />
         <span className="join">{this.state.submitMessage}</span>
-        <Submit className="small" onClick={this.submitForm}>Sign Up</Submit>
+        <Submit className="small" onClick={this.submitForm}>SIGN UP</Submit>
       </form>
     );
   }

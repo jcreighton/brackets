@@ -10,12 +10,12 @@ var Input = React.createClass({
   },
   propTypes: {
     type: React.PropTypes.string.isRequired,
-    label: React.PropTypes.string,
+    blur: React.PropTypes.func,
     placeholder: React.PropTypes.string
   },
   render: function() {
     return (
-      <input type={this.props.type} ref={this.props.ref} placeholder={this.props.placeholder} />
+      <input type={this.props.type} onBlur={this.props.blur} placeholder={this.props.placeholder} />
     );
   }
 });

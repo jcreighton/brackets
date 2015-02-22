@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Link = React.createFactory(require('react-router-component').Link);
+var Link = require('react-router-component').Link;
 
 var EventButton = React.createClass({
   getDefaultProps: function() {

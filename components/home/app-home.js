@@ -1,14 +1,14 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Link = React.createFactory(require('react-router-component').Link);
+var Link = require('react-router-component').Link;
 
 var Home = React.createClass({
   render: function() {
     return (
       <div>
-        <h2>REACT FOR THE WIN!</h2>
-        <Link href="/sign-up">Sign Up</Link>
+        <h2>Where are all the lady devs?</h2>
+        <h2>RIGH HERE.</h2>
       </div>
     );
   }

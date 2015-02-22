@@ -1,42 +1,26 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Link = React.createFactory(require('react-router-component').link);
+var Link = require('react-router-component').Link;
 
 var Header = React.createClass({
-  getDefaultProps: function() {
-    return {
-      items: [
-        {
-          name: 'SIGN UP',
-          url: '/sign-up'
-        },
-        {
-          name: 'LOGIN',
-          url: '/login'
-        },
-        {
-          name: 'LOG IN',
-          url: '/url'
-        }
-      ]
-    };
-  },
-  propTypes: {
-    items: React.PropTypes.array
-  },
   render: function() {
-    var items = items.map(function(item){
-      return <Link href={item.url}>{item.name}</Link>
-    })
+    // var items = items.map(function(item){
+    //   return <li><Link href={item.url}>{item.name}</Link></li>
+    // });
+
     return (
-          <nav className="ob-nav main">
-            <ul>
-              <li>{items}</li>
-            </ul>
-          </nav>
-        );
-      }
-    });
+      <header>
+        <h1><Link href="/">[Open Bracket</Link></h1>
+        <nav>
+          <ul>
+            <li><Link href='/sign-up'>Sign Up</Link></li>
+            <li><Link href='/login'>Login</Link></li>
+          </ul>
+        </nav>
+      </header>
+    );
+  }
+});
 
 module.exports = Header;

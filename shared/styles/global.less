@@ -1,8 +1,10 @@
 // Global Styles
 body{
+  font-family: @abz;
 
   header{
     background-color: @white;
+    border-top: 2px solid @blue;
 
     h1{
       display: inline-block;
@@ -10,22 +12,37 @@ body{
       color: @pink-red;
       font-size: 32px;
       padding: 0 30px;
+
+      a{
+        text-decoration: none;
+
+        &:visited{
+          color: @pink-red;
+        }
+      }
     }
 
     nav{
       display: inline-block;
-      font-family: @roboto;
+
       ul{
         li{
           display: inline-block;
+          padding-right: 30px;
 
           a{
             display: block;
             color: @grey;
+            text-decoration: none;
+            text-transform: uppercase;
 
             &:hover{
               color: @blue;
             }
+          }
+
+          &:last-child{
+            padding-right: 0px;
           }
         }
       }
@@ -34,7 +51,8 @@ body{
 
   .main{
     background-image: url('/img/code.png');
-    height: 600px;
+    height: 480px;
+    overflow: hidden;
   }
 
   ul{
@@ -61,7 +79,7 @@ body{
 
 // Errors & Questions
   .ob-error{
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     color: @pink-red;
   }
