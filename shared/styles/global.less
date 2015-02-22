@@ -1,11 +1,40 @@
 // Global Styles
 body{
-  font-family: @khula;
-  background-color: @app-color;
 
-  h1{
-    color: @pink-red;
-    font-size: 32px;
+  header{
+    background-color: @white;
+
+    h1{
+      display: inline-block;
+      font-family: @museo;
+      color: @pink-red;
+      font-size: 32px;
+      padding: 0 30px;
+    }
+
+    nav{
+      display: inline-block;
+      font-family: @roboto;
+      ul{
+        li{
+          display: inline-block;
+
+          a{
+            display: block;
+            color: @grey;
+
+            &:hover{
+              color: @blue;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .main{
+    background-image: url('/img/code.png');
+    height: 600px;
   }
 
   ul{
@@ -47,12 +76,25 @@ body{
     color: @white;
     text-align: center;
     cursor: pointer;
-  }
 
-  .ob-answer{
-    display: block;
-    background-color: @blue;
-    color: @white;
+    .ob-answer{
+      display: none;
+      background-color: @blue;
+      color: @white;
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 10px;
+      line-height: 18px;
+    }
+
+    &:hover{
+      background-color: @blue;
+
+      .ob-answer{
+        display: block;
+      }
+    }
   }
 
 // States

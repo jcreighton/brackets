@@ -26,7 +26,7 @@ var ZipCode = React.createClass({
         <label>{this.props.label}</label>
         <input type="text" ref="zipcode" onBlur={this.checkZipCode} placeholder={this.props.placeholder} />
         <div className="ob-question"><span onHover={this.displayAnswer}>?</span><span className="ob-answer ob-state-hidden">{this.props.answer}</span></div>
-        <span className="ob-error ob-state-hidden">{this.props.errorMessage}</span>
+        <span className="ob-error">{this.props.errorMessage}</span>
       </div>
     );
   }

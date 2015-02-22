@@ -27,7 +27,7 @@ var Header = React.createClass({
   },
   render: function() {
     var items = items.map(function(item){
-      return <Link>{item}</Link>
+      return <Link href={item.url}>{item.name}</Link>
     })
     return (
           <nav className="ob-nav main">

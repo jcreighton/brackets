@@ -36,7 +36,6 @@ var EventButton = React.createClass({displayName: 'EventButton',
   getDefaultProps: function() {
     return {
       label: 'Go',
-      className: 'default'
     }
   },
   propTypes: {
@@ -45,10 +44,9 @@ var EventButton = React.createClass({displayName: 'EventButton',
     onClick: React.PropTypes.func.isRequired
   },
   render: function() {
-    var className = 'ob-button ' + this.props.className;
-    return (
-      React.DOM.div({className: className, onClick: this.props.onClick}, 
-        React.DOM.a(null, this.props.label)
+    return this.transferPropsTo(
+      React.DOM.div({className: "ob-button", onClick: this.props.onClick}, 
+        React.DOM.a(null, this.props.children)
       )
     );
   }
@@ -230,7 +228,7 @@ var SignUpForm = React.createClass({displayName: 'SignUpForm',
         Password(null), 
         ZipCode(null), 
         React.DOM.span({className: "join"}, this.state.submitMessage), 
-        Submit({label: "Sign Up", url: "/profile", className: "small", onClick: this.submitForm})
+        Submit({url: "/profile", className: "small", onClick: this.submitForm}, "Sign Up")
       )
     );
   }

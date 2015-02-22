@@ -26,7 +26,7 @@ var SignUpForm = React.createClass({
         <Password />
         <ZipCode />
         <span className="join">{this.state.submitMessage}</span>
-        <Submit label="Sign Up" url="/profile" className="small" onClick={this.submitForm} />
+        <Submit className="small" onClick={this.submitForm}>Sign Up</Submit>
       </form>
     );
   }

@@ -7,7 +7,6 @@ var EventButton = React.createClass({
   getDefaultProps: function() {
     return {
       label: 'Go',
-      className: 'default'
     }
   },
   propTypes: {
@@ -16,10 +15,9 @@ var EventButton = React.createClass({
     onClick: React.PropTypes.func.isRequired
   },
   render: function() {
-    var className = 'ob-button ' + this.props.className;
-    return (
-      <div className={className} onClick={this.props.onClick}>
-        <a>{this.props.label}</a>
+    return this.transferPropsTo(
+      <div className="ob-button" onClick={this.props.onClick}>
+        <a>{this.props.children}</a>
       </div>
     );
   }

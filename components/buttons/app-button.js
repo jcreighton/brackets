@@ -7,8 +7,6 @@ var Button = React.createClass({
   getDefaultProps: function() {
     return {
       url: '/',
-      label: 'Go',
-      className: 'default'
     }
   },
   propTypes: {
@@ -17,10 +15,9 @@ var Button = React.createClass({
     className: React.PropTypes.string
   },
   render: function() {
-    var className = 'ob-button ' + this.props.className;
-    return (
-      <div className={className}>
-        <Link href={this.props.url}>{this.props.label}</Link>
+    return this.transferPropsTo(
+      <div className="ob-button">
+        <Link href={this.props.url}>{this.props.children}</Link>
       </div>
     );
   }
