@@ -11,13 +11,18 @@ var Submit = require('../buttons/app-event-button.js');
 var SignUpForm = React.createClass({
   getInitialState: function() {
     return {
-      message: 'Join the fun!',
+      message: 'Create an account:',
       submitMessage: 'Let\'s make it official --->'
     };
   },
-  submitForm: function() {
+  isValid: function(){
+    var test = {test:this.refs.zipcode.isValid()};
+    console.log('test', test.test);
+  },
+  submitForm: function(e) {
     e.preventDefault();
     console.log('submitting form');
+    this.isValid();
   },
   render: function() {
     return (
@@ -26,7 +31,7 @@ var SignUpForm = React.createClass({
         <Email />
         <Username />
         <Password />
-        <ZipCode />
+        <ZipCode ref="zipcode"/>
         <span className="join">{this.state.submitMessage}</span>
         <Submit className="small" onClick={this.submitForm}>SIGN UP</Submit>
       </form>

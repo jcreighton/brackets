@@ -1,6 +1,6 @@
 var JSX = require('node-jsx').install();
 var React = require('react');
-var App = require('./components/app.js');
+var App = React.createFactory(require('./components/app.js'));
 var config = require('./config');
 var Firebase = require('firebase');
 var Ref = new Firebase(config.FIREBASE_URL);
