@@ -97,8 +97,7 @@ var Home = React.createClass({displayName: "Home",
   render: function() {
     return (
       React.createElement("div", null, 
-        React.createElement("h2", null, "Where are all the lady devs?"), 
-        React.createElement("h2", null, "RIGH HERE.")
+        React.createElement("h2", null, "Where are all the lady devs?")
       )
     );
   }

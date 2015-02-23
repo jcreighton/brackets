@@ -8,7 +8,6 @@ var Home = React.createClass({
     return (
       <div>
         <h2>Where are all the lady devs?</h2>
-        <h2>RIGH HERE.</h2>
       </div>
     );
   }
