@@ -1,7 +1,6 @@
 /** @jsx React.DOM */
 
 var React = require('react/addons');
-var Label = require('./basics/app-label.js');
 var Input = require('./basics/app-input.js');
 var Question = require('../misc/app-question.js');
 var Error = require('./basics/app-error.js');
@@ -28,18 +27,23 @@ var ZipCode = React.createClass({
     errorMessage: React.PropTypes.string
   },
   isValid: function() {
-    // check that zip code is valid 6 digit #
-    var isValidZipCode = false;
-    console.log(this.refs.zipcode.getDOMNode().value);
+    // check that zip code is valid 5 digit #
+    var regex = /^(\d{5})?$/;
+    var value = parseInt(this.refs.zipcode.getDOMNode().value, 10);
+
+    var isValidZipCode = regex.test(value);
+
     if (!isValidZipCode) {
-      this.setState({isVisible: true, isValid: true});
+      this.setState({isVisible: true, isValid: false});
+    } else {
+      this.setState({isVisible: false, isValid: true});
     }
-    return (this.state.isValid);
+    return {zipcode: isValidZipCode && value;
   },
   render: function() {
     return (
       <div className="ob-input zipcode">
-        <Label>{this.props.label}</Label>
+        <label>{this.props.label}</label>
         <Input type="text" ref="zipcode" blur={this.isValid} placeholder={this.props.placeholder} />
         <Question answer={this.props.answer} />
         <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />

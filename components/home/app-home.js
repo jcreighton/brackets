@@ -7,7 +7,7 @@ var Home = React.createClass({
   render: function() {
     return (
       <div>
-        <h2>Where are all the lady devs?</h2>
+        <h2>An open community for lady developers</h2>
       </div>
     );
   }

@@ -5,7 +5,7 @@ var React = require('react');
 var Router = require('react-router-component');
 var Header = require('./header/app-header.js');
 var HomePage = require('./home/app-home.js');
-var SignUpPage = require('./signup-form/app-signup-form.js');
+var SignUpPage = require('./forms/app-signup-form.js');
 
 var Locations = Router.Locations;
 var Location = Router.Location;
@@ -30,7 +30,7 @@ module.exports = App;
 
 
 
-},{"./header/app-header.js":3,"./home/app-home.js":4,"./signup-form/app-signup-form.js":13,"react":200,"react-router-component":19}],2:[function(require,module,exports){
+},{"./forms/app-signup-form.js":3,"./header/app-header.js":4,"./home/app-home.js":5,"react":200,"react-router-component":19}],2:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -62,6 +62,84 @@ module.exports = EventButton;
 /** @jsx React.DOM */
 
 var React = require('react');
+var Firebase = require('firebase');
+var config = require('../../config');
+var ref = new Firebase(config.FIREBASE_URL);
+var Email = require('../inputs/app-email.js');
+var Username = require('../inputs/app-username.js');
+var Password = require('../inputs/app-password.js');
+var ZipCode = require('../inputs/app-zipcode.js');
+var Submit = require('../buttons/app-event-button.js');
+
+var SignUpForm = React.createClass({displayName: "SignUpForm",
+  getInitialState: function() {
+    return {
+      message: 'Create an account:',
+      errorVisible: {
+        zipcode: false,
+        email: true
+      }
+    };
+  },
+  isValid: function(e) {
+    e.preventDefault();
+
+    // get validity information from invididual input
+    var inputs = [
+      // { email: this.refs.email.refs.email.getDOMNode().value },
+      // { username: this.refs.username.isValid().isValid },
+      // { password: this.refs.password.isValid().isValid },
+      this.refs.zipcode.isValid()
+    ];
+
+    // determine if any are invalid
+    var invalidInputs = inputs.filter(function(input, i) {
+      return input[Object.keys(input)] === false;
+    });
+
+    if (invalidInputs.length > 0) {
+      // loop through invalid entries and set isVisible state
+      this.setState({ errorVisible: {
+        zipcode: true
+      }});
+    } else {
+      // this.submitForm(inputs);
+    }
+  },
+  submitForm: function(data) {
+    console.log('submitting form');
+
+    ref.createUser({
+      email: email,
+      password: 'test01'
+    }, function(error, authData) {
+      if (error) {
+        console.log("Login Failed!", error);
+      } else {
+        console.log("Authenticated successfully with payload:", authData);
+      }
+    });
+  },
+  render: function() {
+    return (
+      React.createElement("form", {className: "ob-signup-form"}, 
+        React.createElement("h2", null, this.state.message), 
+        React.createElement(Email, {ref: "email"}), 
+        React.createElement(Username, null), 
+        React.createElement(Password, null), 
+        React.createElement(ZipCode, {ref: "zipcode", errorVisible: this.state.errorVisible.zipcode}), 
+        React.createElement(Submit, {className: "small", onClick: this.isValid}, "SIGN UP")
+      )
+    );
+  }
+});
+
+module.exports = SignUpForm;
+
+},{"../../config":13,"../buttons/app-event-button.js":2,"../inputs/app-email.js":6,"../inputs/app-password.js":7,"../inputs/app-username.js":8,"../inputs/app-zipcode.js":9,"firebase":16,"react":200}],4:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React = require('react');
 var Link = require('react-router-component').Link;
 
 var Header = React.createClass({displayName: "Header",
@@ -87,7 +165,7 @@ var Header = React.createClass({displayName: "Header",
 module.exports = Header;
 
 
-},{"react":200,"react-router-component":19}],4:[function(require,module,exports){
+},{"react":200,"react-router-component":19}],5:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -97,7 +175,7 @@ var Home = React.createClass({displayName: "Home",
   render: function() {
     return (
       React.createElement("div", null, 
-        React.createElement("h2", null, "Where are all the lady devs?")
+        React.createElement("h2", null, "An open community for lady developers")
       )
     );
   }
@@ -105,12 +183,20 @@ var Home = React.createClass({displayName: "Home",
 
 module.exports = Home;
 
-},{"react":200,"react-router-component":19}],5:[function(require,module,exports){
+},{"react":200,"react-router-component":19}],6:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
+var Input = require('./basics/app-input.js');
+var Error = require('./basics/app-error.js');
 
 var EmailAddress = React.createClass({displayName: "EmailAddress",
+  getInitialState: function() {
+    return {
+      isVisible: false,
+      isValid: false
+    }
+  },
   getDefaultProps: function() {
     return {
       label: 'E-mail',
@@ -121,15 +207,18 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
   propTypes: {
     label: React.PropTypes.string
   },
-  checkEmailAddress: function() {
+  isValid: function() {
     // check that email address is valid
+    // not blank
+    console.log('value', this.refs.email.getDOMNode().value);
+
   },
   render: function() {
     return (
       React.createElement("div", {className: "ob-input email"}, 
         React.createElement("label", null, this.props.label), 
-        React.createElement("input", {type: "text", ref: "email", onBlur: this.checkEmailAddress, placeholder: this.props.placeholder}), 
-        React.createElement("span", {className: "ob-error ob-state-hidden"}, this.props.errorMessage)
+        React.createElement(Input, {type: "text", ref: "email", blur: this.isValid, placeholder: this.props.placeholder}), 
+        React.createElement(Error, {isVisible: this.state.isVisible, errorMessage: this.props.errorMessage})
       )
     );
   }
@@ -137,26 +226,39 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
 
 module.exports = EmailAddress;
 
-},{"react":200}],6:[function(require,module,exports){
+},{"./basics/app-error.js":10,"./basics/app-input.js":11,"react":200}],7:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
+var Input = require('./basics/app-input.js');
+var Error = require('./basics/app-error.js');
 
 var Password = React.createClass({displayName: "Password",
+  getInitialState: function() {
+    return {
+      isVisible: false,
+      isValid: false
+    }
+  },
   getDefaultProps: function() {
     return {
       label: 'Password',
-      placeholder: 'Secure your account!'
+      placeholder: 'Secure your account!',
+      errorMessage: 'Must be >= 8 characaters & can contain letters, numbers & certain symbols ONLY'
     }
   },
   propTypes: {
     label: React.PropTypes.string
   },
+  isValid: function() {
+    // check that password is only letters, numbers, !@? & > 8 characters
+  },
   render: function() {
     return (
       React.createElement("div", {className: "ob-input password"}, 
         React.createElement("label", null, this.props.label), 
-        React.createElement("input", {type: "password", ref: "username", placeholder: this.props.placeholder})
+        React.createElement(Input, {type: "password", ref: "username", blur: this.isValid, placeholder: this.props.placeholder}), 
+        React.createElement(Error, {isVisible: this.state.isVisible, errorMessage: this.props.errorMessage})
       )
     );
   }
@@ -164,33 +266,44 @@ var Password = React.createClass({displayName: "Password",
 
 module.exports = Password;
 
-},{"react":200}],7:[function(require,module,exports){
+},{"./basics/app-error.js":10,"./basics/app-input.js":11,"react":200}],8:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
+var Input = require('./basics/app-input.js');
 
 var Username = React.createClass({displayName: "Username",
+  getInitialState: function() {
+    return {
+      isVisible: false,
+      isValid: false
+    }
+  },
   getDefaultProps: function() {
     return {
       label: 'Username',
       placeholder: 'Choose a nifty username!',
-      errorMessage: 'Drat! Someone already has that username. Please choose another.'
+      errorMessage: 'Drat! Someone already has that username.'
     }
   },
   propTypes: {
     label: React.PropTypes.string
   },
-  checkUsernameUnique: function() {
-    // check that username is unique
+  isValid: function() {
+    // check that username contains ONLY letters/numbers & >= 4 characters
     var username = this.refs.username.getDOMNode().value;
-    // Firebase.checkUsernameUnique(); ?
+
+    if (lessThanSix) {
+      this.setState({errorMessage: 'Must be >= 4 characters & can ONLY contain letters/numbers'});
+    }
+
   },
   render: function() {
     return (
       React.createElement("div", {className: "ob-input username"}, 
         React.createElement("label", null, this.props.label), 
-        React.createElement("input", {type: "text", ref: "username", onBlur: this.checkUsernameUnique, placeholder: this.props.placeholder}), 
-        React.createElement("span", {className: "ob-error ob-state-hidden"}, this.props.errorMessage)
+        React.createElement("input", {type: "text", ref: "username", blur: this.isValid, placeholder: this.props.placeholder}), 
+        React.createElement(Error, {isVisible: this.state.isVisible, errorMessage: this.props.errorMessage})
       )
     );
   }
@@ -200,24 +313,18 @@ module.exports = Username;
 
 
 
-},{"react":200}],8:[function(require,module,exports){
+},{"./basics/app-input.js":11,"react":200}],9:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react/addons');
-var Label = require('./basics/app-label.js');
 var Input = require('./basics/app-input.js');
 var Question = require('../misc/app-question.js');
-var Error = require('./basics/app-error.js');
+// var Error = require('./basics/app-error.js');
 
 var ZipCode = React.createClass({displayName: "ZipCode",
-  getInitialState: function() {
-    return {
-      isVisible: false,
-      isValid: false
-    }
-  },
   getDefaultProps: function() {
     return {
+      isVisible: false,
       label: 'Zip Code',
       placeholder: 'Please and thank you.',
       answer: 'Open Bracket lets you find fellow lady developers nearby, so we need to know your zip code for location purposes.',
@@ -225,27 +332,32 @@ var ZipCode = React.createClass({displayName: "ZipCode",
     }
   },
   propTypes: {
+    isVisible: React.PropTypes.bool,
     label: React.PropTypes.string,
     placeholder: React.PropTypes.string,
     answer: React.PropTypes.string,
     errorMessage: React.PropTypes.string
   },
   isValid: function() {
-    // check that zip code is valid 6 digit #
-    var isValidZipCode = false;
-    console.log(this.refs.zipcode.getDOMNode().value);
-    if (!isValidZipCode) {
-      this.setState({isVisible: true, isValid: true});
-    }
-    return (this.state.isValid);
+    // check that zip code is valid 5 digit #
+    var regex = /^(\d{5})?$/;
+    var value = parseInt(this.refs.zipcode.getDOMNode().value, 10);
+
+    var isValidZipCode = regex.test(value);
+
+    var result = {
+      zipcode: isValidZipCode && value
+    };
+
+    return result;
   },
   render: function() {
     return (
       React.createElement("div", {className: "ob-input zipcode"}, 
-        React.createElement(Label, null, this.props.label), 
+        React.createElement("label", null, this.props.label), 
         React.createElement(Input, {type: "text", ref: "zipcode", blur: this.isValid, placeholder: this.props.placeholder}), 
         React.createElement(Question, {answer: this.props.answer}), 
-        React.createElement(Error, {isVisible: this.state.isVisible, errorMessage: this.props.errorMessage})
+        React.createElement(Error, {isVisible: this.props.isVisible, errorMessage: this.props.errorMessage})
       )
     );
   }
@@ -253,7 +365,7 @@ var ZipCode = React.createClass({displayName: "ZipCode",
 
 module.exports = ZipCode;
 
-},{"../misc/app-question.js":12,"./basics/app-error.js":9,"./basics/app-input.js":10,"./basics/app-label.js":11,"react/addons":39}],9:[function(require,module,exports){
+},{"../misc/app-question.js":12,"./basics/app-input.js":11,"react/addons":39}],10:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react/addons');
@@ -283,7 +395,7 @@ var Error = React.createClass({displayName: "Error",
 
 module.exports = Error;
 
-},{"react/addons":39}],10:[function(require,module,exports){
+},{"react/addons":39}],11:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -307,21 +419,6 @@ var Input = React.createClass({displayName: "Input",
 });
 
 module.exports = Input;
-
-},{"react":200}],11:[function(require,module,exports){
-/** @jsx React.DOM */
-
-var React = require('react');
-
-var Label = React.createClass({displayName: "Label",
-  render: function() {
-    return (
-      React.createElement("label", null, this.props.children)
-    );
-  }
-});
-
-module.exports = Label;
 
 },{"react":200}],12:[function(require,module,exports){
 /** @jsx React.DOM */
@@ -347,50 +444,11 @@ var Question = React.createClass({displayName: "Question",
 module.exports = Question;
 
 },{"react":200}],13:[function(require,module,exports){
-/** @jsx React.DOM */
+module.exports = {
+  FIREBASE_URL: 'https://glowing-inferno-6073.firebaseio.com'
+}
 
-var React = require('react');
-var Firebase = require('firebase');
-var Email = require('../inputs/app-email.js');
-var Username = require('../inputs/app-username.js');
-var Password = require('../inputs/app-password.js');
-var ZipCode = require('../inputs/app-zipcode.js');
-var Submit = require('../buttons/app-event-button.js');
-
-var SignUpForm = React.createClass({displayName: "SignUpForm",
-  getInitialState: function() {
-    return {
-      message: 'Create an account:',
-      submitMessage: 'Let\'s make it official --->'
-    };
-  },
-  isValid: function(){
-    var test = {test:this.refs.zipcode.isValid()};
-    console.log('test', test.test);
-  },
-  submitForm: function(e) {
-    e.preventDefault();
-    console.log('submitting form');
-    this.isValid();
-  },
-  render: function() {
-    return (
-      React.createElement("form", {className: "ob-signup-form", onSubmit: this.onSubmit}, 
-        React.createElement("h2", null, this.state.message), 
-        React.createElement(Email, null), 
-        React.createElement(Username, null), 
-        React.createElement(Password, null), 
-        React.createElement(ZipCode, {ref: "zipcode"}), 
-        React.createElement("span", {className: "join"}, this.state.submitMessage), 
-        React.createElement(Submit, {className: "small", onClick: this.submitForm}, "SIGN UP")
-      )
-    );
-  }
-});
-
-module.exports = SignUpForm;
-
-},{"../buttons/app-event-button.js":2,"../inputs/app-email.js":5,"../inputs/app-password.js":6,"../inputs/app-username.js":7,"../inputs/app-zipcode.js":8,"firebase":16,"react":200}],14:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');

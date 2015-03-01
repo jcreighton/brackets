@@ -1,8 +1,16 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var Input = require('./basics/app-input.js');
+var Error = require('./basics/app-error.js');
 
 var EmailAddress = React.createClass({
+  getInitialState: function() {
+    return {
+      isVisible: false,
+      isValid: false
+    }
+  },
   getDefaultProps: function() {
     return {
       label: 'E-mail',
@@ -13,15 +21,18 @@ var EmailAddress = React.createClass({
   propTypes: {
     label: React.PropTypes.string
   },
-  checkEmailAddress: function() {
+  isValid: function() {
     // check that email address is valid
+    // not blank
+    console.log('value', this.refs.email.getDOMNode().value);
+
   },
   render: function() {
     return (
       <div className="ob-input email">
         <label>{this.props.label}</label>
-        <input type="text" ref="email" onBlur={this.checkEmailAddress} placeholder={this.props.placeholder} />
-        <span className="ob-error ob-state-hidden">{this.props.errorMessage}</span>
+        <Input type="text" ref="email" blur={this.isValid} placeholder={this.props.placeholder} />
+        <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
       </div>
     );
   }
