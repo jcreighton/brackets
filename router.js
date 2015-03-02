@@ -3,7 +3,7 @@ var React = require('react');
 var App = React.createFactory(require('./components/app.js'));
 var config = require('./config');
 var Firebase = require('firebase');
-var FBRef = new Firebase(config.FIREBASE_URL);
+var ref = new Firebase(config.FIREBASE_URL);
 
 var renderTemplate = function(usePath, res){
     var path = {path: usePath};
@@ -28,7 +28,7 @@ var router = {
   },
   profile_private: function(req, res) {
     var username = req.params.username;
-    FBRef.set({message: username});
+    ref.set({message: username});
     res.render('home', {
       markup: username
     });

@@ -38,7 +38,8 @@ var ZipCode = React.createClass({
     } else {
       this.setState({isVisible: false, isValid: true});
     }
-    return {zipcode: isValidZipCode && value;
+
+    return {zipcode: isValidZipCode && value};
   },
   render: function() {
     return (

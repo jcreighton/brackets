@@ -15,7 +15,7 @@ var Password = React.createClass({
     return {
       label: 'Password',
       placeholder: 'Secure your account!',
-      errorMessage: 'Must be >= 8 characaters & can contain letters, numbers & certain symbols ONLY'
+      errorMessage: 'Must be 6-18 characters. Can contain letters, numbers, !@?$ symbols only.'
     }
   },
   propTypes: {
@@ -23,12 +23,24 @@ var Password = React.createClass({
   },
   isValid: function() {
     // check that password is only letters, numbers, !@? & > 8 characters
+    var regex = /^[a-z0-9$!?@]{6,18}$/;
+    var value = this.refs.password.getDOMNode().value;
+
+    var isValidPassword = regex.test(value);
+
+    if (!isValidPassword) {
+      this.setState({isVisible: true, isValid: false});
+    } else {
+      this.setState({isVisible: false, isValid: true});
+    }
+
+    return {password: isValidPassword && value};
   },
   render: function() {
     return (
       <div className="ob-input password">
         <label>{this.props.label}</label>
-        <Input type="password" ref="username" blur={this.isValid} placeholder={this.props.placeholder} />
+        <Input type="password" ref="password" blur={this.isValid} placeholder={this.props.placeholder} />
         <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
       </div>
     );

@@ -23,9 +23,18 @@ var EmailAddress = React.createClass({
   },
   isValid: function() {
     // check that email address is valid
-    // not blank
-    console.log('value', this.refs.email.getDOMNode().value);
+    var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
+    var value = this.refs.email.getDOMNode().value;
 
+    var isValidEmail = regex.test(value);
+
+    if (!isValidEmail) {
+      this.setState({isVisible: true, isValid: false});
+    } else {
+      this.setState({isVisible: false, isValid: true});
+    }
+
+    return {email: isValidEmail && value};
   },
   render: function() {
     return (
