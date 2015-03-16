@@ -185,19 +185,10 @@ var Link = require('react-router-component').Link;
 
 var Header = React.createClass({displayName: "Header",
   render: function() {
-    // var items = items.map(function(item){
-    //   return <li><Link href={item.url}>{item.name}</Link></li>
-    // });
-
     return (
       React.createElement("header", null, 
-        React.createElement("h1", null, React.createElement(Link, {href: "/"}, "[Open Bracket")), 
-        React.createElement("nav", null, 
-          React.createElement("ul", null, 
-            React.createElement("li", null, React.createElement(Link, {href: "/sign-up"}, "Sign Up")), 
-            React.createElement("li", null, React.createElement(Link, {href: "/login"}, "Login"))
-          )
-        )
+        React.createElement("h1", null, React.createElement(Link, {href: "/"}, React.createElement("span", {className: "bracket"}, "["), React.createElement("span", {className: "name"}, "Open Bracket"))), 
+        React.createElement("div", {className: "ob-button small donate-button", href: "http://gofundme.com"}, "Donate")
       )
     );
   }
@@ -216,7 +207,6 @@ var Home = React.createClass({displayName: "Home",
   getDefaultProps: function() {
     return{
       message: 'An open community for lady developers',
-      username: 'jenn'
     }
   },
   propTypes: {
@@ -224,9 +214,51 @@ var Home = React.createClass({displayName: "Home",
   },
   render: function() {
     return (
-      React.createElement("div", null, 
-        React.createElement("h2", null, this.props.message), 
-        React.createElement("span", null, this.props.username)
+      React.createElement("main", {className: "page-home"}, 
+        React.createElement("section", {className: "mission"}, 
+          React.createElement("div", {className: "inner"}, 
+            React.createElement("figure", {className: "lady one"}, React.createElement("img", {src: "/img/lady.png"})), 
+            React.createElement("figure", {className: "lady two"}, React.createElement("img", {src: "/img/lady.png"})), 
+            React.createElement("h1", null, "Connecting Lady Developers"), 
+            React.createElement("figure", {className: "bracket"}, React.createElement("img", {src: "/img/bracket.png"}))
+          )
+        ), 
+        React.createElement("div", {className: "arrow-container"}, 
+          React.createElement("div", {className: "arrow"}, React.createElement("img", {src: "/img/arrow-down.png"}))
+        ), 
+        React.createElement("section", {className: "why"}, 
+          React.createElement("div", {className: "inner"}, 
+            React.createElement("h1", null, "Some Copy About Why"), 
+            React.createElement("p", null, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquam risus libero, a consequat est dignissim quis."), 
+            React.createElement("figure", {className: "people"}, React.createElement("img", {src: "/img/people.png"}))
+          )
+        ), 
+        React.createElement("section", {className: "how"}, 
+          React.createElement("div", {className: "inner"}, 
+            React.createElement("h1", null, "How It Works"), 
+            React.createElement("p", null, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquam risus libero, a consequat est dignissim quis."), 
+            React.createElement("div", {className: "map-container"}, 
+              React.createElement("figure", {className: "map"}, React.createElement("img", {src: "/img/map-block.png"})), 
+              React.createElement("span", {className: "location"}), 
+              React.createElement("span", {className: "location"}), 
+              React.createElement("span", {className: "location"}), 
+              React.createElement("span", {className: "location"}), 
+              React.createElement("span", {className: "location"})
+            )
+          )
+        ), 
+        React.createElement("section", {className: "coming-soon"}, 
+          React.createElement("div", {className: "inner"}, 
+            React.createElement("h1", null, "Launching ", React.createElement("span", {className: "may-2015"}, "May 2015"))
+          )
+        ), 
+        React.createElement("section", {className: "email-suggestion"}, 
+          React.createElement("div", {className: "inner"}, 
+            React.createElement("figure", {className: "envelope"}, React.createElement("img", {src: "/img/envelope.png"})), 
+            React.createElement("h1", null, "Join Us"), 
+            React.createElement("p", null, "Sign up for email updates or send us a suggestion")
+          )
+        )
       )
     );
   }

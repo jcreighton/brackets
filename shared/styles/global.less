@@ -1,25 +1,42 @@
 // Global Styles
 body{
-  font-family: @abz;
+  font-family: @open-sans;
+  color: @white;
 
   header{
     background-color: @white;
-    border-top: 2px solid @blue;
+    position: relative;
 
     h1{
       display: inline-block;
-      font-family: @museo;
-      color: @pink-red;
-      font-size: 32px;
+      color: @pink;
       padding: 0 30px;
 
       a{
         text-decoration: none;
 
         &:visited{
-          color: @pink-red;
+          color: @pink;
+        }
+
+        .bracket{
+          font-size: 42px;
+        }
+
+        .name{
+          font-size: 32px;
+          position: relative;
+          top: -2px;
+          left: 0px;
         }
       }
+    }
+
+    .donate-button{
+      display: inline-block;
+      position: absolute;
+      right: 60px;
+      top: 20px;
     }
 
     nav{
@@ -32,12 +49,12 @@ body{
 
           a{
             display: block;
-            color: @grey;
+            color: @gray;
             text-decoration: none;
             text-transform: uppercase;
 
             &:hover{
-              color: @blue;
+              color: @green;
             }
           }
 
@@ -49,12 +66,32 @@ body{
     }
   }
 
-  .main{
-    background-image: url('/img/code.png');
-    color: @white;
-    text-align: center;
-    height: 480px;
-    overflow: hidden;
+  #open-bracket-app{
+    // background-image: url('/img/code.png');
+    background-color: rgba(0, 0, 0, .8);
+  }
+
+  h1{
+    font-family: @museo;
+    font-size: 32px;
+    font-weight: 400;
+  }
+
+  p{
+    font-size: 14px;
+  }
+
+  section{
+    width: 100%;
+
+    .inner{
+      position: relative;
+      width: 1020px;
+      height: 100%;
+      margin: 0 auto;
+      text-align: center;
+      overflow: hidden;
+    }
   }
 
   ul{
@@ -64,7 +101,8 @@ body{
   }
 
   span{
-    font-size: 12px;
+    font-size: inherit;
+    font-weight: inherit;
   }
 
   input:focus,
@@ -79,11 +117,22 @@ body{
     padding: 2px 0 0 10px;
   }
 
+  footer{
+    height: 60px;
+    text-align: center;
+
+    span{
+      color: @gray;
+      display: block;
+      margin: 30px;
+    }
+  }
+
 // Errors & Questions
   .ob-error{
     font-size: 14px;
     font-weight: bold;
-    color: @pink-red;
+    color: @pink;
   }
 
   .ob-question{
@@ -92,14 +141,14 @@ body{
     height: 20px;
     width: 20px;
     border-radius: 10px;
-    background-color: @pink-red;
+    background-color: @pink;
     color: @white;
     text-align: center;
     cursor: pointer;
 
     .ob-answer{
       display: none;
-      background-color: @blue;
+      background-color: @green;
       color: @white;
       position: absolute;
       top: 0;
@@ -109,7 +158,7 @@ body{
     }
 
     &:hover{
-      background-color: @blue;
+      background-color: @green;
 
       .ob-answer{
         display: block;

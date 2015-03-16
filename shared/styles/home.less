@@ -1,0 +1,138 @@
+@green-opacity: rgba(222, 255, 254, .7);
+@green-light-opacity: rgba(83, 189, 186, .9);
+
+.page-home{
+  .mission{
+    height: 600px;
+
+    .lady{
+      display: inline-block;
+      position: relative;
+      top: 60px;
+      left: 0px;
+      margin-bottom: 60px;
+
+      &.one{
+        margin-right: 98px;
+      }
+
+      &.two{
+        margin-left: 98px;
+      }
+    }
+
+    h1{
+      font-size: 50px;
+      text-transform: uppercase;
+    }
+  }
+
+  .arrow-container{
+    text-align: center;
+
+    .arrow{
+      display: inline-block;
+      position: relative;
+      top: 26px;
+      left: 0;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #86E2D5;
+
+      img{
+        position: relative;
+        top: 22px;
+        left: 0;
+      }
+    }
+  }
+
+  .why{
+    height: 360px;
+    background-color: @green-opacity;
+
+    h1{
+      margin: 60px 0 0 0;
+    }
+
+    figure{
+      margin-top: 48px;
+    }
+  }
+
+  .how{
+    height: 470px;
+    background-color: @green-light-opacity;
+
+    h1{
+      margin: 40px 0 0 0;
+    }
+
+    .map-container{
+      position: relative;
+
+      .map{
+        margin-top: 40px;
+      }
+
+      span.location{
+        position: absolute;
+        display: block;
+        background-color: @pink;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, .04);
+
+        &:nth-child(2n){
+          top: 119px;
+          left: 449px;
+        }
+
+        &:nth-child(3n){
+          top: 165px;
+          left: 920px;
+        }
+
+        &:nth-child(4n){
+          top: 226px;
+          left: 212px;
+        }
+
+        &:nth-child(5n){
+          top: 282px;
+          left: 636px;
+        }
+
+        &:last-child{
+          top: 27px;
+          left: 883px;
+        }
+      }
+    }
+  }
+
+  .coming-soon{
+    height: 180px;
+
+    h1{
+      position: relative;
+      top: 50px;
+      left: 0;
+
+      .may-2015{
+        color: @pink;
+      }
+    }
+  }
+
+  .email-suggestion{
+    height: 640px;
+    background-color: @green-opacity;
+
+    .envelope{
+      margin-top: 40px;
+    }
+  }
+}
