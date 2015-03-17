@@ -2,6 +2,7 @@
 
 var React = require('react');
 var Link = require('react-router-component').Link;
+var EmailSignUp = require('../forms/app-email-signup-form.js');
 
 var Home = React.createClass({
   getDefaultProps: function() {
@@ -57,6 +58,7 @@ var Home = React.createClass({
             <figure className="envelope"><img src="/img/envelope.png" /></figure>
             <h1>Join Us</h1>
             <p>Sign up for email updates or send us a suggestion</p>
+            <EmailSignUp />
           </div>
         </section>
       </main>
