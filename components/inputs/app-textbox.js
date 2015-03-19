@@ -13,8 +13,8 @@ var TextBox = React.createClass({
   },
   getDefaultProps: function() {
     return {
-      label: 'Text',
-      placeholder: 'Write something here.',
+      label: 'Suggestion',
+      placeholder: 'Would love to hear your thoughts!',
       errorMessage: 'Must be under 300 characters!'
     }
   },
@@ -41,7 +41,7 @@ var TextBox = React.createClass({
     return (
       <div className="ob-input textbox">
         <label>{this.props.label}</label>
-        <Input type="text" ref="text" blur={this.isValid} placeholder={this.props.placeholder} />
+        <textarea ref="text" onBlur={this.isValid}></textarea>
         <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
       </div>
     );

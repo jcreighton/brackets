@@ -78,7 +78,8 @@ var EmailSignUpForm = React.createClass({displayName: "EmailSignUpForm",
       emailError: {
         message: 'Email already in use!',
         isVisible: false
-      }
+      },
+      toggleMessage: false
     };
   },
   isValid: function(e) {
@@ -106,18 +107,29 @@ var EmailSignUpForm = React.createClass({displayName: "EmailSignUpForm",
       });
 
       // send email to database
-      EmailListRef.push({
+      var ref = EmailListRef.push({
         'email': this.data.email,
         'suggestion': this.data.text
       });
+
+      this.postMessage();
     }
   },
+  postMessage: function(){
+    console.log('setState');
+    this.setState({toggleMessage: true});
+  },
   render: function() {
+    var classes = this.state.toggleMessage ? 'toggle-message' : '';
+
     return (
-      React.createElement("form", {className: "ob-email-signup-form"}, 
-        React.createElement(Email, {ref: "email"}), 
-        React.createElement(TextBox, {ref: "text"}), 
-        React.createElement(Submit, {className: "small", onClick: this.isValid}, "SUBMIT")
+      React.createElement("div", {className: classes}, 
+        React.createElement("div", {className: "thanks"}, "Thanks for the note!"), 
+        React.createElement("form", {className: "ob-email-signup-form"}, 
+          React.createElement(Email, {ref: "email"}), 
+          React.createElement(TextBox, {ref: "text"}), 
+          React.createElement(Submit, {className: "small", onClick: this.isValid}, "SUBMIT")
+        )
       )
     );
   }
@@ -453,8 +465,8 @@ var TextBox = React.createClass({displayName: "TextBox",
   },
   getDefaultProps: function() {
     return {
-      label: 'Text',
-      placeholder: 'Write something here.',
+      label: 'Suggestion',
+      placeholder: 'Would love to hear your thoughts!',
       errorMessage: 'Must be under 300 characters!'
     }
   },
@@ -481,7 +493,7 @@ var TextBox = React.createClass({displayName: "TextBox",
     return (
       React.createElement("div", {className: "ob-input textbox"}, 
         React.createElement("label", null, this.props.label), 
-        React.createElement(Input, {type: "text", ref: "text", blur: this.isValid, placeholder: this.props.placeholder}), 
+        React.createElement("textarea", {ref: "text", onBlur: this.isValid}), 
         React.createElement(Error, {isVisible: this.state.isVisible, errorMessage: this.props.errorMessage})
       )
     );

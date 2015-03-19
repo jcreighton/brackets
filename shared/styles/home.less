@@ -128,11 +128,85 @@
   }
 
   .email-suggestion{
-    height: 640px;
+    height: 802px;
     background-color: @green-opacity;
 
     .envelope{
       margin-top: 40px;
     }
+
+    .ob-email-signup-form{
+      position: relative;
+      width: 400px;
+      padding: 30px;
+      margin: 0 auto;
+      font-size: 14px;
+
+      .ob-input{
+        text-align: left;
+        margin-bottom: 30px;
+
+        label{
+          display: block;
+          width: 100px;
+          margin: 0 0 7px 7px;
+          font-family: @museo;
+          color: @green;
+        }
+
+        input, textarea{
+          width: 100%;
+          margin-left: 7px;
+          padding: 10px;
+          border: none;
+          color: #aaa;
+        }
+
+        input::-webkit-input-placeholder{
+          color: #aaa;
+          font-size: 13px;
+        }
+
+        textarea{
+          height: 300px;
+          color: #aaa;
+          padding-left: 8px;
+          font-size: 13px;
+        }
+
+        .ob-error{
+          position: relative;
+          left: 9px;
+          top: 8px;
+        }
+      }
+
+      .ob-button{
+        width: 80px;
+        text-align: center;
+        margin: 0 auto;
+      }
+    }
+
+    .thanks{
+      display: none;
+      margin-top: 140px;
+      color: @green;
+      font-family: @museo;
+      font-size: 28px;
+      text-align: center;
+    }
+
+    .toggle-message{
+
+      form.ob-email-signup-form{
+        display: none
+      }
+
+      div.thanks{
+        display: block;
+      }
+    }
   }
 }
+

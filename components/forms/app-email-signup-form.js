@@ -15,7 +15,8 @@ var EmailSignUpForm = React.createClass({
       emailError: {
         message: 'Email already in use!',
         isVisible: false
-      }
+      },
+      toggleMessage: false
     };
   },
   isValid: function(e) {
@@ -43,19 +44,30 @@ var EmailSignUpForm = React.createClass({
       });
 
       // send email to database
-      EmailListRef.push({
+      var ref = EmailListRef.push({
         'email': this.data.email,
         'suggestion': this.data.text
       });
+
+      this.postMessage();
     }
   },
+  postMessage: function(){
+    console.log('setState');
+    this.setState({toggleMessage: true});
+  },
   render: function() {
+    var classes = this.state.toggleMessage ? 'toggle-message' : '';
+
     return (
-      <form className="ob-email-signup-form">
-        <Email ref="email"/>
-        <TextBox ref="text" />
-        <Submit className="small" onClick={this.isValid}>SUBMIT</Submit>
-      </form>
+      <div className={classes}>
+        <div className="thanks">Thanks for the note!</div>
+        <form className="ob-email-signup-form">
+          <Email ref="email"/>
+          <TextBox ref="text" />
+          <Submit className="small" onClick={this.isValid}>SUBMIT</Submit>
+        </form>
+      </div>
     );
   }
 });
