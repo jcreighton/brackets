@@ -2,7 +2,7 @@
 
 var React = require('react');
 var Firebase = require('firebase');
-var ref = new Firebase(FIREBASE_URL);
+var ref = new Firebase(process.env.FIREBASE_URL);
 var Email = require('../inputs/app-email.js');
 var Username = require('../inputs/app-username.js');
 var Password = require('../inputs/app-password.js');
