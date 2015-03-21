@@ -3,8 +3,7 @@
 var React = require('react');
 var Router = require('react-router-component');
 var Firebase = require('firebase');
-var config = require('../../config');
-var ref = new Firebase(config.FIREBASE_URL);
+var ref = new Firebase(FIREBASE_URL);
 var Email = require('../inputs/app-email.js');
 var Username = require('../inputs/app-username.js');
 var Password = require('../inputs/app-password.js');

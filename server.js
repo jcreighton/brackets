@@ -1,6 +1,5 @@
 var express = require('express');
 var exphbs = require('express-handlebars');
-var config = require('./config.js');
 var router = require('./router.js');
 
 // Create an express instance and set a port variable
