@@ -17,6 +17,7 @@
   "dependencies": {
     "express": "~4.9.7",
     "express-handlebars": "~1.1.0",
+    "firebase": "^2.2.3",
     "handlebars": "~3.0.0",
     "node-jsx": "0.12.4",
     "react": "0.12.2",
