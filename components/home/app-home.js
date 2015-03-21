@@ -29,15 +29,15 @@ var Home = React.createClass({
         </div>
         <section className="why">
           <div className="inner">
-            <h1>Some Copy About Why</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquam risus libero, a consequat est dignissim quis.</p>
+            <h1>Raise Your Hand</h1>
+            <p>20% of developers are women. It can be difficult to connect to one another. Let's change that. Let's raise our hands so we can be visible to each other and support each other.</p>
             <figure className="people"><img src="/img/people.png" /></figure>
           </div>
         </section>
         <section className="how">
           <div className="inner">
-            <h1>How It Works</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquam risus libero, a consequat est dignissim quis.</p>
+            <h1>Find Your Community</h1>
+            <p>Do you need a mentor? Or help with a job search? Or maybe someone to grab coffee or lunch with? You'll be able to find fellow lady developers near you, make connections and build your own awesome community.</p>
             <div className="map-container">
               <figure className="map"><img src="/img/map-block.png" /></figure>
               <span className="location"></span>
