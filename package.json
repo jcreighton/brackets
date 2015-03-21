@@ -10,7 +10,7 @@
   "main": "main.js",
   "scripts": {
     "watch": "watchify main.js -o public/js/bundle.js -v",
-    "browserify": "browserify main.js > public/js/bundle.js",
+    "browserify": "browserify main.js | uglifyjs > public/js/bundle.js",
     "build": "npm run browserify ",
     "start": "npm run watch & nodemon server.js"
   },
