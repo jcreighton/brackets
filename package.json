@@ -20,6 +20,7 @@
     "handlebars": "~3.0.0",
     "node-jsx": "0.12.4",
     "react": "0.12.2",
+    "react-router-component": "^0.23.3",
     "react-async": "^2.0.1"
   },
   "devDependencies": {
@@ -32,7 +33,6 @@
     "gulp-react": "^2.0.0",
     "gulp-uglify": "^1.1.0",
     "nodemon": "^1.2.1",
-    "react-router-component": "^0.23.3",
     "react-tools": "^0.12.2",
     "reactify": "1.0.0",
     "uglify-js": "~2.4.15",
