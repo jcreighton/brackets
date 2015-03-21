@@ -1,8 +1,7 @@
 /** @jsx React.DOM */
-
 var React = require('react');
 var Firebase = require('firebase');
-var EmailListRef = new Firebase(process.env.FIREBASE_URL + '/email_list');
+var EmailListRef = new Firebase('https://glowing-inferno-6073.firebaseio.com');
 var Email = require('../inputs/app-email.js');
 var TextBox = require('../inputs/app-textbox.js');
 var Submit = require('../buttons/app-event-button.js');

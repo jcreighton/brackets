@@ -61,12 +61,10 @@ var EventButton = React.createClass({displayName: "EventButton",
 module.exports = EventButton;
 
 },{"react":201,"react-router-component":20}],3:[function(require,module,exports){
-(function (process){
 /** @jsx React.DOM */
-
 var React = require('react');
 var Firebase = require('firebase');
-var EmailListRef = new Firebase(process.env.FIREBASE_URL + '/email_list');
+var EmailListRef = new Firebase('https://glowing-inferno-6073.firebaseio.com');
 var Email = require('../inputs/app-email.js');
 var TextBox = require('../inputs/app-textbox.js');
 var Submit = require('../buttons/app-event-button.js');
@@ -137,15 +135,13 @@ var EmailSignUpForm = React.createClass({displayName: "EmailSignUpForm",
 
 module.exports = EmailSignUpForm;
 
-}).call(this,require('_process'))
-},{"../buttons/app-event-button.js":2,"../inputs/app-email.js":7,"../inputs/app-textbox.js":9,"_process":16,"firebase":17,"react":201}],4:[function(require,module,exports){
-(function (process){
+},{"../buttons/app-event-button.js":2,"../inputs/app-email.js":7,"../inputs/app-textbox.js":9,"firebase":17,"react":201}],4:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
 var Router = require('react-router-component');
 var Firebase = require('firebase');
-var ref = new Firebase(process.env.FIREBASE_URL);
+var ref = new Firebase('https://glowing-inferno-6073.firebaseio.com');
 var Email = require('../inputs/app-email.js');
 var Username = require('../inputs/app-username.js');
 var Password = require('../inputs/app-password.js');
@@ -255,8 +251,7 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
 
 module.exports = SignUpForm;
 
-}).call(this,require('_process'))
-},{"../buttons/app-event-button.js":2,"../inputs/app-email.js":7,"../inputs/app-password.js":8,"../inputs/app-username.js":10,"../inputs/app-zipcode.js":11,"../inputs/basics/app-error.js":12,"_process":16,"firebase":17,"react":201,"react-router-component":20}],5:[function(require,module,exports){
+},{"../buttons/app-event-button.js":2,"../inputs/app-email.js":7,"../inputs/app-password.js":8,"../inputs/app-username.js":10,"../inputs/app-zipcode.js":11,"../inputs/basics/app-error.js":12,"firebase":17,"react":201,"react-router-component":20}],5:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
