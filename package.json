@@ -20,8 +20,8 @@
     "handlebars": "~3.0.0",
     "node-jsx": "0.12.4",
     "react": "0.12.2",
-    "react-router-component": "^0.23.3",
-    "react-async": "^2.0.1"
+    "react-async": "^2.0.1",
+    "react-router-component": "^0.23.3"
   },
   "devDependencies": {
     "browserify": "~6.0.3",
