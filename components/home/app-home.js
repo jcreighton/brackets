@@ -56,8 +56,8 @@ var Home = React.createClass({
         <section className="email-suggestion">
           <div className="inner">
             <figure className="envelope"><img src="/img/envelope.png" /></figure>
-            <h1>Join Us</h1>
-            <p>Sign up for email updates or send us a suggestion</p>
+            <h1>Sign Up For Updates</h1>
+            <p>We'll notify you when Open Bracket launches</p>
             <EmailSignUp />
           </div>
         </section>
