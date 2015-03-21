@@ -50,7 +50,7 @@ var Home = React.createClass({
         </section>
         <section className="coming-soon">
           <div className="inner">
-            <h1>Launching <span className="may-2015">May 2015</span></h1>
+            <h1>Launching <span className="launch-date">June 2015</span></h1>
           </div>
         </section>
         <section className="email-suggestion">

@@ -2,6 +2,7 @@
 ###################
 config.js
 firebase.json
+node_modules/
 
 # Compiled source #
 ###################

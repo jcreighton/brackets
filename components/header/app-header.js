@@ -8,7 +8,7 @@ var Header = React.createClass({
     return (
       <header>
         <h1><Link href="/"><span className="bracket">[</span><span className="name">Open Bracket</span></Link></h1>
-        <div className="ob-button small donate-button" href="http://gofundme.com">Donate</div>
+        <div className="ob-button medium donate" href="http://gofundme.com">Donate</div>
       </header>
     );
   }

@@ -4,6 +4,9 @@
   "description": "an open community for lady developers",
   "author": "Jenn Creighton",
   "license": "MIT",
+  "engines": {
+    "node": "0.10.x"
+  },
   "main": "main.js",
   "scripts": {
     "watch": "watchify main.js -o public/js/bundle.js -v",

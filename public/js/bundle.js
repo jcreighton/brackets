@@ -265,7 +265,7 @@ var Header = React.createClass({displayName: "Header",
     return (
       React.createElement("header", null, 
         React.createElement("h1", null, React.createElement(Link, {href: "/"}, React.createElement("span", {className: "bracket"}, "["), React.createElement("span", {className: "name"}, "Open Bracket"))), 
-        React.createElement("div", {className: "ob-button small donate-button", href: "http://gofundme.com"}, "Donate")
+        React.createElement("div", {className: "ob-button medium donate", href: "http://gofundme.com"}, "Donate")
       )
     );
   }
@@ -327,7 +327,7 @@ var Home = React.createClass({displayName: "Home",
         ), 
         React.createElement("section", {className: "coming-soon"}, 
           React.createElement("div", {className: "inner"}, 
-            React.createElement("h1", null, "Launching ", React.createElement("span", {className: "may-2015"}, "May 2015"))
+            React.createElement("h1", null, "Launching ", React.createElement("span", {className: "launch-date"}, "June 2015"))
           )
         ), 
         React.createElement("section", {className: "email-suggestion"}, 
