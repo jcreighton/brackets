@@ -16,7 +16,7 @@ var renderTemplate = function(usePath, res){
 var router = {
   index: function(req, res) {
     renderTemplate('/', res);
-  }
+  },
   // sign_up: function(req, res) {
   //   renderTemplate('/sign-up', res);
   // },
@@ -36,9 +36,9 @@ var router = {
   // friends: function(req, res) {
 
   // },
-  // finder: function(req, res) {
-  //   // Map
-  // }
+  map: function(req, res) {
+    renderTemplate('/map', res);
+  }
 };
 
 
