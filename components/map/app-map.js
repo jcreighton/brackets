@@ -1,57 +1,93 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var Button = require('../buttons/app-event-button.js');
+var ErrorMessage = require('../inputs/basics/app-error.js');
+var MapCanvas = require('./app-map-canvas.js');
 var Instagram = require('instagram-node-lib');
 
 // Configure Instagram
-Instagram.set('client_id', '6313400f443044bb96b6ad4354742b1f');
-Instagram.set('client_secret', 'a084c8d9986a4e05a70204ff2e160c73');
+Instagram.set('client_id', '76d908c33c25411c936b94ff4e4961cb');
+Instagram.set('client_secret', 'a80c12f0d0b34d67b5b62b933c21c909');
 
 var Map = React.createClass({
   getInitialState: function() {
     return {
-      markers: []
+      markers: [],
+      isVisible: false,
+      errorMessage: 'Sorry, this user\'s images do not have location data.'
     }
   },
-  componentDidMount: function() {
-    // call Instagram API (data for entire previous week)
-    console.log('Instagram', Instagram);
-    // Instagram.users.recent({
-    //   user_id: 592328384,
-    //   complete: function(data, pagination) {
-    //     console.log('data', data);
-    //     console.log('pagination', pagination);
-    //   },
-    //   error: function(errorMessage, errorObject, caller) {
-    //     console.log(errorMessage);
-    //   }
-    // });
+  getUserID: function() {
+    var _this = this;
+    var username = this.refs.username.getDOMNode().value;
 
-    var requestURL = 'https://api.instagram.com/v1/users/592328384/media/recent/?client_id=6313400f443044bb96b6ad4354742b1f';
+    $.ajax({
+      type: "GET",
+      dataType: "jsonp",
+      cache: false,
+      url: 'https://api.instagram.com/v1/users/search?q=' + username + '&client_id=6313400f443044bb96b6ad4354742b1f',
+      success: function(data) {
+        _this.getInstagramLocations(data.data[0].id);
+      }
+    });
+  },
+  getInstagramLocations: function(userID) {
+    var _this = this;
 
-    var request = new XMLHttpRequest();
-    request.open('GET', requestURL, true);
+    $.ajax({
+      type: "GET",
+      dataType: "jsonp",
+      cache: false,
+      url: 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?client_id=76d908c33c25411c936b94ff4e4961cb',
+      success: function(data) {
+        _this.createMarkers(data.data);
+      }
+    });
+  },
+  createMarkers: function(entries) {
+    var markers = [];
 
-    request.onload = function(e) {
-      console.log(e);
-    };
+    var filterEntries = entries.filter(function(entry) {
+      return (entry.location);
+    });
 
-    request.send();
+    // if location doesn't exist, exit loop & show error message
+    if (filterEntries.length == 0) {
+      this.setState({
+        isVisible: true
+      });
+    } else {
+      // else make sure error message doesn't show
+      this.setState({
+        isVisible: false
+      });
 
-    // on result, loop through to add items to array
-    // BLAH
+      // & extract lat/long to create array of markers
+      for (var i = 0; i < filterEntries.length; i++) {
+        var location = filterEntries[i].location;
 
-    //then update state
-    // this.setState({
-    //   markers: markers
-    // });
+        markers.push({
+          lat: location.latitude,
+          lng: location.longitude
+        });
+      }
+    }
+
+    //update state
+    this.setState({
+      markers: markers
+    });
   },
   render: function() {
     return (
       <main className="page-map">
         <section className="map">
           <div className="inner">
-            <div>MAP</div>
+            <input type="text" ref="username" />
+            <Button className="small" onClick={this.getUserID}>Find</Button>
+            <ErrorMessage isVisible={this.state.isVisible} errorMessage={this.state.errorMessage} />
+            <MapCanvas markers={this.state.markers}/>
           </div>
         </section>
       </main>
