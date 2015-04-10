@@ -4,11 +4,6 @@ var React = require('react');
 var Button = require('../buttons/app-event-button.js');
 var ErrorMessage = require('../inputs/basics/app-error.js');
 var MapCanvas = require('./app-map-canvas.js');
-var Instagram = require('instagram-node-lib');
-
-// Configure Instagram
-Instagram.set('client_id', '76d908c33c25411c936b94ff4e4961cb');
-Instagram.set('client_secret', 'a80c12f0d0b34d67b5b62b933c21c909');
 
 var Map = React.createClass({
   getInitialState: function() {
@@ -42,6 +37,11 @@ var Map = React.createClass({
       url: 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?client_id=76d908c33c25411c936b94ff4e4961cb',
       success: function(data) {
         _this.createMarkers(data.data);
+      },
+      error: function(err) {
+        this.setState({
+          isVisible: true
+        });
       }
     });
   },
@@ -49,7 +49,7 @@ var Map = React.createClass({
     var markers = [];
 
     var filterEntries = entries.filter(function(entry) {
-      return (entry.location);
+      return (entry.location && entry.location.latitude && entry.location.longitude);
     });
 
     // if location doesn't exist, exit loop & show error message
@@ -65,11 +65,14 @@ var Map = React.createClass({
 
       // & extract lat/long to create array of markers
       for (var i = 0; i < filterEntries.length; i++) {
-        var location = filterEntries[i].location;
+        var entry = filterEntries[i];
 
         markers.push({
-          lat: location.latitude,
-          lng: location.longitude
+          lat: entry.location.latitude,
+          lng: entry.location.longitude,
+          caption: entry.caption.text,
+          image: entry.location.low_resolution.url,
+          thumbnail: entry.images.thumbnail.url
         });
       }
     }
