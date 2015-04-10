@@ -30,7 +30,6 @@ var Map = React.createClass({
     this.removeMarkers();
 
     if (this.props.markers.length > 0) {
-      console.log('markers', this.props.markers);
       this.addMarkers();
 
       // update boundaries based on all image locations

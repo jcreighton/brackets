@@ -13,14 +13,19 @@ var Map = React.createClass({
       errorMessage: 'Sorry, this user\'s images do not have location data.'
     }
   },
+  componentDidMount: function() {
+    this.counter = 0;
+    this.data = [];
+  },
   getTextValue: function() {
     var text = this.refs.text.getDOMNode().value;
+    var firstLetter = text[0];
+    var word = text.slice(1);
 
-    if (text[0] === "#") {
-      var hashtag = text.slice(1);
-      this.getInstagramsByTag(hashtag);
+    if (firstLetter === "#") {
+      this.getInstagramsByTag(word);
     } else {
-      this.getUserID(text);
+      this.getUserID(word);
     }
   },
   getUserID: function(username) {
@@ -53,10 +58,18 @@ var Map = React.createClass({
       cache: false,
       url: url,
       success: function(data) {
-        _this.createMarkers(data.data);
+        if (_this.counter < 4) {
+          _this.counter++;
+          _this.data = _this.data.concat(data.data);
+          _this.callRecentMediaAPI(data.pagination.next_url);
+        } else {
+          _this.createMarkers(_this.data);
+          _this.counter = 0;
+          _this.data = [];
+        }
       },
       error: function(err) {
-        this.setState({
+        _this.setState({
           isVisible: true
         });
       }
@@ -104,7 +117,7 @@ var Map = React.createClass({
       <main className="page-map">
         <section className="map">
           <div className="inner">
-            <input type="text" ref="text" placeholder="username or #hashtag" />
+            <input type="text" ref="text" placeholder="@username or #hashtag" />
             <Button className="small" onClick={this.getTextValue}>Find</Button>
             <ErrorMessage isVisible={this.state.isVisible} errorMessage={this.state.errorMessage} />
             <MapCanvas markers={this.state.markers}/>
