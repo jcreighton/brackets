@@ -27,6 +27,8 @@ var Map = React.createClass({
     this.map = new google.maps.Map(element, mapOptions);
   },
   componentDidUpdate: function() {
+    this.removeMarkers();
+
     if (this.props.markers.length > 0) {
       console.log('markers', this.props.markers);
       this.addMarkers();
@@ -41,35 +43,36 @@ var Map = React.createClass({
       }
 
       this.map.fitBounds(bounds);
-    } else {
-      this.removeMarkers();
     }
   },
   addMarkers: function() {
     var _this = this;
 
     for (var i = 0; i < this.props.markers.length; i++) {
+      var currMarker = this.props.markers[i];
       var marker = new google.maps.Marker({
         position: {
-          lat: this.props.markers[i].lat,
-          lng: this.props.markers[i].lng
+          lat: currMarker.lat,
+          lng: currMarker.lng
         },
         icon: {
-          url: this.props.markers[i].thumbnail,
+          url: currMarker.thumbnail,
           scaledSize: new google.maps.Size(32, 32),
           origin: new google.maps.Point(0,0),
           anchor: new google.maps.Point(0, 32)
         },
+        html: '<div class="infopane-instagram"><img src="' + currMarker.image + '"><span class="caption">' + currMarker.caption + '</span></div>',
         map: this.map
       });
 
-      // var infowindow = new google.maps.InfoWindow({
-      //   content: contentString
-      // });
+      var infopane = new google.maps.InfoWindow({
+        content: ''
+      });
 
-      // google.maps.event.addListener(marker, 'click', function() {
-      //   infowindow.open(map,marker);
-      // });
+      google.maps.event.addListener(marker, 'click', function() {
+        infopane.setContent(this.html);
+        infopane.open(_this.map, this);
+      });
 
       marker.setMap(this.map);
 
@@ -78,6 +81,7 @@ var Map = React.createClass({
   },
   removeMarkers: function() {
     for (var i = 0; i < this.markers.length; i++) {
+      google.maps.event.clearListeners(this.markers[i], 'click');
       this.markers[i].setMap(null);
     }
     this.markers = [];

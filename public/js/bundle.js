@@ -689,6 +689,8 @@ var Map = React.createClass({displayName: "Map",
     this.map = new google.maps.Map(element, mapOptions);
   },
   componentDidUpdate: function() {
+    this.removeMarkers();
+
     if (this.props.markers.length > 0) {
       console.log('markers', this.props.markers);
       this.addMarkers();
@@ -703,27 +705,35 @@ var Map = React.createClass({displayName: "Map",
       }
 
       this.map.fitBounds(bounds);
-    } else {
-      this.removeMarkers();
     }
   },
   addMarkers: function() {
     var _this = this;
 
     for (var i = 0; i < this.props.markers.length; i++) {
+      var currMarker = this.props.markers[i];
       var marker = new google.maps.Marker({
         position: {
-          lat: this.props.markers[i].lat,
-          lng: this.props.markers[i].lng
+          lat: currMarker.lat,
+          lng: currMarker.lng
         },
         icon: {
-          url: this.props.markers[i].thumbnail,
-          size: new google.maps.Size(42, 42),
+          url: currMarker.thumbnail,
           scaledSize: new google.maps.Size(32, 32),
           origin: new google.maps.Point(0,0),
-          anchor: new google.maps.Point(0, 42)
+          anchor: new google.maps.Point(0, 32)
         },
+        html: '<div class="infopane-instagram"><img src="' + currMarker.image + '"><span class="caption">' + currMarker.caption + '</span></div>',
         map: this.map
+      });
+
+      var infopane = new google.maps.InfoWindow({
+        content: ''
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        infopane.setContent(this.html);
+        infopane.open(_this.map, this);
       });
 
       marker.setMap(this.map);
@@ -733,6 +743,7 @@ var Map = React.createClass({displayName: "Map",
   },
   removeMarkers: function() {
     for (var i = 0; i < this.markers.length; i++) {
+      google.maps.event.clearListeners(this.markers[i], 'click');
       this.markers[i].setMap(null);
     }
     this.markers = [];
@@ -762,9 +773,18 @@ var Map = React.createClass({displayName: "Map",
       errorMessage: 'Sorry, this user\'s images do not have location data.'
     }
   },
-  getUserID: function() {
+  getTextValue: function() {
+    var text = this.refs.text.getDOMNode().value;
+
+    if (text[0] === "#") {
+      var hashtag = text.slice(1);
+      this.getInstagramsByTag(hashtag);
+    } else {
+      this.getUserID(text);
+    }
+  },
+  getUserID: function(username) {
     var _this = this;
-    var username = this.refs.username.getDOMNode().value;
 
     $.ajax({
       type: "GET",
@@ -772,18 +792,26 @@ var Map = React.createClass({displayName: "Map",
       cache: false,
       url: 'https://api.instagram.com/v1/users/search?q=' + username + '&client_id=6313400f443044bb96b6ad4354742b1f',
       success: function(data) {
-        _this.getInstagramLocations(data.data[0].id);
+        _this.getUserInstagrams(data.data[0].id);
       }
     });
   },
-  getInstagramLocations: function(userID) {
+  getInstagramsByTag: function(tag) {
+    var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?client_id=76d908c33c25411c936b94ff4e4961cb';
+    this.callRecentMediaAPI(url);
+  },
+  getUserInstagrams: function(userID) {
+    var url = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?client_id=76d908c33c25411c936b94ff4e4961cb';
+    this.callRecentMediaAPI(url);
+  },
+  callRecentMediaAPI: function(url) {
     var _this = this;
 
     $.ajax({
       type: "GET",
       dataType: "jsonp",
       cache: false,
-      url: 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?client_id=76d908c33c25411c936b94ff4e4961cb',
+      url: url,
       success: function(data) {
         _this.createMarkers(data.data);
       },
@@ -796,7 +824,7 @@ var Map = React.createClass({displayName: "Map",
   },
   createMarkers: function(entries) {
     var markers = [];
-
+    console.log(entries);
     var filterEntries = entries.filter(function(entry) {
       return (entry.location && entry.location.latitude && entry.location.longitude);
     });
@@ -819,6 +847,8 @@ var Map = React.createClass({displayName: "Map",
         markers.push({
           lat: entry.location.latitude,
           lng: entry.location.longitude,
+          caption: entry.caption.text,
+          image: entry.images.low_resolution.url,
           thumbnail: entry.images.thumbnail.url
         });
       }
@@ -834,8 +864,8 @@ var Map = React.createClass({displayName: "Map",
       React.createElement("main", {className: "page-map"}, 
         React.createElement("section", {className: "map"}, 
           React.createElement("div", {className: "inner"}, 
-            React.createElement("input", {type: "text", ref: "username"}), 
-            React.createElement(Button, {className: "small", onClick: this.getUserID}, "Find"), 
+            React.createElement("input", {type: "text", ref: "text", placeholder: "username or #hashtag"}), 
+            React.createElement(Button, {className: "small", onClick: this.getTextValue}, "Find"), 
             React.createElement(ErrorMessage, {isVisible: this.state.isVisible, errorMessage: this.state.errorMessage}), 
             React.createElement(MapCanvas, {markers: this.state.markers})
           )
