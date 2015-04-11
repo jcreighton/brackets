@@ -665,6 +665,8 @@ var React = require('react');
 var Button = require('../buttons/app-event-button.js');
 var ErrorMessage = require('../inputs/basics/app-error.js');
 var MapCanvas = require('./app-map-canvas.js');
+var Firebase = require('firebase');
+var LocListRef = new Firebase('https://glowing-inferno-6073.firebaseio.com/thedogist');
 
 var Map = React.createClass({displayName: "Map",
   getInitialState: function() {
@@ -680,14 +682,17 @@ var Map = React.createClass({displayName: "Map",
   },
   getTextValue: function() {
     var text = this.refs.text.getDOMNode().value;
+    if (text === 'thedogist') {
+      this.getDogistMarkers();
+      return;
+    }
     var firstLetter = text[0];
-    var word = text.slice(1);
+    var value = text.slice(1);
 
     if (firstLetter === "#") {
-      this.getInstagramsByTag(word);
+      this.getInstagramsByTag(value);
     } else {
-      // this.getUserID(word);
-      this.getUserInstagrams();
+      this.getUserID(value);
     }
   },
   getUserID: function(username) {
@@ -708,8 +713,7 @@ var Map = React.createClass({displayName: "Map",
     this.callRecentMediaAPI(url);
   },
   getUserInstagrams: function(userID) {
-    var url = 'https://api.instagram.com/v1/users/592328384/media/recent?max_id=927568226562663970_592328384&_=1428779331016&client_id=76d908c33c25411c936b94ff4e4961cb';
-    // var url = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?client_id=76d908c33c25411c936b94ff4e4961cb';
+    var url = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?client_id=76d908c33c25411c936b94ff4e4961cb';
     this.callRecentMediaAPI(url);
   },
   callRecentMediaAPI: function(url) {
@@ -721,13 +725,12 @@ var Map = React.createClass({displayName: "Map",
       cache: false,
       url: url,
       success: function(data) {
-        if (_this.counter < 4) {
+        if (_this.counter < 3) {
           _this.counter++;
           _this.data = _this.data.concat(data.data);
           _this.callRecentMediaAPI(data.pagination.next_url);
         } else {
-          //_this.createMarkers(_this.data);
-          _this.getLocations(_this.data);
+          _this.createMarkers(_this.data);
           _this.counter = 0;
           _this.data = [];
         }
@@ -737,6 +740,23 @@ var Map = React.createClass({displayName: "Map",
           isVisible: true
         });
       }
+    });
+  },
+  getDogistMarkers: function() {
+    var _this = this;
+    var clean = [];
+    // call database to get locations
+    LocListRef.once('value', function(db) {
+      var snapshot = db.val();
+      for (obj in snapshot) {
+        clean.push(snapshot[obj]);
+      }
+      // update state
+      _this.setState({
+        markers: clean
+      });
+    }, function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
     });
   },
   getLocations: function(data) {
@@ -814,7 +834,7 @@ var Map = React.createClass({displayName: "Map",
 
 module.exports = Map;
 
-},{"../buttons/app-event-button.js":2,"../inputs/basics/app-error.js":11,"./app-map-canvas.js":14,"react":202}],14:[function(require,module,exports){
+},{"../buttons/app-event-button.js":2,"../inputs/basics/app-error.js":11,"./app-map-canvas.js":14,"firebase":18,"react":202}],14:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -942,9 +962,7 @@ var Map = React.createClass({displayName: "Map",
   },
   addMarkers: function(markers) {
     var _this = this;
-
     var markers = markers || this.props.markers;
-    console.log('markers', markers);
 
     for (var i = 0; i < markers.length; i++) {
       var currMarker = markers[i];
@@ -953,12 +971,14 @@ var Map = React.createClass({displayName: "Map",
           lat: currMarker.lat,
           lng: currMarker.lng
         },
+        draggable: true,
         icon: {
           url: currMarker.thumbnail,
           scaledSize: new google.maps.Size(32, 32),
           origin: new google.maps.Point(0,0),
           anchor: new google.maps.Point(0, 32)
         },
+        id: currMarker.id,
         html: '<div class="infopane-instagram"><img src="' + currMarker.image + '"><span class="caption">' + currMarker.caption + '</span></div>',
         map: this.map
       });
@@ -967,7 +987,21 @@ var Map = React.createClass({displayName: "Map",
         content: ''
       });
 
-      google.maps.event.addListener(marker, 'click', function() {
+      google.maps.event.addListener(marker, 'click', function(e) {
+        // var self = this;
+        // console.log(this.id, e.latLng.lat(), e.latLng.lng());
+        // LocListRef.once('value', function(snapshot) {
+        //   var snap = snapshot.val();
+        //   for (d in snap) {
+        //     if (snap[d].id == self.id) {
+        //       console.log(self.id, snap[d].id);
+        //       LocListRef.child(d).update({
+        //         lat: e.latLng.lat(),
+        //         lng: e.latLng.lng()
+        //       });
+        //     }
+        //   }
+        // });
         infopane.setContent(this.html);
         infopane.open(_this.map, this);
       });

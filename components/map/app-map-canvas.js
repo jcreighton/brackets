@@ -125,9 +125,7 @@ var Map = React.createClass({
   },
   addMarkers: function(markers) {
     var _this = this;
-
     var markers = markers || this.props.markers;
-    console.log('markers', markers);
 
     for (var i = 0; i < markers.length; i++) {
       var currMarker = markers[i];
@@ -136,12 +134,14 @@ var Map = React.createClass({
           lat: currMarker.lat,
           lng: currMarker.lng
         },
+        draggable: true,
         icon: {
           url: currMarker.thumbnail,
           scaledSize: new google.maps.Size(32, 32),
           origin: new google.maps.Point(0,0),
           anchor: new google.maps.Point(0, 32)
         },
+        id: currMarker.id,
         html: '<div class="infopane-instagram"><img src="' + currMarker.image + '"><span class="caption">' + currMarker.caption + '</span></div>',
         map: this.map
       });
@@ -150,7 +150,21 @@ var Map = React.createClass({
         content: ''
       });
 
-      google.maps.event.addListener(marker, 'click', function() {
+      google.maps.event.addListener(marker, 'click', function(e) {
+        // var self = this;
+        // console.log(this.id, e.latLng.lat(), e.latLng.lng());
+        // LocListRef.once('value', function(snapshot) {
+        //   var snap = snapshot.val();
+        //   for (d in snap) {
+        //     if (snap[d].id == self.id) {
+        //       console.log(self.id, snap[d].id);
+        //       LocListRef.child(d).update({
+        //         lat: e.latLng.lat(),
+        //         lng: e.latLng.lng()
+        //       });
+        //     }
+        //   }
+        // });
         infopane.setContent(this.html);
         infopane.open(_this.map, this);
       });
