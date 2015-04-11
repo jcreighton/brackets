@@ -1,6 +1,8 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var Firebase = require('firebase');
+var LocListRef = new Firebase('https://glowing-inferno-6073.firebaseio.com/thedogist');
 
 var Map = React.createClass({
   getDefaultProps: function() {
@@ -8,11 +10,13 @@ var Map = React.createClass({
       lat: 40.7470,
       lng: -73.9860,
       zoom: 12,
-      markers: []
+      markers: [],
+      geocodes: []
     }
   },
   componentDidMount: function() {
     this.markers = [];
+    this.geocodes = [];
     var element = this.getDOMNode();
 
     var mapOptions = {
@@ -29,6 +33,10 @@ var Map = React.createClass({
   componentDidUpdate: function() {
     this.removeMarkers();
 
+    if (this.props.geocodes.length) {
+      this.getGeocodes();
+    }
+
     if (this.props.markers.length > 0) {
       this.addMarkers();
 
@@ -44,11 +52,85 @@ var Map = React.createClass({
       this.map.fitBounds(bounds);
     }
   },
-  addMarkers: function() {
+  getGeocodes: function() {
+    var _this = this;
+    var geocoder = new google.maps.Geocoder();
+
+    function setOptions(data, index, collector) {
+        geocoder.geocode({
+          address: data.location
+        }, function(results, status) {
+          if (status === google.maps.GeocoderStatus.OK) {
+            var result = results[0];
+            var image = {
+              id: data.id,
+              location: data.location,
+              lat: result.geometry.location.lat(),
+              lng: result.geometry.location.lng(),
+              caption: data.caption,
+              image: data.image,
+              thumbnail: data.thumbnail
+            };
+
+            collector.push(image);
+
+            // send location to database
+            var ref = LocListRef.push({
+              'image': image
+            });
+
+            if (collector.length == 80) {
+              var filtered = collector.filter(function(c) {
+                return (c.lat);
+              });
+              clearInterval(interval);
+              _this.addMarkers(filtered);
+            }
+          } else {
+            collector.push({
+              error: status
+            });
+
+            if (collector.length == 80) {
+              var filtered = collector.filter(function(c) {
+                return (c.lat);
+              });
+              clearInterval(interval);
+              _this.addMarkers(filtered);
+            }
+          }
+        });
+      }
+
+    function geocode(data, index, collector) {
+      return function() {
+        setOptions(data, index, collector);
+      }
+    }
+
+    function callGeocodeAPI(start, limit) {
+      for (var i = start; i < limit; i++) {
+        geocode(_this.props.geocodes[i], i, _this.geocodes)();
+      }
+    }
+
+    var start = 0;
+    var end = 3;
+
+    var interval = setInterval(function() {
+      callGeocodeAPI(start, end);
+      start += 3;
+      end += 3;
+    }, 2000);
+  },
+  addMarkers: function(markers) {
     var _this = this;
 
-    for (var i = 0; i < this.props.markers.length; i++) {
-      var currMarker = this.props.markers[i];
+    var markers = markers || this.props.markers;
+    console.log('markers', markers);
+
+    for (var i = 0; i < markers.length; i++) {
+      var currMarker = markers[i];
       var marker = new google.maps.Marker({
         position: {
           lat: currMarker.lat,

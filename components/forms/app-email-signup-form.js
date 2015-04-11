@@ -51,7 +51,6 @@ var EmailSignUpForm = React.createClass({
     }
   },
   postMessage: function(){
-    console.log('setState');
     this.setState({toggleMessage: true});
   },
   render: function() {

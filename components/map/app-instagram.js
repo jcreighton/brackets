@@ -20,12 +20,12 @@ var Map = React.createClass({
   getTextValue: function() {
     var text = this.refs.text.getDOMNode().value;
     var firstLetter = text[0];
-    var word = text.slice(1);
+    var value = text.slice(1);
 
     if (firstLetter === "#") {
-      this.getInstagramsByTag(word);
+      this.getInstagramsByTag(value);
     } else {
-      this.getUserID(word);
+      this.getUserID(value);
     }
   },
   getUserID: function(username) {
@@ -58,7 +58,7 @@ var Map = React.createClass({
       cache: false,
       url: url,
       success: function(data) {
-        if (_this.counter < 4) {
+        if (_this.counter < 3) {
           _this.counter++;
           _this.data = _this.data.concat(data.data);
           _this.callRecentMediaAPI(data.pagination.next_url);
@@ -73,6 +73,26 @@ var Map = React.createClass({
           isVisible: true
         });
       }
+    });
+  },
+  getLocations: function(data) {
+    var captions = [];
+    console.log('data', data);
+    for (var i = 0; i < data.length; i++) {
+      var temp = data[i].caption.text.split(', ');
+      var state = temp[4] ? temp[4].slice(0, 2) : '';
+      captions.push({
+        id: data[i].id,
+        location: temp[2] + ' ' + temp[3] + ' ' + state,
+        caption: data[i].caption.text,
+        image: data[i].images.low_resolution.url,
+        thumbnail: data[i].images.thumbnail.url
+      });
+    }
+
+    //update state
+    this.setState({
+      geocodes: captions
     });
   },
   createMarkers: function(entries) {
@@ -120,7 +140,7 @@ var Map = React.createClass({
             <input type="text" ref="text" placeholder="@username or #hashtag" />
             <Button className="small" onClick={this.getTextValue}>Find</Button>
             <ErrorMessage isVisible={this.state.isVisible} errorMessage={this.state.errorMessage} />
-            <MapCanvas markers={this.state.markers}/>
+            <MapCanvas markers={this.state.markers} geocodes={this.state.geocodes}/>
           </div>
         </section>
       </main>

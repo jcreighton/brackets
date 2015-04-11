@@ -114,7 +114,6 @@ var EmailSignUpForm = React.createClass({displayName: "EmailSignUpForm",
     }
   },
   postMessage: function(){
-    console.log('setState');
     this.setState({toggleMessage: true});
   },
   render: function() {
@@ -687,7 +686,8 @@ var Map = React.createClass({displayName: "Map",
     if (firstLetter === "#") {
       this.getInstagramsByTag(word);
     } else {
-      this.getUserID(word);
+      // this.getUserID(word);
+      this.getUserInstagrams();
     }
   },
   getUserID: function(username) {
@@ -708,7 +708,8 @@ var Map = React.createClass({displayName: "Map",
     this.callRecentMediaAPI(url);
   },
   getUserInstagrams: function(userID) {
-    var url = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?client_id=76d908c33c25411c936b94ff4e4961cb';
+    var url = 'https://api.instagram.com/v1/users/592328384/media/recent?max_id=927568226562663970_592328384&_=1428779331016&client_id=76d908c33c25411c936b94ff4e4961cb';
+    // var url = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?client_id=76d908c33c25411c936b94ff4e4961cb';
     this.callRecentMediaAPI(url);
   },
   callRecentMediaAPI: function(url) {
@@ -725,7 +726,8 @@ var Map = React.createClass({displayName: "Map",
           _this.data = _this.data.concat(data.data);
           _this.callRecentMediaAPI(data.pagination.next_url);
         } else {
-          _this.createMarkers(_this.data);
+          //_this.createMarkers(_this.data);
+          _this.getLocations(_this.data);
           _this.counter = 0;
           _this.data = [];
         }
@@ -735,6 +737,26 @@ var Map = React.createClass({displayName: "Map",
           isVisible: true
         });
       }
+    });
+  },
+  getLocations: function(data) {
+    var captions = [];
+    console.log('data', data);
+    for (var i = 0; i < data.length; i++) {
+      var temp = data[i].caption.text.split(', ');
+      var state = temp[4] ? temp[4].slice(0, 2) : '';
+      captions.push({
+        id: data[i].id,
+        location: temp[2] + ' ' + temp[3] + ' ' + state,
+        caption: data[i].caption.text,
+        image: data[i].images.low_resolution.url,
+        thumbnail: data[i].images.thumbnail.url
+      });
+    }
+
+    //update state
+    this.setState({
+      geocodes: captions
     });
   },
   createMarkers: function(entries) {
@@ -782,7 +804,7 @@ var Map = React.createClass({displayName: "Map",
             React.createElement("input", {type: "text", ref: "text", placeholder: "@username or #hashtag"}), 
             React.createElement(Button, {className: "small", onClick: this.getTextValue}, "Find"), 
             React.createElement(ErrorMessage, {isVisible: this.state.isVisible, errorMessage: this.state.errorMessage}), 
-            React.createElement(MapCanvas, {markers: this.state.markers})
+            React.createElement(MapCanvas, {markers: this.state.markers, geocodes: this.state.geocodes})
           )
         )
       )
@@ -796,6 +818,8 @@ module.exports = Map;
 /** @jsx React.DOM */
 
 var React = require('react');
+var Firebase = require('firebase');
+var LocListRef = new Firebase('https://glowing-inferno-6073.firebaseio.com/thedogist');
 
 var Map = React.createClass({displayName: "Map",
   getDefaultProps: function() {
@@ -803,11 +827,13 @@ var Map = React.createClass({displayName: "Map",
       lat: 40.7470,
       lng: -73.9860,
       zoom: 12,
-      markers: []
+      markers: [],
+      geocodes: []
     }
   },
   componentDidMount: function() {
     this.markers = [];
+    this.geocodes = [];
     var element = this.getDOMNode();
 
     var mapOptions = {
@@ -824,6 +850,10 @@ var Map = React.createClass({displayName: "Map",
   componentDidUpdate: function() {
     this.removeMarkers();
 
+    if (this.props.geocodes.length) {
+      this.getGeocodes();
+    }
+
     if (this.props.markers.length > 0) {
       this.addMarkers();
 
@@ -839,11 +869,85 @@ var Map = React.createClass({displayName: "Map",
       this.map.fitBounds(bounds);
     }
   },
-  addMarkers: function() {
+  getGeocodes: function() {
+    var _this = this;
+    var geocoder = new google.maps.Geocoder();
+
+    function setOptions(data, index, collector) {
+        geocoder.geocode({
+          address: data.location
+        }, function(results, status) {
+          if (status === google.maps.GeocoderStatus.OK) {
+            var result = results[0];
+            var image = {
+              id: data.id,
+              location: data.location,
+              lat: result.geometry.location.lat(),
+              lng: result.geometry.location.lng(),
+              caption: data.caption,
+              image: data.image,
+              thumbnail: data.thumbnail
+            };
+
+            collector.push(image);
+
+            // send location to database
+            var ref = LocListRef.push({
+              'image': image
+            });
+
+            if (collector.length == 80) {
+              var filtered = collector.filter(function(c) {
+                return (c.lat);
+              });
+              clearInterval(interval);
+              _this.addMarkers(filtered);
+            }
+          } else {
+            collector.push({
+              error: status
+            });
+
+            if (collector.length == 80) {
+              var filtered = collector.filter(function(c) {
+                return (c.lat);
+              });
+              clearInterval(interval);
+              _this.addMarkers(filtered);
+            }
+          }
+        });
+      }
+
+    function geocode(data, index, collector) {
+      return function() {
+        setOptions(data, index, collector);
+      }
+    }
+
+    function callGeocodeAPI(start, limit) {
+      for (var i = start; i < limit; i++) {
+        geocode(_this.props.geocodes[i], i, _this.geocodes)();
+      }
+    }
+
+    var start = 0;
+    var end = 3;
+
+    var interval = setInterval(function() {
+      callGeocodeAPI(start, end);
+      start += 3;
+      end += 3;
+    }, 2000);
+  },
+  addMarkers: function(markers) {
     var _this = this;
 
-    for (var i = 0; i < this.props.markers.length; i++) {
-      var currMarker = this.props.markers[i];
+    var markers = markers || this.props.markers;
+    console.log('markers', markers);
+
+    for (var i = 0; i < markers.length; i++) {
+      var currMarker = markers[i];
       var marker = new google.maps.Marker({
         position: {
           lat: currMarker.lat,
@@ -889,7 +993,7 @@ var Map = React.createClass({displayName: "Map",
 
 module.exports = Map;
 
-},{"react":202}],15:[function(require,module,exports){
+},{"firebase":18,"react":202}],15:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
