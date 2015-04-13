@@ -67,7 +67,14 @@ var Map = React.createClass({
         if (_this.counter < 3) {
           _this.counter++;
           _this.data = _this.data.concat(data.data);
-          _this.callRecentMediaAPI(data.pagination.next_url);
+          if (data.pagination.next_url) {
+            _this.callRecentMediaAPI(data.pagination.next_url);
+          } else {
+            _this.createMarkers(_this.data);
+            _this.counter = 0;
+            _this.data = [];
+            return;
+          }
         } else {
           _this.createMarkers(_this.data);
           _this.counter = 0;
@@ -100,7 +107,7 @@ var Map = React.createClass({
   },
   getLocations: function(data) {
     var captions = [];
-    console.log('data', data);
+
     for (var i = 0; i < data.length; i++) {
       var temp = data[i].caption.text.split(', ');
       var state = temp[4] ? temp[4].slice(0, 2) : '';
@@ -113,7 +120,7 @@ var Map = React.createClass({
       });
     }
 
-    //update state
+    // update state
     this.setState({
       geocodes: captions
     });

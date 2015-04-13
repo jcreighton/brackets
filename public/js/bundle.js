@@ -728,7 +728,14 @@ var Map = React.createClass({displayName: "Map",
         if (_this.counter < 3) {
           _this.counter++;
           _this.data = _this.data.concat(data.data);
-          _this.callRecentMediaAPI(data.pagination.next_url);
+          if (data.pagination.next_url) {
+            _this.callRecentMediaAPI(data.pagination.next_url);
+          } else {
+            // _this.createMarkers(_this.data);
+            _this.counter = 0;
+            _this.data = [];
+            return;
+          }
         } else {
           _this.createMarkers(_this.data);
           _this.counter = 0;
@@ -761,7 +768,7 @@ var Map = React.createClass({displayName: "Map",
   },
   getLocations: function(data) {
     var captions = [];
-    console.log('data', data);
+
     for (var i = 0; i < data.length; i++) {
       var temp = data[i].caption.text.split(', ');
       var state = temp[4] ? temp[4].slice(0, 2) : '';
@@ -774,7 +781,7 @@ var Map = React.createClass({displayName: "Map",
       });
     }
 
-    //update state
+    // update state
     this.setState({
       geocodes: captions
     });
@@ -912,11 +919,9 @@ var Map = React.createClass({displayName: "Map",
             collector.push(image);
 
             // send location to database
-            var ref = LocListRef.push({
-              'image': image
-            });
+            var ref = LocListRef.push(image);
 
-            if (collector.length == 80) {
+            if (collector.length == 16) {
               var filtered = collector.filter(function(c) {
                 return (c.lat);
               });
@@ -928,7 +933,7 @@ var Map = React.createClass({displayName: "Map",
               error: status
             });
 
-            if (collector.length == 80) {
+            if (collector.length == 16) {
               var filtered = collector.filter(function(c) {
                 return (c.lat);
               });
@@ -988,20 +993,20 @@ var Map = React.createClass({displayName: "Map",
       });
 
       google.maps.event.addListener(marker, 'click', function(e) {
-        // var self = this;
-        // console.log(this.id, e.latLng.lat(), e.latLng.lng());
-        // LocListRef.once('value', function(snapshot) {
-        //   var snap = snapshot.val();
-        //   for (d in snap) {
-        //     if (snap[d].id == self.id) {
-        //       console.log(self.id, snap[d].id);
-        //       LocListRef.child(d).update({
-        //         lat: e.latLng.lat(),
-        //         lng: e.latLng.lng()
-        //       });
-        //     }
-        //   }
-        // });
+        var self = this;
+        console.log(this.id, e.latLng.lat(), e.latLng.lng());
+        LocListRef.once('value', function(snapshot) {
+          var snap = snapshot.val();
+          for (d in snap) {
+            if (snap[d].id == self.id) {
+              console.log(self.id, snap[d].id);
+              LocListRef.child(d).update({
+                lat: e.latLng.lat(),
+                lng: e.latLng.lng()
+              });
+            }
+          }
+        });
         infopane.setContent(this.html);
         infopane.open(_this.map, this);
       });

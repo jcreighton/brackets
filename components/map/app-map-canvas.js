@@ -75,11 +75,9 @@ var Map = React.createClass({
             collector.push(image);
 
             // send location to database
-            var ref = LocListRef.push({
-              'image': image
-            });
+            var ref = LocListRef.push(image);
 
-            if (collector.length == 80) {
+            if (collector.length == 16) {
               var filtered = collector.filter(function(c) {
                 return (c.lat);
               });
@@ -91,7 +89,7 @@ var Map = React.createClass({
               error: status
             });
 
-            if (collector.length == 80) {
+            if (collector.length == 16) {
               var filtered = collector.filter(function(c) {
                 return (c.lat);
               });
@@ -134,7 +132,7 @@ var Map = React.createClass({
           lat: currMarker.lat,
           lng: currMarker.lng
         },
-        draggable: true,
+        // draggable: true,
         icon: {
           url: currMarker.thumbnail,
           scaledSize: new google.maps.Size(32, 32),
