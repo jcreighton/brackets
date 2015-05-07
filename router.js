@@ -17,9 +17,12 @@ var router = {
   index: function(req, res) {
     renderTemplate('/', res);
   },
-  // sign_up: function(req, res) {
-  //   renderTemplate('/sign-up', res);
-  // },
+  sign_up: function(req, res) {
+    renderTemplate('/sign-up', res);
+  },
+  log_in: function(req, res) {
+    renderTemplate('/login', res);
+  },
   // profile_public: function(req, res) {
 
   // },
