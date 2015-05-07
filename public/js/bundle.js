@@ -725,13 +725,20 @@ var Map = React.createClass({displayName: "Map",
       cache: false,
       url: url,
       success: function(data) {
+        if (data.meta.code === 400) {
+          _this.setState({
+            isVisible: true
+          });
+          return;
+        }
+
         if (_this.counter < 3) {
           _this.counter++;
           _this.data = _this.data.concat(data.data);
-          if (data.pagination.next_url) {
+          if (data.pagination) {
             _this.callRecentMediaAPI(data.pagination.next_url);
           } else {
-            // _this.createMarkers(_this.data);
+            _this.createMarkers(_this.data);
             _this.counter = 0;
             _this.data = [];
             return;
@@ -976,7 +983,7 @@ var Map = React.createClass({displayName: "Map",
           lat: currMarker.lat,
           lng: currMarker.lng
         },
-        draggable: true,
+        // draggable: true,
         icon: {
           url: currMarker.thumbnail,
           scaledSize: new google.maps.Size(32, 32),
@@ -993,20 +1000,20 @@ var Map = React.createClass({displayName: "Map",
       });
 
       google.maps.event.addListener(marker, 'click', function(e) {
-        var self = this;
-        console.log(this.id, e.latLng.lat(), e.latLng.lng());
-        LocListRef.once('value', function(snapshot) {
-          var snap = snapshot.val();
-          for (d in snap) {
-            if (snap[d].id == self.id) {
-              console.log(self.id, snap[d].id);
-              LocListRef.child(d).update({
-                lat: e.latLng.lat(),
-                lng: e.latLng.lng()
-              });
-            }
-          }
-        });
+        // var self = this;
+        // console.log(this.id, e.latLng.lat(), e.latLng.lng());
+        // LocListRef.once('value', function(snapshot) {
+        //   var snap = snapshot.val();
+        //   for (d in snap) {
+        //     if (snap[d].id == self.id) {
+        //       console.log(self.id, snap[d].id);
+        //       LocListRef.child(d).update({
+        //         lat: e.latLng.lat(),
+        //         lng: e.latLng.lng()
+        //       });
+        //     }
+        //   }
+        // });
         infopane.setContent(this.html);
         infopane.open(_this.map, this);
       });

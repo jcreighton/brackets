@@ -31,153 +31,66 @@ var Map = React.createClass({
     this.map = new google.maps.Map(element, mapOptions);
   },
   componentDidUpdate: function() {
-    this.removeMarkers();
+    // this.removeMarkers();
 
-    if (this.props.geocodes.length) {
-      this.getGeocodes();
-    }
+    // if (this.props.markers.length > 0) {
+    //   this.addMarkers();
 
-    if (this.props.markers.length > 0) {
-      this.addMarkers();
+    //   // update boundaries based on all image locations
+    //   var bounds = new google.maps.LatLngBounds();
 
-      // update boundaries based on all image locations
-      var bounds = new google.maps.LatLngBounds();
+    //   for (var i = 0; i < this.props.markers.length; i++) {
+    //     var marker = this.props.markers[i];
+    //     var latlng = new google.maps.LatLng(marker.lat, marker.lng);
+    //     bounds.extend(latlng);
+    //   }
 
-      for (var i = 0; i < this.props.markers.length; i++) {
-        var marker = this.props.markers[i];
-        var latlng = new google.maps.LatLng(marker.lat, marker.lng);
-        bounds.extend(latlng);
-      }
-
-      this.map.fitBounds(bounds);
-    }
-  },
-  getGeocodes: function() {
-    var _this = this;
-    var geocoder = new google.maps.Geocoder();
-
-    function setOptions(data, index, collector) {
-        geocoder.geocode({
-          address: data.location
-        }, function(results, status) {
-          if (status === google.maps.GeocoderStatus.OK) {
-            var result = results[0];
-            var image = {
-              id: data.id,
-              location: data.location,
-              lat: result.geometry.location.lat(),
-              lng: result.geometry.location.lng(),
-              caption: data.caption,
-              image: data.image,
-              thumbnail: data.thumbnail
-            };
-
-            collector.push(image);
-
-            // send location to database
-            var ref = LocListRef.push(image);
-
-            if (collector.length == 16) {
-              var filtered = collector.filter(function(c) {
-                return (c.lat);
-              });
-              clearInterval(interval);
-              _this.addMarkers(filtered);
-            }
-          } else {
-            collector.push({
-              error: status
-            });
-
-            if (collector.length == 16) {
-              var filtered = collector.filter(function(c) {
-                return (c.lat);
-              });
-              clearInterval(interval);
-              _this.addMarkers(filtered);
-            }
-          }
-        });
-      }
-
-    function geocode(data, index, collector) {
-      return function() {
-        setOptions(data, index, collector);
-      }
-    }
-
-    function callGeocodeAPI(start, limit) {
-      for (var i = start; i < limit; i++) {
-        geocode(_this.props.geocodes[i], i, _this.geocodes)();
-      }
-    }
-
-    var start = 0;
-    var end = 3;
-
-    var interval = setInterval(function() {
-      callGeocodeAPI(start, end);
-      start += 3;
-      end += 3;
-    }, 2000);
+    //   this.map.fitBounds(bounds);
+    // }
   },
   addMarkers: function(markers) {
-    var _this = this;
-    var markers = markers || this.props.markers;
+    // var _this = this;
+    // var markers = markers || this.props.markers;
 
-    for (var i = 0; i < markers.length; i++) {
-      var currMarker = markers[i];
-      var marker = new google.maps.Marker({
-        position: {
-          lat: currMarker.lat,
-          lng: currMarker.lng
-        },
-        // draggable: true,
-        icon: {
-          url: currMarker.thumbnail,
-          scaledSize: new google.maps.Size(32, 32),
-          origin: new google.maps.Point(0,0),
-          anchor: new google.maps.Point(0, 32)
-        },
-        id: currMarker.id,
-        html: '<div class="infopane-instagram"><img src="' + currMarker.image + '"><span class="caption">' + currMarker.caption + '</span></div>',
-        map: this.map
-      });
+    // for (var i = 0; i < markers.length; i++) {
+    //   var currMarker = markers[i];
+    //   var marker = new google.maps.Marker({
+    //     position: {
+    //       lat: currMarker.lat,
+    //       lng: currMarker.lng
+    //     },
+    //     // draggable: true,
+    //     icon: {
+    //       url: currMarker.thumbnail,
+    //       scaledSize: new google.maps.Size(32, 32),
+    //       origin: new google.maps.Point(0,0),
+    //       anchor: new google.maps.Point(0, 32)
+    //     },
+    //     id: currMarker.id,
+    //     html: '<div class="infopane-instagram"><img src="' + currMarker.image + '"><span class="caption">' + currMarker.caption + '</span></div>',
+    //     map: this.map
+    //   });
 
-      var infopane = new google.maps.InfoWindow({
-        content: ''
-      });
+    //   var infopane = new google.maps.InfoWindow({
+    //     content: ''
+    //   });
 
-      google.maps.event.addListener(marker, 'click', function(e) {
-        // var self = this;
-        // console.log(this.id, e.latLng.lat(), e.latLng.lng());
-        // LocListRef.once('value', function(snapshot) {
-        //   var snap = snapshot.val();
-        //   for (d in snap) {
-        //     if (snap[d].id == self.id) {
-        //       console.log(self.id, snap[d].id);
-        //       LocListRef.child(d).update({
-        //         lat: e.latLng.lat(),
-        //         lng: e.latLng.lng()
-        //       });
-        //     }
-        //   }
-        // });
-        infopane.setContent(this.html);
-        infopane.open(_this.map, this);
-      });
+    //   google.maps.event.addListener(marker, 'click', function(e) {
+    //     infopane.setContent(this.html);
+    //     infopane.open(_this.map, this);
+    //   });
 
-      marker.setMap(this.map);
+    //   marker.setMap(this.map);
 
-      this.markers.push(marker);
-    }
+    //   this.markers.push(marker);
+    // }
   },
   removeMarkers: function() {
-    for (var i = 0; i < this.markers.length; i++) {
-      google.maps.event.clearListeners(this.markers[i], 'click');
-      this.markers[i].setMap(null);
-    }
-    this.markers = [];
+    // for (var i = 0; i < this.markers.length; i++) {
+    //   google.maps.event.clearListeners(this.markers[i], 'click');
+    //   this.markers[i].setMap(null);
+    // }
+    // this.markers = [];
   },
   render: function() {
     return (
