@@ -2,9 +2,6 @@ var express = require('express');
 var exphbs = require('express-handlebars');
 var router = require('./router.js');
 
-var clientID = '6313400f443044bb96b6ad4354742b1f';
-var clientSecret = 'a084c8d9986a4e05a70204ff2e160c73';
-
 // Create an express instance and set a port variable
 var app = express();
 var port = process.env.PORT || 8080;

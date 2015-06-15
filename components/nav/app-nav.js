@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Login = require('forms/app-login.js');
+var Login = require('../forms/app-login-form.js');
 var Link = require('react-router-component').Link;
 
 var Navigation = React.createClass({
@@ -21,7 +21,7 @@ var Navigation = React.createClass({
       <nav>
         <ul>
           <li><Link href="/sign-up">Sign Up</Link></li>
-          <Login />
+          <Login/>
         </ul>
         {this.props.children}
       </nav>

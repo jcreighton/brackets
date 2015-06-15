@@ -7,7 +7,6 @@ var ref = new Firebase('https://glowing-inferno-6073.firebaseio.com');
 var Email = require('../inputs/app-email.js');
 var Username = require('../inputs/app-username.js');
 var Password = require('../inputs/app-password.js');
-var ZipCode = require('../inputs/app-zipcode.js');
 var Submit = require('../buttons/app-event-button.js');
 var Error = require('../inputs/basics/app-error.js');
 
@@ -30,7 +29,6 @@ var SignUpForm = React.createClass({
       this.refs.email.isValid(),
       this.refs.username.isValid(),
       this.refs.password.isValid(),
-      this.refs.zipcode.isValid()
     ];
 
     // determine if any are invalid
@@ -104,7 +102,6 @@ var SignUpForm = React.createClass({
         <Error isVisible={this.state.emailError.isVisible} errorMessage={this.state.emailError.message} />
         <Username ref="username" />
         <Password ref="password" />
-        <ZipCode ref="zipcode"/>
         <Submit className="small" onClick={this.isValid}>SIGN UP</Submit>
       </form>
     );

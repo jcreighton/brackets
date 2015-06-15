@@ -11,8 +11,12 @@ var Submit = require('../buttons/app-event-button.js');
 var LoginForm = React.createClass({
   getInitialState: function() {
     return {
-
+      placeholder: '',
+      errorMessage: ''
     };
+  },
+  isValid: function() {
+    console.log('no');
   },
   loginUser: function() {
     console.log('authenticating...');
@@ -30,12 +34,12 @@ var LoginForm = React.createClass({
   },
   render: function() {
     return (
-      <div>LOGIN</div>
-      <form className="ob-signup-form">
+      <div className="ob-signup-form">
+        <h2>LOGIN</h2>
         <Email ref="email"/>
-        <Password />
+        <Password placeholder={this.state.placeholder} errorMessage={this.state.errorMessage}/>
         <Submit className="small" onClick={this.isValid}>LOGIN</Submit>
-      </form>
+      </div>
     );
   }
 });

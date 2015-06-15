@@ -5,7 +5,7 @@ var Router = require('react-router-component');
 var Header = require('./header/app-header.js');
 var HomePage = require('./home/app-home.js');
 var ProfilePage = require('./home/app-home.js');
-var SignUpPage = require('./forms/app-signup-form.js');
+var SignUpPage = require('./sign-up/app-signup-page.js');
 var MapPage = require('./map/app-map-canvas.js');
 
 var Locations = Router.Locations;
