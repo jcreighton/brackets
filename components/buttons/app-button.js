@@ -15,7 +15,8 @@ var Button = React.createClass({
     className: React.PropTypes.string
   },
   render: function() {
-    return this.transferPropsTo(
+    var { className, ...other } = this.props;
+    return (
       <div className="ob-button">
         <Link href={this.props.url}>{this.props.children}</Link>
       </div>

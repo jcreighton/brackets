@@ -14,11 +14,12 @@ var EventButton = React.createClass({
     onClick: React.PropTypes.func.isRequired
   },
   render: function() {
-    return this.transferPropsTo(
+    var { className, ...other } = this.props;
+    return (
       <div className="ob-button" onClick={this.props.onClick}>
         <a>{this.props.children}</a>
       </div>
-    );
+    )
   }
 });
 

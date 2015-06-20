@@ -1,4 +1,4 @@
-var JSX = require('node-jsx').install();
+var JSX = require('node-jsx').install({harmony: true});
 var React = require('react');
 var App = React.createFactory(require('./components/app.js'));
 
