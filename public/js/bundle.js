@@ -4,9 +4,9 @@
 var React = require('react');
 var Router = require('react-router-component');
 var Header = require('./header/app-header.js');
-var HomePage = require('./home/app-home.js');
-var SignUpPage = require('./sign-up/app-signup-page.js');
-var MapPage = require('./map/app-map-canvas.js');
+var HomePage = React.createElement(require('./home/app-home.js'));
+var SignUpPage = React.createElement(require('./sign-up/app-signup-page.js'));
+var MapPage = React.createElement(require('./map/app-map-canvas.js'));
 
 var Locations = Router.Locations;
 var Location = Router.Location;
@@ -852,8 +852,6 @@ var SignUpPage = React.createClass({displayName: "SignUpPage",
 module.exports = SignUpPage;
 
 },{"../forms/app-location.js":4,"../forms/app-signup-form.js":6,"react":215}],18:[function(require,module,exports){
-/** @jsx React.DOM */
-
 var React = require('react');
 var App = require('./components/app.js');
 
