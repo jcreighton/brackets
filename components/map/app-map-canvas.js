@@ -15,20 +15,20 @@ var Map = React.createClass({
     }
   },
   componentDidMount: function() {
-    this.markers = [];
-    this.geocodes = [];
-    var element = this.getDOMNode();
+    // this.markers = [];
+    // this.geocodes = [];
+    // var element = this.getDOMNode();
 
-    var mapOptions = {
-      center: {
-        lat: this.props.lat,
-        lng: this.props.lng
-      },
-      zoom: this.props.zoom,
-      maxZoom: 17
-    };
+    // var mapOptions = {
+    //   center: {
+    //     lat: this.props.lat,
+    //     lng: this.props.lng
+    //   },
+    //   zoom: this.props.zoom,
+    //   maxZoom: 17
+    // };
 
-    this.map = new google.maps.Map(element, mapOptions);
+    // this.map = new google.maps.Map(element, mapOptions);
   },
   componentDidUpdate: function() {
     // this.removeMarkers();

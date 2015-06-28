@@ -5,7 +5,6 @@ var React = require('react');
 var Router = require('react-router-component');
 var Header = require('./header/app-header.js');
 var HomePage = require('./home/app-home.js');
-var ProfilePage = require('./home/app-home.js');
 var SignUpPage = require('./sign-up/app-signup-page.js');
 var MapPage = require('./map/app-map-canvas.js');
 
@@ -21,7 +20,6 @@ var App = React.createClass({displayName: "App",
           React.createElement(Locations, {path: this.props.path}, 
             React.createElement(Location, {path: "/", handler: HomePage}), 
             React.createElement(Location, {path: "/sign-up", handler: SignUpPage}), 
-            React.createElement(Location, {path: "/:username/profile", handler: ProfilePage}), 
             React.createElement(Location, {path: "/map", handler: MapPage})
           )
         )
@@ -30,7 +28,7 @@ var App = React.createClass({displayName: "App",
   }
 });
 
-module.exports = App;
+module.exports = React.createFactory(App);
 
 },{"./header/app-header.js":7,"./home/app-home.js":8,"./map/app-map-canvas.js":15,"./sign-up/app-signup-page.js":17,"react":215,"react-router-component":23}],2:[function(require,module,exports){
 /** @jsx React.DOM */
@@ -713,20 +711,20 @@ var Map = React.createClass({displayName: "Map",
     }
   },
   componentDidMount: function() {
-    this.markers = [];
-    this.geocodes = [];
-    var element = this.getDOMNode();
+    // this.markers = [];
+    // this.geocodes = [];
+    // var element = this.getDOMNode();
 
-    var mapOptions = {
-      center: {
-        lat: this.props.lat,
-        lng: this.props.lng
-      },
-      zoom: this.props.zoom,
-      maxZoom: 17
-    };
+    // var mapOptions = {
+    //   center: {
+    //     lat: this.props.lat,
+    //     lng: this.props.lng
+    //   },
+    //   zoom: this.props.zoom,
+    //   maxZoom: 17
+    // };
 
-    this.map = new google.maps.Map(element, mapOptions);
+    // this.map = new google.maps.Map(element, mapOptions);
   },
   componentDidUpdate: function() {
     // this.removeMarkers();
@@ -857,15 +855,14 @@ module.exports = SignUpPage;
 /** @jsx React.DOM */
 
 var React = require('react');
-var App = React.createFactory(require('./components/app.js'));
+var App = require('./components/app.js');
 
-// Snag the initial state that was passed from the server side
-var initialState = JSON.parse(document.getElementById('initial-state').innerHTML);
+var renderTarget = document.getElementById('open-bracket-app');
 
-// Render the components, picking up where react left off on the server
+// Render the main component with correct path
 React.render(
-    App(initialState),
-    document.getElementById('open-bracket-app')
+    App({path: window.location.pathname}),
+    renderTarget
 );
 
 },{"./components/app.js":1,"react":215}],19:[function(require,module,exports){

@@ -1,13 +1,12 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var App = React.createFactory(require('./components/app.js'));
+var App = require('./components/app.js');
 
-// Snag the initial state that was passed from the server side
-var initialState = JSON.parse(document.getElementById('initial-state').innerHTML);
+var renderTarget = document.getElementById('open-bracket-app');
 
-// Render the components, picking up where react left off on the server
+// Render the main component with correct path
 React.render(
-    App(initialState),
-    document.getElementById('open-bracket-app')
+    App({path: window.location.pathname}),
+    renderTarget
 );

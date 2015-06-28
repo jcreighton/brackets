@@ -1,15 +1,14 @@
 var JSX = require('node-jsx').install({harmony: true});
 var React = require('react');
-var App = React.createFactory(require('./components/app.js'));
+var App = require('./components/app.js');
 
 var renderTemplate = function(usePath, res){
     var path = {path: usePath};
     var app = App(path);
     var markup = React.renderToString(app);
 
-    res.render('home', {
-      markup: markup,
-      state: JSON.stringify(path)
+    res.render('main', {
+      markup: markup
     });
 };
 

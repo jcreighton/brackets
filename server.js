@@ -12,7 +12,7 @@ var server = app.listen(port, function() {
 });
 
 // Set handlebars as the templating engine
-app.engine('handlebars', exphbs({ defaultLayout: 'main'}));
+app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
 // Set /public as the static content dir
