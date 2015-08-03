@@ -1,3 +1,4 @@
+var path = require('path');
 var express = require('express');
 var exphbs = require('express-handlebars');
 var router = require('./router.js');
@@ -12,6 +13,7 @@ var server = app.listen(port, function() {
 });
 
 // Set handlebars as the templating engine
+app.set('views', path.join(__dirname, 'views/'));
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
