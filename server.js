@@ -5,7 +5,10 @@ var router = require('./router.js');
 
 // Create an express instance and set a port variable
 var app = express();
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 80;
+
+// Set app port
+app.set('port', port);
 
 // Start server
 var server = app.listen(port, function() {

@@ -398,7 +398,7 @@ var Home = React.createClass({displayName: "Home",
         ), 
         React.createElement("section", {className: "coming-soon"}, 
           React.createElement("div", {className: "inner"}, 
-            React.createElement("h1", null, "Launching ", React.createElement("span", {className: "launch-date"}, "June 2015"))
+            React.createElement("h1", null, "Launching ", React.createElement("span", {className: "launch-date"}, "January 2016"))
           )
         ), 
         React.createElement("section", {className: "email-suggestion"}, 
