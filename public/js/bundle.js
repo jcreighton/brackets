@@ -368,7 +368,7 @@ var Home = React.createClass({displayName: "Home",
           React.createElement("div", {className: "inner"}, 
             React.createElement("figure", {className: "lady one"}, React.createElement("img", {src: "/img/lady.png"})), 
             React.createElement("figure", {className: "lady two"}, React.createElement("img", {src: "/img/lady.png"})), 
-            React.createElement("h1", null, "Connecting Lady Developers"), 
+            React.createElement("h1", null, "Connecting Women Coders"), 
             React.createElement("figure", {className: "bracket"}, React.createElement("img", {src: "/img/bracket.png"}))
           )
         ), 

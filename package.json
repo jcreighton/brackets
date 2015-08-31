@@ -12,8 +12,8 @@
   "scripts": {
     "watch": "watchify main.js -o public/js/bundle.js -v",
     "browserify": "browserify main.js > public/js/bundle.js",
-    "build": "npm run browserify ",
-    "start": "npm run watch & nodemon server.js"
+    "build": "npm run browserify & gulp",
+    "start": "npm run build & node server.js"
   },
   "dependencies": {
     "express": "~4.9.7",
@@ -23,7 +23,8 @@
     "node-jsx": "^0.13.3",
     "react": "^0.13.3",
     "react-async": "^2.1.0",
-    "react-router-component": "0.24"
+    "react-router-component": "0.24",
+    "reflux": "^0.2.12"
   },
   "devDependencies": {
     "browserify": "10.2.4",
@@ -43,7 +44,12 @@
   },
   "browserify": {
     "transform": [
-      [ "reactify", {"es6": true} ]
+      [
+        "reactify",
+        {
+          "es6": true
+        }
+      ]
     ]
   }
 }

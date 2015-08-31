@@ -21,7 +21,7 @@ var Home = React.createClass({
           <div className="inner">
             <figure className="lady one"><img src="/img/lady.png" /></figure>
             <figure className="lady two"><img src="/img/lady.png" /></figure>
-            <h1>Connecting Lady Developers</h1>
+            <h1>Connecting Women Coders</h1>
             <figure className="bracket"><img src="/img/bracket.png" /></figure>
           </div>
         </section>
