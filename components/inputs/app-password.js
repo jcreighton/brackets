@@ -23,7 +23,7 @@ var Password = React.createClass({
   },
   isValid: function() {
     // check that password is only letters, numbers, !@? & > 8 characters
-    var regex = /^[a-z0-9$!?@]{6,18}$/;
+    var regex = /^[a-zA-Z0-9$!?@]{6,18}$/;
     var value = this.refs.password.getDOMNode().value;
 
     var isValidPassword = regex.test(value);
@@ -34,7 +34,10 @@ var Password = React.createClass({
       this.setState({isVisible: false, isValid: true});
     }
 
-    return {password: isValidPassword && value};
+    return {
+      password: isValidPassword,
+      value: value
+    };
   },
   render: function() {
     return (

@@ -20,6 +20,8 @@
     "express-handlebars": "~1.1.0",
     "firebase": "^2.2.3",
     "handlebars": "~3.0.0",
+    "leaflet": "^0.7.4",
+    "lodash": "^3.10.1",
     "node-jsx": "^0.13.3",
     "react": "^0.13.3",
     "react-async": "^2.1.0",

@@ -15,15 +15,15 @@ var Username = React.createClass({
     return {
       label: 'Username',
       placeholder: 'Choose a nifty username!',
-      errorMessage: 'Must be more than 3-18 characters. Can contain letters, numbers, hyphens & underscores only.'
+      errorMessage: 'Must be 3-18 characters. Letters, numbers, - and _ allowed.'
     }
   },
   propTypes: {
     label: React.PropTypes.string
   },
   isValid: function() {
-    // check that username contains ONLY letters/numbers & >= 4 characters
-    var regex = /^[a-z0-9_-]{3,16}$/;
+    // Check that username contains ONLY letters/numbers & >= 4 characters
+    var regex = /^[a-zA-Z0-9_-]{3,18}$/;
     var value = this.refs.username.getDOMNode().value;
 
     var isValidUsername = regex.test(value);
@@ -34,7 +34,10 @@ var Username = React.createClass({
       this.setState({isVisible: false, isValid: true});
     }
 
-    return {username: isValidUsername && value};
+    return {
+      username: isValidUsername,
+      value: value
+    };
   },
   render: function() {
     return (

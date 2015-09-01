@@ -1,3 +1,3 @@
 module.exports = {
-  FIREBASE_URL: 'https://glowing-inferno-6073.firebaseio.com'
+  FIREBASE_URL: 'https://openbracket.firebaseio.com'
 }

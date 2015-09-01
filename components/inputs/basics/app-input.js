@@ -11,11 +11,17 @@ var Input = React.createClass({
   propTypes: {
     type: React.PropTypes.string.isRequired,
     blur: React.PropTypes.func,
-    placeholder: React.PropTypes.string
+    placeholder: React.PropTypes.string,
+    value: React.PropTypes.string
   },
   render: function() {
     return (
-      <input type={this.props.type} onBlur={this.props.blur} placeholder={this.props.placeholder} />
+      <input
+        type={this.props.type}
+        onBlur={this.props.blur}
+        placeholder={this.props.placeholder}
+        value={this.props.value}
+      />
     );
   }
 });

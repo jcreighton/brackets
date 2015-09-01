@@ -34,7 +34,10 @@ var EmailAddress = React.createClass({
       this.setState({isVisible: false, isValid: true});
     }
 
-    return {email: isValidEmail && value};
+    return {
+      email: isValidEmail,
+      value: value
+    };
   },
   render: function() {
     return (
