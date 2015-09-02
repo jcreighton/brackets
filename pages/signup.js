@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var SignUpForm = require('../forms/app-signup-form.js');
+var SignUpForm = require('../components/forms/signup-form.js');
 
 var SignUpPage = React.createClass({
   render: function() {

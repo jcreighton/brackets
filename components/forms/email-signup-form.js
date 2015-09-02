@@ -2,9 +2,9 @@
 var React = require('react');
 var Firebase = require('firebase');
 var EmailListRef = new Firebase('https://glowing-inferno-6073.firebaseio.com/email_list');
-var Email = require('../inputs/app-email.js');
-var TextBox = require('../inputs/app-textbox.js');
-var Submit = require('../buttons/app-event-button.js');
+var Email = require('../inputs/email.js');
+var TextBox = require('../inputs/textbox.js');
+var Submit = require('../buttons/event-button.js');
 
 var EmailSignUpForm = React.createClass({
   getInitialState: function() {

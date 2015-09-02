@@ -1,9 +1,9 @@
 /** @jsx React.DOM */
 
 var React = require('react/addons');
-var Input = require('./basics/app-input.js');
-var Question = require('../misc/app-question.js');
-var Error = require('./basics/app-error.js');
+var Input = require('./basics/basic-input.js');
+var Question = require('../misc/question.js');
+var Error = require('./basics/error.js');
 
 var ZipCode = React.createClass({
   getInitialState: function() {

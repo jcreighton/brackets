@@ -1,5 +1,5 @@
 var React = require('react');
-var App = require('./components/app.js');
+var App = require('./pages/app.js');
 
 var renderTarget = document.getElementById('open-bracket-app');
 

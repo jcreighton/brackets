@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Navigation = require('../nav/app-nav');
+var Navigation = require('../nav/nav');
 var Link = require('react-router-component').Link;
 
 var Header = React.createClass({

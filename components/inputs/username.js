@@ -1,21 +1,21 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Input = require('./basics/app-input.js');
-var Error = require('./basics/app-error.js');
+var Input = require('./basics/basic-input.js');
+var Error = require('./basics/error.js');
 
 var Username = React.createClass({
   getInitialState: function() {
     return {
       isVisible: false,
-      isValid: false
+      isValid: false,
+      placeholder: 'Choose a nifty username!',
+      errorMessage: 'Must be 3-18 characters. Letters, numbers, - and _ allowed.'
     }
   },
   getDefaultProps: function() {
     return {
       label: 'Username',
-      placeholder: 'Choose a nifty username!',
-      errorMessage: 'Must be 3-18 characters. Letters, numbers, - and _ allowed.'
     }
   },
   propTypes: {
@@ -43,8 +43,8 @@ var Username = React.createClass({
     return (
       <div className="ob-input username">
         <label>{this.props.label}</label>
-        <Input type="text" ref="username" blur={this.isValid} placeholder={this.props.placeholder} />
-        <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
+        <Input type="text" ref="username" blur={this.isValid} placeholder={this.state.placeholder} />
+        <Error isVisible={this.state.isVisible} errorMessage={this.state.errorMessage} />
       </div>
     );
   }

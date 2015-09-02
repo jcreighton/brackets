@@ -3,10 +3,10 @@
 var React = require('react');
 var Firebase = require('firebase');
 var ref = new Firebase('https://glowing-inferno-6073.firebaseio.com');
-var Email = require('../inputs/app-email.js');
-var Username = require('../inputs/app-username.js');
-var Password = require('../inputs/app-password.js');
-var Submit = require('../buttons/app-event-button.js');
+var Email = require('../inputs/email.js');
+var Username = require('../inputs/username.js');
+var Password = require('../inputs/password.js');
+var Submit = require('../buttons/event-button.js');
 
 var LoginForm = React.createClass({
   getInitialState: function() {

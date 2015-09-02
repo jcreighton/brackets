@@ -1,6 +1,6 @@
 var JSX = require('node-jsx').install({harmony: true});
 var React = require('react');
-var App = require('./components/app.js');
+var App = require('./pages/app.js');
 
 var renderTemplate = function(usePath, res){
     var path = {path: usePath};

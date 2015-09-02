@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Login = require('../forms/app-login-form.js');
+var Login = require('../forms/login-form.js');
 var Link = require('react-router-component').Link;
 
 var Navigation = React.createClass({

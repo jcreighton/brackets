@@ -2,8 +2,7 @@
 
 var React = require('react');
 var Link = require('react-router-component').Link;
-// var Header = require();
-var EmailSignUp = require('../forms/app-email-signup-form.js');
+var EmailSignUp = require('../components/forms/email-signup-form.js');
 
 var Home = React.createClass({
   getDefaultProps: function() {

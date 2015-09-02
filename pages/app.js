@@ -2,10 +2,9 @@
 
 var React = require('react');
 var Router = require('react-router-component');
-var Header = require('./header/app-header.js');
-var HomePage = React.createElement(require('./home/app-home.js'));
-var SignUpPage = React.createElement(require('./sign-up/app-signup-page.js'));
-var MapPage = React.createElement(require('./map/app-map-canvas.js'));
+var Header = require('../components/header/header.js');
+var HomePage = React.createElement(require('./home.js'));
+var SignUpPage = React.createElement(require('./signup.js'));
 
 var Locations = Router.Locations;
 var Location = Router.Location;
@@ -19,7 +18,6 @@ var App = React.createClass({
           <Locations path={this.props.path}>
             <Location path="/" handler={HomePage} />
             <Location path="/sign-up" handler={SignUpPage} />
-            <Location path="/map" handler={MapPage} />
           </Locations>
         </div>
       </div>

@@ -1,8 +1,8 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Input = require('./basics/app-input.js');
-var Error = require('./basics/app-error.js');
+var Input = require('./basics/basic-input.js');
+var Error = require('./basics/error.js');
 
 var EmailAddress = React.createClass({
   getInitialState: function() {

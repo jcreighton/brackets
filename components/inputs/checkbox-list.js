@@ -1,8 +1,8 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Error = require('../inputs/basics/app-error.js');
-var Checkbox = require('../inputs/app-checkbox.js');
+var Error = require('./basics/error.js');
+var Checkbox = require('./checkbox.js');
 
 var CheckboxList = React.createClass({
   getInitialState: function() {
