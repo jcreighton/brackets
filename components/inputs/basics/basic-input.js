@@ -18,7 +18,8 @@ var Input = React.createClass({
     return (
       <input
         type={this.props.type}
-        onBlur={this.props.blur}
+        onBlur={this.props.onInputBlur}
+        onChange={this.props.onInputChange}
         placeholder={this.props.placeholder}
         value={this.props.value}
       />

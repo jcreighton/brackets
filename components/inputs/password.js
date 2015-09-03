@@ -43,7 +43,7 @@ var Password = React.createClass({
     return (
       <div className="ob-input password">
         <label>{this.props.label}</label>
-        <Input type="password" ref="password" blur={this.isValid} placeholder={this.props.placeholder} />
+        <Input type="password" ref="password" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
         <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
       </div>
     );

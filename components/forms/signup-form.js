@@ -3,7 +3,8 @@
 var React = require('react');
 var Router = require('react-router-component');
 var Reflux = require('reflux');
-// var UserStore = require('../../stores/UserStore.js');
+var UserStore = require('../../stores/UserStore.js');
+var Actions = require('../../actions/actions.js');
 var Firebase = require('firebase');
 var openBracket = new Firebase('https://test-openbracket.firebaseio.com/users');
 
@@ -19,64 +20,6 @@ var Checkbox = require('../inputs/checkbox.js');
 var Password = require('../inputs/password.js');
 var Submit = require('../buttons/event-button.js');
 var Error = require('../inputs/basics/error.js');
-
-var actions = Reflux.createActions([
-  'createUser',
-  'checkUsername',
-  'loginUser'
-]);
-
-var UserStore = Reflux.createStore({
-  listenables: [actions],
-  onCreateUser: function(userData) {
-    var _this = this;
-    openBracket.createUser({
-      email: userData.email,
-      password: userData.password
-    }, function(error, authData) {
-      if (error) {
-        console.log("User creation failed!", error);
-        // if EMAIL ERROR set error message
-        var errorCode = error.code;
-        if (errorCode === 'EMAIL_TAKEN') {
-          _this.trigger({
-            emailError: {
-              message: 'Email already in use!',
-              isVisible: true
-            }
-          });
-        }
-      } else {
-        console.log("Created successfully:", authData);
-        // Create profile for user
-        openBracket.child('users')
-            .child(authData.uid)
-            .set({
-              "first_name": userData.firstName,
-              "last_name": userData.lastName,
-              "username": userData.username,
-              "email": userData.email,
-              "conductAgreementSigned": true,
-              "interactions": userData.interactionsList
-            });
-        }
-    });
-  },
-  onCheckUsername: function(userData) {
-    var isUnique = function(exists) {
-      this.trigger({isUniqueUsername: exists});
-    }.bind(this);
-
-    openBracket.orderByChild('username')
-               .equalTo(userData.username)
-               .once('value', function(snapshot) {
-                  isUnique(snapshot.exists());
-                });
-  },
-  onLoginUser: function() {
-    console.log('log user in');
-  }
-});
 
 var SignUpForm = React.createClass({
   mixins: [Router.NavigatableMixin, Reflux.connect(UserStore)],
@@ -135,8 +78,7 @@ var SignUpForm = React.createClass({
       console.log('this.data', this.data);
 
       // Create user
-      actions.checkUsername(this.data);
-      // actions.createUser(this.data);
+      Actions.createUser(this.data);
     }
   },
   createUser: function() {

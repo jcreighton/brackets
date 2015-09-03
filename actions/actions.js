@@ -1,7 +1,9 @@
 var Reflux = require('reflux');
 
-var Actions = React.createAction([
-  'createUser'
+var Actions = Reflux.createActions([
+  'createUser',
+  'checkUsername',
+  'loginUser'
 ]);
 
 module.exports = Actions;

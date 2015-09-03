@@ -43,7 +43,7 @@ var EmailAddress = React.createClass({
     return (
       <div className="ob-input email">
         <label>{this.props.label}</label>
-        <Input type="text" ref="email" blur={this.isValid} placeholder={this.props.placeholder} />
+        <Input type="text" ref="email" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
         <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
       </div>
     );
