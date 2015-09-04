@@ -29,17 +29,8 @@ app.get('/', router.index);
 // Sign Up Route
 app.get('/sign-up', router.sign_up);
 
-// // Public Profile Route
-// app.get('/:username', router.profile_public);
-
-// // Private Profile Route
-// app.get('/:username/profile', router.profile_private);
-
-// // Messages Route
-// app.get('/:username/messages', router.messages);
-
-// // Friends List Route
-// app.get('/:username/friends', router.friends);
+// Profile Route
+app.get('/:username', router.profile);
 
 // Map Route
 app.get('/map', router.map);

@@ -15,8 +15,7 @@ var ZipCode = React.createClass({
   getDefaultProps: function() {
     return {
       label: 'Zip Code',
-      placeholder: 'Please and thank you.',
-      answer: 'Open Bracket lets you find fellow lady developers nearby, so we need to know your zip code for location purposes.',
+      answer: 'Open Bracket lets you find fellow women coders nearby, so we need to know your zip code for location purposes.',
       errorMessage: 'Are you sure that\'s a valid zipcode?'
     }
   },

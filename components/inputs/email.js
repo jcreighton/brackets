@@ -13,13 +13,14 @@ var EmailAddress = React.createClass({
   },
   getDefaultProps: function() {
     return {
-      label: 'E-mail',
-      placeholder: 'e-mail@e-mail.com',
+      label: 'Email',
       errorMessage: 'Are you sure that\'s a valid e-mail address?'
     }
   },
   propTypes: {
-    label: React.PropTypes.string
+    label: React.PropTypes.string,
+    placeholder: React.PropTypes.string,
+    errorMessage: React.PropTypes.string
   },
   isValid: function() {
     // check that email address is valid

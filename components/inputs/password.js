@@ -14,12 +14,13 @@ var Password = React.createClass({
   getDefaultProps: function() {
     return {
       label: 'Password',
-      placeholder: 'Secure your account!',
       errorMessage: 'Must be 6-18 characters. Can contain letters, numbers, !@?$ symbols only.'
     }
   },
   propTypes: {
-    label: React.PropTypes.string
+    label: React.PropTypes.string,
+    placeholder: React.PropTypes.string,
+    errorMessage: React.PropTypes.string
   },
   isValid: function() {
     // check that password is only letters, numbers, !@? & > 8 characters

@@ -19,25 +19,9 @@ var router = {
   sign_up: function(req, res) {
     renderTemplate('/sign-up', res);
   },
-  log_in: function(req, res) {
-    renderTemplate('/login', res);
+  profile: function(req, res) {
+    renderTemplate('/:username', res);
   },
-  // profile_public: function(req, res) {
-
-  // },
-  // profile_private: function(req, res) {
-  //   var username = req.params.username;
-  //   ref.set({message: username});
-  //   res.render('home', {
-  //     markup: username
-  //   });
-  // },
-  // messages: function(req, res) {
-
-  // },
-  // friends: function(req, res) {
-
-  // },
   map: function(req, res) {
     renderTemplate('/map', res);
   }

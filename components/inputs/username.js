@@ -19,8 +19,7 @@ var Username = React.createClass({
   },
   getDefaultProps: function() {
     return {
-      label: 'Username',
-      placeholder: 'Choose a nifty username!'
+      label: 'Username'
     }
   },
   propTypes: {
@@ -28,21 +27,20 @@ var Username = React.createClass({
     placeholder: React.PropTypes.string
   },
   isUnique: function() {
-    console.log('isUnique');
     var username = this.refs.username.getDOMNode().value;
     Actions.checkUsername(username);
-console.log('isUnique state: ',username, this.state.isUnique);
+
+    // If username is unique, check if it's valid
     if (this.state.isUnique) {
       this.isValid();
     }
   },
   isValid: function() {
-    console.log('isValid');
     var username = this.refs.username.getDOMNode().value;
     // Check that username contains ONLY letters/numbers & >= 4 characters
     var regex = /^[a-zA-Z0-9_-]{3,18}$/;
     var isValidUsername = regex.test(username);
-    console.log('isValid', isValidUsername);
+
     if (!isValidUsername) {
       this.setState({
         isValid: false

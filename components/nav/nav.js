@@ -8,8 +8,7 @@ var Navigation = React.createClass({
   getDefaultProps: function() {
     return {
       navItems: {
-        'sign up': '/sign-up',
-        'sign in': '/sign-in'
+        'sign up': '/sign-up'
       }
     }
   },

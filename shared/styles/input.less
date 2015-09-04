@@ -1,0 +1,53 @@
+@container-width: 72px;
+@input-width: @container-width - 2px;
+
+.ob-input {
+  position: relative;
+  width: 450px;
+  height: @container-width;
+  font-family: @open-sans;
+  font-size: 14px;
+  font-weight: 300;
+  color: @teal;
+  background-color: @gray-medium;
+  border: 1px solid @green;
+
+  label {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  input {
+    position: relative;
+    left: 121px;
+    width: 313px;
+    height: @input-width;
+    font-size: 24px;
+    color: @teal-light;
+    background-color: @gray-medium;
+    border: none;
+  }
+
+  /* Fuck you, webkit */
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 50px @gray-medium inset; /* Change the color to your own background color */
+    -webkit-text-fill-color: @teal-light;
+  }
+
+  input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 50px @gray-medium inset;
+    -webkit-text-fill-color: @teal-light;
+  }
+
+  .ob-error {
+    display: none;
+  }
+
+  input[type=checkbox] {
+    background-color: @gray-light;
+  }
+}

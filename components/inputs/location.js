@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var Zipcode = require('../inputs/zipcode.js');
 
 var LocationFinder = React.createClass({
   getInitialState: function() {
@@ -11,15 +12,8 @@ var LocationFinder = React.createClass({
   render: function() {
     return (
       <div className="ob-location-finder">
-        <h2>{this.state.message}</h2>
-        <ul>
-          <li>
-            <span>Use current location</span>
-          </li>
-          <li>
-            <span>Find location on map</span>
-          </li>
-        </ul>
+        <Zipcode />
+        <CurrentLocation />
       </div>
     );
   }

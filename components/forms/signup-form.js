@@ -2,11 +2,10 @@
 
 var React = require('react');
 var Router = require('react-router-component');
+var Navigatable = Router.NavigatableMixin;
 var Reflux = require('reflux');
 var UserStore = require('../../stores/UserStore.js');
 var Actions = require('../../actions/actions.js');
-var Firebase = require('firebase');
-var openBracket = new Firebase('https://test-openbracket.firebaseio.com/users');
 
 // UTILITIES
 var _ = require('lodash');
@@ -25,6 +24,7 @@ var SignUpForm = React.createClass({
   mixins: [Router.NavigatableMixin, Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
+      router: Navigatable,
       emailError: {
         message: 'Email already in use!',
         isVisible: false
@@ -36,19 +36,15 @@ var SignUpForm = React.createClass({
       checkboxes: [
         {
           value: 'social',
-          text: 'I\'d like to find new friends'
+          text: 'Social'
         },
         {
-          value: 'mentor',
-          text: 'I\'d like to be a mentor'
-        },
-        {
-          value: 'mentee',
-          text: 'I\'d like to find a mentor'
+          value: 'mentorship',
+          text: 'Mentorship'
         },
         {
           value: 'networking',
-          text: 'I\'m interested in networking'
+          text: 'Networking'
         }
       ]
     };
@@ -75,85 +71,27 @@ var SignUpForm = React.createClass({
         this.data[keys[i]] = input.value;
       }, this);
 
-      console.log('this.data', this.data);
-
       // Create user
       Actions.createUser(this.data);
     }
-  },
-  createUser: function() {
-    var _this = this;
-
-    // ref.createUser({
-    //   email: this.data.email,
-    //   password: this.data.password
-    // }, function(error, authData) {
-    //   if (error) {
-    //     console.log("User creation failed!", error);
-    //     // if EMAIL ERROR set error message
-    //     var errorCode = error.code;
-    //     if (errorCode === 'EMAIL_TAKEN') {
-    //       _this.setState({
-    //         emailError: {
-    //           message: 'Email already in use!',
-    //           isVisible: true
-    //         }
-    //       });
-    //     }
-    //   } else {
-    //     console.log("Created successfully:", authData);
-    //     // Create profile for user
-    //     ref.child('users')
-    //         .child(authData.uid)
-    //         .set({
-    //           "first_name": _this.data.firstName,
-    //           "last_name": _this.data.lastName,
-    //           "username": _this.data.username,
-    //           "email": _this.data.email,
-    //           "conductAgreementSigned": true,
-    //           "interactions": _this.data.interactionsList
-    //         });
-        // location: {lat: 123, long: 678},
-
-
-        // Log user in
-        // _this.loginUser();
-    //   }
-    // });
-
-    // Firebase image hosting...
-  },
-  loginUser: function() {
-    var _this = this;
-
-    // ref.authWithPassword({
-    //   email: this.data.email,
-    //   password: this.data.password
-    // }, function(error, authData) {
-    //   if (error) {
-    //     console.log("Login Failed!", error);
-    //   } else {
-    //     console.log("Authenticated successfully:", authData);
-    //     var path = '/' + _this.data.username + '/profile';
-    //     _this.navigate(path);
-    //   }
-    // });
-
-    // Direct to Map? Highlight profile & handraise areas
-    // or direct to profile, highlight areas to fill in & handraise
   },
   render: function() {
     return (
       <form className="ob-signup-form">
         <h2>{this.props.message}</h2>
+        <Name ref="name" label="Name" />
         <Email ref="email"/>
         <Error isVisible={this.state.emailError.isVisible} errorMessage={this.state.emailError.message} />
         <Username ref="username" />
         <Password ref="password" />
-        <Name ref="firstName" refName="firstName" label="First Name" placeholder="First name" />
-        <Name ref="lastName" refName="lastName" label="Last Name" placeholder="Last name" />
         <CheckboxList ref="interactionsList" refName="interactionsList" checklistClassName="interactions-list" checkboxes={this.state.checkboxes} />
-        <Checkbox ref="conductAgreement" checkboxClassName="conduct-agreement" value="conductAgreement" text="I agree to the Code of Conduct"/>
+        <div className="code-of-conduct">
+          <h3>Code of Awesome</h3>
+          <p>
+            Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.
+          </p>
+          <Checkbox ref="conductAgreement" checkboxClassName="conduct-agreement" value="conductAgreement" text="I agree to the Code of Awesome"/>
+        </div>
         <Submit className="small" onClick={this.isValid}>SIGN UP</Submit>
       </form>
     );

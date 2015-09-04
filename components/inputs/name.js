@@ -20,12 +20,11 @@ var Name = React.createClass({
     label: React.PropTypes.string
   },
   isValid: function() {
-    // Check that name contains ONLY letters & length is >=1 <= 30
-    var key = Object.keys(this.refs);
-    var regex = /^[a-zA-Z]{1,30}$/;
-    var value = this.refs[key].getDOMNode().value;
+    // Check that name contains ONLY letters & length is >=1 <= 60
+    var regex = /^[a-zA-Z]{1,60}$/;
+    var value = this.refs.name.getDOMNode().value.split(' ');
 
-    var isValidName = regex.test(value);
+    var isValidName = value.length > 1 ? regex.test(value[0]) && regex.test(value[1]) : regex.test(value[0]);
 
     if (!isValidName) {
       this.setState({
@@ -39,8 +38,10 @@ var Name = React.createClass({
       });
     }
 
-    var returnValue = { value: value };
-    returnValue[key] = isValidName;
+    var returnValue = {
+      name: isValidName,
+      value: value
+    };
 
     return returnValue;
   },
@@ -48,7 +49,7 @@ var Name = React.createClass({
     return (
       <div className="ob-input name">
         <label>{this.props.label}</label>
-        <Input type="text" ref={this.props.refName} blur={this.isValid} placeholder={this.props.placeholder} value={this.props.value} />
+        <Input type="text" ref="name" onInputBlur={this.isValid} placeholder={this.props.placeholder} value={this.props.value} />
         <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
       </div>
     );

@@ -15,7 +15,6 @@ var TextBox = React.createClass({
   getDefaultProps: function() {
     return {
       label: 'Suggestions? We\'d Love to Hear Them!',
-      placeholder: 'Would love to hear your thoughts!',
       errorMessage: 'Must be under 600 characters!'
     }
   },

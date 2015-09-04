@@ -1,18 +1,18 @@
 var Reflux = require('reflux');
 var Actions = require('../actions/actions.js');
 var Firebase = require('firebase');
-var openBracket = new Firebase('https://test-openbracket.firebaseio.com/users');
+var OpenBracket = new Firebase('https://test-openbracket.firebaseio.com');
+var Users = new Firebase('https://test-openbracket.firebaseio.com/users');
 
 var UserStore = Reflux.createStore({
   listenables: [Actions],
   onCreateUser: function(userData) {
     var _this = this;
-    openBracket.createUser({
+    OpenBracket.createUser({
       email: userData.email,
       password: userData.password
     }, function(error, authData) {
       if (error) {
-        console.log("User creation failed!", error);
         // if EMAIL ERROR set error message
         var errorCode = error.code;
         if (errorCode === 'EMAIL_TAKEN') {
@@ -24,18 +24,24 @@ var UserStore = Reflux.createStore({
           });
         }
       } else {
-        console.log("Created successfully:", authData);
+        // Did user send their full name?
+        var fullName = (userData.name.length > 1);
+
+        var profile = {
+          'first_name': fullName ? userData.name[0] : userData.name,
+          'username': userData.username,
+          'email': userData.email,
+          'conductAgreementSigned': true,
+          'interactions': userData.interactionsList
+        };
+
+        // If user sent full name, assign last name to profile property
+        if (fullName) {
+          profile.last_name = userData.name[1];
+        }
+
         // Create profile for user
-        openBracket.child('users')
-            .child(authData.uid)
-            .set({
-              "first_name": userData.firstName,
-              "last_name": userData.lastName,
-              "username": userData.username,
-              "email": userData.email,
-              "conductAgreementSigned": true,
-              "interactions": userData.interactionsList
-            });
+        Users.child(authData.uid).set(profile, _this.onUserLogin(userData, '/'));
         }
     });
   },
@@ -46,12 +52,29 @@ var UserStore = Reflux.createStore({
       });
     }.bind(this);
 
-    openBracket.orderByChild('username')
+    Users.orderByChild('username')
                .equalTo(username)
                .once('value', checkIfExists);
   },
-  onLoginUser: function() {
+  onUserLogin: function(userData, path) {
+    var _this = this;
+    console.log('on user login', userData);
     console.log('log user in');
+    OpenBracket.authWithPassword({
+      email: userData.email,
+      password: userData.password
+    }, function(error, authData) {
+      if (error) {
+        console.log("Login Failed!", error);
+      } else {
+        console.log("Authenticated successfully:", authData);
+        var path = '/' + userData.username;
+
+      }
+    });
+
+    // Direct to Map? Highlight profile & handraise areas
+    // or direct to profile, highlight areas to fill in & handraise
   }
 });
 

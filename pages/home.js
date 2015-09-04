@@ -16,6 +16,7 @@ var Home = React.createClass({
   render: function() {
     return (
       <main className="page-home">
+      {this.props.username}
         <section className="mission">
           <div className="inner">
             <figure className="lady one"><img src="/img/lady.png" /></figure>

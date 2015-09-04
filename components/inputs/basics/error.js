@@ -9,7 +9,8 @@ var Error = React.createClass({
     }
   },
   propTypes: {
-    errorMessage: React.PropTypes.string.isRequired,
+    isVisible: React.PropTypes.bool,
+    errorMessage: React.PropTypes.string
   },
   render: function() {
     var cx = React.addons.classSet;

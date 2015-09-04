@@ -1,44 +1,38 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Firebase = require('firebase');
-var ref = new Firebase('https://glowing-inferno-6073.firebaseio.com');
-var Email = require('../inputs/email.js');
-var Username = require('../inputs/username.js');
-var Password = require('../inputs/password.js');
+var Reflux = require('reflux');
+var UserStore = require('../../stores/UserStore.js');
+var Actions = require('../../actions/actions.js');
+
+// COMPONENTS
+var Label = require('../inputs/basics/label.js');
+var Input = require('../inputs/basics/basic-input.js');
+var Error = require('../inputs/basics/error.js');
 var Submit = require('../buttons/event-button.js');
 
+
 var LoginForm = React.createClass({
+  mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
-      placeholder: '',
-      errorMessage: ''
+      errorMessage: 'Email or password is incorrect.'
     };
   },
-  isValid: function() {
-    console.log('no');
-  },
-  loginUser: function() {
+  handleLogin: function() {
     console.log('authenticating...');
-
-    ref.authWithPassword({
-      email: email,
-      password: password
-    }, function(error, authData) {
-      if (error) {
-        console.log("Login Failed!", error);
-      } else {
-        console.log("Authenticated successfully with payload:", authData);
-      }
-    });
+    Actions.onUserLogin();
   },
   render: function() {
     return (
-      <div className="ob-signup-form">
+      <div className="ob-login-form">
         <h2>LOGIN</h2>
-        <Email ref="email"/>
-        <Password placeholder={this.state.placeholder} errorMessage={this.state.errorMessage}/>
-        <Submit className="small" onClick={this.isValid}>LOGIN</Submit>
+        <Label>Email</Label>
+        <Input type="text" ref="email" />
+        <Label>Password</Label>
+        <Input type="password" ref="password" />
+        <Error errorMessage={this.state.errorMessage} />
+        <Submit className="small" onClick={this.handleLogin}>LOGIN</Submit>
       </div>
     );
   }
