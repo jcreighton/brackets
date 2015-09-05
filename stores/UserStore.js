@@ -40,8 +40,16 @@ var UserStore = Reflux.createStore({
           profile.last_name = userData.name[1];
         }
 
+        var triggerLocationSet = function() {
+          this.trigger({
+            user: profile,
+            step_one: complete
+          });
+        }.bind(this);
+
         // Create profile for user
-        Users.child(authData.uid).set(profile, _this.onUserLogin(userData, '/'));
+        Users.child(authData.uid).set(profile);
+        // _this.onUserLogin(userData, '/')
         }
     });
   },
@@ -57,24 +65,20 @@ var UserStore = Reflux.createStore({
                .once('value', checkIfExists);
   },
   onUserLogin: function(userData, path) {
-    var _this = this;
-    console.log('on user login', userData);
-    console.log('log user in');
-    OpenBracket.authWithPassword({
-      email: userData.email,
-      password: userData.password
-    }, function(error, authData) {
+    var handleLogin = function(error, authData) {
       if (error) {
         console.log("Login Failed!", error);
       } else {
         console.log("Authenticated successfully:", authData);
         var path = '/' + userData.username;
-
+        Actions.navigate(path);
       }
-    });
+    };
 
-    // Direct to Map? Highlight profile & handraise areas
-    // or direct to profile, highlight areas to fill in & handraise
+    OpenBracket.authWithPassword({
+      email: userData.email,
+      password: userData.password
+    }, handleLogin);
   }
 });
 

@@ -17,7 +17,8 @@ var cssFiles = [
 'shared/styles/global.less',
 'shared/styles/button.less',
 'shared/styles/home.less',
-'shared/styles/input.less'
+'shared/styles/input.less',
+'shared/styles/signup.less'
 ];
 
 gulp.task('less', function() {

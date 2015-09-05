@@ -6,7 +6,10 @@ var Actions = Reflux.createActions([
   'checkUsername',
   'userLogin',
   'router',
-  'navigate'
+  'navigate',
+  'profileCreation',
+  'setCurrentLocation',
+  'setLocation'
 ]);
 
 module.exports = Actions;
@@ -157,7 +160,7 @@ var LoginForm = React.createClass({displayName: "LoginForm",
 
 module.exports = LoginForm;
 
-},{"../../actions/actions.js":1,"../../stores/UserStore.js":240,"../buttons/event-button.js":2,"../inputs/basics/basic-input.js":7,"../inputs/basics/error.js":8,"../inputs/basics/label.js":9,"react":216,"reflux":233}],5:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/UserStore.js":241,"../buttons/event-button.js":2,"../inputs/basics/basic-input.js":7,"../inputs/basics/error.js":8,"../inputs/basics/label.js":9,"react":216,"reflux":233}],5:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -206,7 +209,8 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
           value: 'networking',
           text: 'Networking'
         }
-      ]
+      ],
+      interactionsMessage: 'What opportunities are you looking for?'
     };
   },
   isValid: function(e) {
@@ -238,21 +242,34 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
   render: function() {
     return (
       React.createElement("form", {className: "ob-signup-form"}, 
-        React.createElement("h2", null, this.props.message), 
-        React.createElement(Name, {ref: "name", label: "Name"}), 
-        React.createElement(Email, {ref: "email"}), 
-        React.createElement(Error, {isVisible: this.state.emailError.isVisible, errorMessage: this.state.emailError.message}), 
-        React.createElement(Username, {ref: "username"}), 
-        React.createElement(Password, {ref: "password"}), 
-        React.createElement(CheckboxList, {ref: "interactionsList", refName: "interactionsList", checklistClassName: "interactions-list", checkboxes: this.state.checkboxes}), 
+        React.createElement("h2", null, "Welcome! Create a profile & find lady engineers near you."), 
+        React.createElement("div", {className: "profile-information"}, 
+          React.createElement("div", {className: "grouping"}, 
+            React.createElement(Name, {ref: "name", label: "Name"}), 
+            React.createElement(Email, {ref: "email"}), 
+            React.createElement(Error, {isVisible: this.state.emailError.isVisible, errorMessage: this.state.emailError.message})
+          ), 
+          React.createElement("div", {className: "grouping"}, 
+            React.createElement(Username, {ref: "username"}), 
+            React.createElement(Password, {ref: "password"})
+          ), 
+          React.createElement("div", {className: "grouping"}, 
+            React.createElement("h2", null, this.state.interactionsMessage), 
+            React.createElement(CheckboxList, {ref: "interactionsList", refName: "interactionsList", checklistClassName: "interactions-list", checkboxes: this.state.checkboxes})
+          ), 
+          React.createElement("div", {className: "grouping"}, 
+            React.createElement("h2", null, "Where are you located?")
+          )
+        ), 
         React.createElement("div", {className: "code-of-conduct"}, 
           React.createElement("h3", null, "Code of Awesome"), 
           React.createElement("p", null, 
+            "Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly." + ' ' +
             "Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly."
           ), 
-          React.createElement(Checkbox, {ref: "conductAgreement", checkboxClassName: "conduct-agreement", value: "conductAgreement", text: "I agree to the Code of Awesome"})
-        ), 
-        React.createElement(Submit, {className: "small", onClick: this.isValid}, "SIGN UP")
+          React.createElement(Checkbox, {ref: "conduct", checkboxClassName: "conduct-agreement", value: "conduct", text: "I agree to the Code of Awesome"}), 
+          React.createElement(Submit, {onClick: this.isValid}, "Start making connections")
+        )
       )
     );
   }
@@ -260,7 +277,7 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
 
 module.exports = SignUpForm;
 
-},{"../../actions/actions.js":1,"../../stores/UserStore.js":240,"../buttons/event-button.js":2,"../inputs/basics/error.js":8,"../inputs/checkbox-list.js":10,"../inputs/checkbox.js":11,"../inputs/email.js":12,"../inputs/name.js":13,"../inputs/password.js":14,"../inputs/username.js":16,"lodash":21,"react":216,"react-router-component":24,"reflux":233}],6:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/UserStore.js":241,"../buttons/event-button.js":2,"../inputs/basics/error.js":8,"../inputs/checkbox-list.js":10,"../inputs/checkbox.js":11,"../inputs/email.js":12,"../inputs/name.js":13,"../inputs/password.js":14,"../inputs/username.js":16,"lodash":21,"react":216,"react-router-component":24,"reflux":233}],6:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -801,7 +818,7 @@ var Username = React.createClass({displayName: "Username",
 
 module.exports = Username;
 
-},{"../../actions/actions.js":1,"../../stores/UserStore.js":240,"./basics/basic-input.js":7,"./basics/error.js":8,"react":216,"reflux":233}],17:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/UserStore.js":241,"./basics/basic-input.js":7,"./basics/error.js":8,"react":216,"reflux":233}],17:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -38406,12 +38423,21 @@ module.exports = Home;
 /** @jsx React.DOM */
 
 var React = require('react');
+var Reflux = require('reflux');
+var UserStore = require('../stores/SignUpStore.js');
+var Actions = require('../actions/actions.js');
 var SignUpForm = require('../components/forms/signup-form.js');
 
 var SignUpPage = React.createClass({displayName: "SignUpPage",
+  getInitialState: function() {
+    return {
+      profile_created: false,
+      location_set: false
+    };
+  },
   render: function() {
     return (
-      React.createElement("main", {className: "page-sign-up"}, 
+      React.createElement("main", {className: "page-profile-creation"}, 
         React.createElement(SignUpForm, null)
       )
     );
@@ -38420,7 +38446,7 @@ var SignUpPage = React.createClass({displayName: "SignUpPage",
 
 module.exports = SignUpPage;
 
-},{"../components/forms/signup-form.js":5,"react":216}],239:[function(require,module,exports){
+},{"../actions/actions.js":1,"../components/forms/signup-form.js":5,"../stores/SignUpStore.js":240,"react":216,"reflux":233}],239:[function(require,module,exports){
 var Reflux = require('reflux');
 var Actions = require('../actions/actions.js');
 var Firebase = require('firebase');
@@ -38430,16 +38456,27 @@ var LocationStore = Reflux.createStore({
   listenables: [Actions],
   onRouter: function(router) {
     this.router = router;
-    this.onNavigate();
   },
-  onNavigate: function () {
-    this.router.navigate('/sign-up');
+  onNavigate: function (path) {
+    this.router.navigate(path);
   }
 });
 
 module.exports = LocationStore;
 
 },{"../actions/actions.js":1,"firebase":20,"reflux":233}],240:[function(require,module,exports){
+var Reflux = require('reflux');
+var Actions = require('../actions/actions.js');
+var Firebase = require('firebase');
+var openBracket = new Firebase('https://test-openbracket.firebaseio.com/users');
+
+var SignUpStore = Reflux.createStore({
+  listenables: [Actions]
+});
+
+module.exports = SignUpStore;
+
+},{"../actions/actions.js":1,"firebase":20,"reflux":233}],241:[function(require,module,exports){
 var Reflux = require('reflux');
 var Actions = require('../actions/actions.js');
 var Firebase = require('firebase');
@@ -38482,8 +38519,16 @@ var UserStore = Reflux.createStore({
           profile.last_name = userData.name[1];
         }
 
+        var triggerLocationSet = function() {
+          this.trigger({
+            user: profile,
+            step_one: complete
+          });
+        }.bind(this);
+
         // Create profile for user
-        Users.child(authData.uid).set(profile, _this.onUserLogin(userData, '/'));
+        Users.child(authData.uid).set(profile);
+        // _this.onUserLogin(userData, '/')
         }
     });
   },
@@ -38499,24 +38544,20 @@ var UserStore = Reflux.createStore({
                .once('value', checkIfExists);
   },
   onUserLogin: function(userData, path) {
-    var _this = this;
-    console.log('on user login', userData);
-    console.log('log user in');
-    OpenBracket.authWithPassword({
-      email: userData.email,
-      password: userData.password
-    }, function(error, authData) {
+    var handleLogin = function(error, authData) {
       if (error) {
         console.log("Login Failed!", error);
       } else {
         console.log("Authenticated successfully:", authData);
         var path = '/' + userData.username;
-
+        Actions.navigate(path);
       }
-    });
+    };
 
-    // Direct to Map? Highlight profile & handraise areas
-    // or direct to profile, highlight areas to fill in & handraise
+    OpenBracket.authWithPassword({
+      email: userData.email,
+      password: userData.password
+    }, handleLogin);
   }
 });
 
