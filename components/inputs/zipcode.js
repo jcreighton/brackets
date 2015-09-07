@@ -8,7 +8,7 @@ var Error = require('./basics/error.js');
 var ZipCode = React.createClass({
   getInitialState: function() {
     return {
-      isVisible: false,
+      isVisible: true,
       isValid: false
     }
   },
@@ -16,6 +16,7 @@ var ZipCode = React.createClass({
     return {
       label: 'Zip Code',
       answer: 'Open Bracket lets you find fellow women coders nearby, so we need to know your zip code for location purposes.',
+      message: 'You can edit where your pin appears on the next page',
       errorMessage: 'Are you sure that\'s a valid zipcode?'
     }
   },
@@ -23,6 +24,7 @@ var ZipCode = React.createClass({
     label: React.PropTypes.string,
     placeholder: React.PropTypes.string,
     answer: React.PropTypes.string,
+    message: React.PropTypes.string,
     errorMessage: React.PropTypes.string
   },
   isValid: function() {
@@ -33,20 +35,26 @@ var ZipCode = React.createClass({
     var isValidZipCode = regex.test(value);
 
     if (!isValidZipCode) {
-      this.setState({isVisible: true, isValid: false});
+      this.setState({
+        isValid: false
+      });
     } else {
-      this.setState({isVisible: false, isValid: true});
+      this.setState({
+        isValid: true
+      });
     }
 
     return {zipcode: isValidZipCode && value};
   },
   render: function() {
+    var message = this.state.isValid ? this.props.message : this.props.errorMessage;
+
     return (
       <div className="ob-input zipcode">
         <label>{this.props.label}</label>
         <Input type="text" ref="zipcode" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
         <Question answer={this.props.answer} />
-        <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
+        <Feedback isVisible={this.state.isVisible} isError={this.state.isValid} message={message} />
       </div>
     );
   }

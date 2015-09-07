@@ -2,21 +2,25 @@
 
 var React = require('react');
 var Input = require('./basics/basic-input.js');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 
 var Name = React.createClass({
   getInitialState: function() {
     return {
-      isVisible: false,
-      isValid: false
+      isVisible: true,
+      isValid: true,
+      isError: false
     }
   },
   getDefaultProps: function() {
     return {
-      errorMessage: 'Must be 1-30 characters. Special characters not allowed.'
+      message: 'Your name will be public',
+      errorMessage: 'Must be 1-30 characters; no special characters'
     }
   },
   propTypes: {
+    message: React.PropTypes.string,
+    errorMessage: React.PropTypes.string,
     label: React.PropTypes.string
   },
   isValid: function() {
@@ -28,13 +32,13 @@ var Name = React.createClass({
 
     if (!isValidName) {
       this.setState({
-        isVisible: true,
-        isValid: false
+        isValid: false,
+        isError: true
       });
     } else {
       this.setState({
-        isVisible: false,
-        isValid: true
+        isValid: true,
+        isError: false
       });
     }
 
@@ -46,11 +50,15 @@ var Name = React.createClass({
     return returnValue;
   },
   render: function() {
+    var message = this.state.isValid ? this.props.message : this.props.errorMessage;
+
     return (
       <div className="ob-input name">
-        <label>{this.props.label}</label>
-        <Input type="text" ref="name" onInputBlur={this.isValid} placeholder={this.props.placeholder} value={this.props.value} />
-        <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
+        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={message} />
+        <div className="input">
+          <label>{this.props.label}</label>
+          <Input type="text" ref="name" onInputBlur={this.isValid} placeholder={this.props.placeholder} value={this.props.value} />
+        </div>
       </div>
     );
   }

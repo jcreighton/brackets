@@ -16,7 +16,11 @@ var SignUpPage = React.createClass({
   render: function() {
     return (
       <main className="page-profile-creation">
-        <SignUpForm />
+        <section className="profile">
+          <div className="inner">
+            <SignUpForm />
+          </div>
+        </section>
       </main>
     );
   }

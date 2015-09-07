@@ -35,8 +35,10 @@ var Checkbox = React.createClass({
     value: React.PropTypes.string
   },
   render: function() {
+    var classes = 'ob-checkbox ' + this.props.className;
+
     return (
-      <label className={this.props.checkboxClassName}>
+      <label className={classes}>
         <input
           type="checkbox"
           ref="checkbox"

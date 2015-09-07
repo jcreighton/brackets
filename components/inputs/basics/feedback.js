@@ -2,28 +2,35 @@
 
 var React = require('react/addons');
 
-var Error = React.createClass({
+var Feedback = React.createClass({
   getDefaultProps: function() {
     return {
+      isError: false,
       isVisible: false
     }
   },
   propTypes: {
+    isError: React.PropTypes.bool,
     isVisible: React.PropTypes.bool,
-    errorMessage: React.PropTypes.string
+    message: React.PropTypes.string
   },
   render: function() {
     var cx = React.addons.classSet;
     var classes = cx({
-      'ob-error': true,
+      'ob-feedback': true,
+      'ob-error': this.props.isError,
       'ob-state-hidden': !this.props.isVisible,
       'ob-state-visible': this.props.isVisible
     });
 
     return (
-      <span className={classes}>{this.props.errorMessage}</span>
+      <div className={classes}>
+        <span>
+          {this.props.message}
+        </span>
+      </div>
     );
   }
 });
 
-module.exports = Error;
+module.exports = Feedback;

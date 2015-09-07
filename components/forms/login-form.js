@@ -8,7 +8,7 @@ var Actions = require('../../actions/actions.js');
 // COMPONENTS
 var Label = require('../inputs/basics/label.js');
 var Input = require('../inputs/basics/basic-input.js');
-var Error = require('../inputs/basics/error.js');
+var Feedback = require('../inputs/basics/feedback.js');
 var Submit = require('../buttons/event-button.js');
 
 
@@ -16,7 +16,7 @@ var LoginForm = React.createClass({
   mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
-      errorMessage: 'Email or password is incorrect.'
+      message: 'Email or password is incorrect.'
     };
   },
   handleLogin: function() {
@@ -31,7 +31,7 @@ var LoginForm = React.createClass({
         <Input type="text" ref="email" />
         <Label>Password</Label>
         <Input type="password" ref="password" />
-        <Error errorMessage={this.state.errorMessage} />
+        <Feedback message={this.state.message} />
         <Submit className="small" onClick={this.handleLogin}>LOGIN</Submit>
       </div>
     );

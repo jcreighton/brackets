@@ -5,50 +5,49 @@ var Reflux = require('reflux');
 var UserStore = require('../../stores/UserStore.js');
 var Actions = require('../../actions/actions.js');
 var Input = require('./basics/basic-input.js');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 
 var Username = React.createClass({
   mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
-      isUnique: true,
+      isVisible: true,
       isValid: true,
-      invalidUsernameMessage: 'Must be 3-18 characters. Letters, numbers, - and _ allowed.',
-      takenUsernameMessage: 'Username is taken!'
+      isUnique: true,
+      msg: 'Create a username'
     }
   },
   getDefaultProps: function() {
     return {
-      label: 'Username'
+      label: 'Username',
+      message: 'Create a username',
     }
   },
   propTypes: {
     label: React.PropTypes.string,
-    placeholder: React.PropTypes.string
-  },
-  isUnique: function() {
-    var username = this.refs.username.getDOMNode().value;
-    Actions.checkUsername(username);
-
-    // If username is unique, check if it's valid
-    if (this.state.isUnique) {
-      this.isValid();
-    }
+    placeholder: React.PropTypes.string,
+    message: React.PropTypes.string
   },
   isValid: function() {
     var username = this.refs.username.getDOMNode().value;
-    // Check that username contains ONLY letters/numbers & >= 4 characters
-    var regex = /^[a-zA-Z0-9_-]{3,18}$/;
+    // Check that username contains ONLY letters/numbers & >= 3 characters
+    var regex = /^[a-zA-Z0-9_]{3,18}$/;
     var isValidUsername = regex.test(username);
 
     if (!isValidUsername) {
       this.setState({
-        isValid: false
+        msg: '# & letters only',
+        isValid: false,
+        isError: true
       });
     } else {
       this.setState({
-        isValid: true
+        msg: 'Create a username',
+        isValid: true,
+        isError: false
       });
+
+      this.isUnique();
     }
 
     return {
@@ -56,14 +55,19 @@ var Username = React.createClass({
       value: username
     };
   },
+  isUnique: function() {
+    var username = this.refs.username.getDOMNode().value;
+    console.log(username);
+    Actions.checkUsername(username);
+  },
   render: function() {
     return (
       <div className="ob-input username">
-        <label>{this.props.label}</label>
-        <span>{this.state.isUnique}</span>
-        <Input type="text" ref="username" onInputBlur={this.isUnique} placeholder={this.props.placeholder} />
-        <Error isVisible={!this.state.isValid} errorMessage={this.state.invalidUsernameMessage} />
-        <Error isVisible={!this.state.isUnique} errorMessage={this.state.takenUsernameMessage} />
+        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={this.state.msg} />
+        <div className="input">
+          <label>{this.props.label}</label>
+          <Input type="text" ref="username" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
+        </div>
       </div>
     );
   }

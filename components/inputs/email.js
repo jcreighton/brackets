@@ -2,25 +2,27 @@
 
 var React = require('react');
 var Input = require('./basics/basic-input.js');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 
 var EmailAddress = React.createClass({
   getInitialState: function() {
     return {
-      isVisible: false,
-      isValid: false
+      isVisible: true,
+      isValid: true,
+      isError: false
     }
   },
   getDefaultProps: function() {
     return {
+      isUnique: true,
       label: 'Email',
-      errorMessage: 'Are you sure that\'s a valid e-mail address?'
+      message: 'This email will never be shown or shared'
     }
   },
   propTypes: {
+    isUnique: React.PropTypes.bool,
     label: React.PropTypes.string,
-    placeholder: React.PropTypes.string,
-    errorMessage: React.PropTypes.string
+    placeholder: React.PropTypes.string
   },
   isValid: function() {
     // check that email address is valid
@@ -30,9 +32,15 @@ var EmailAddress = React.createClass({
     var isValidEmail = regex.test(value);
 
     if (!isValidEmail) {
-      this.setState({isVisible: true, isValid: false});
+      this.setState({
+        isValid: false,
+        isError: true,
+      });
     } else {
-      this.setState({isVisible: false, isValid: true});
+      this.setState({
+        isValid: true,
+        isError: false
+      });
     }
 
     return {
@@ -41,11 +49,16 @@ var EmailAddress = React.createClass({
     };
   },
   render: function() {
+    var errorMessage = this.props.isUnique ? 'Are you sure that\'s a valid e-mail address?' : 'An account with that email address already exists';
+    var message = this.state.isValid ? this.props.message : errorMessage;
+
     return (
       <div className="ob-input email">
-        <label>{this.props.label}</label>
-        <Input type="text" ref="email" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
-        <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
+        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={message} />
+        <div className="input">
+          <label>{this.props.label}</label>
+          <Input type="text" ref="email" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
+        </div>
       </div>
     );
   }

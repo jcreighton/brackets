@@ -128,7 +128,7 @@ var Actions = require('../../actions/actions.js');
 // COMPONENTS
 var Label = require('../inputs/basics/label.js');
 var Input = require('../inputs/basics/basic-input.js');
-var Error = require('../inputs/basics/error.js');
+var Feedback = require('../inputs/basics/feedback.js');
 var Submit = require('../buttons/event-button.js');
 
 
@@ -136,7 +136,7 @@ var LoginForm = React.createClass({displayName: "LoginForm",
   mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
-      errorMessage: 'Email or password is incorrect.'
+      message: 'Email or password is incorrect.'
     };
   },
   handleLogin: function() {
@@ -151,7 +151,7 @@ var LoginForm = React.createClass({displayName: "LoginForm",
         React.createElement(Input, {type: "text", ref: "email"}), 
         React.createElement(Label, null, "Password"), 
         React.createElement(Input, {type: "password", ref: "password"}), 
-        React.createElement(Error, {errorMessage: this.state.errorMessage}), 
+        React.createElement(Feedback, {message: this.state.message}), 
         React.createElement(Submit, {className: "small", onClick: this.handleLogin}, "LOGIN")
       )
     );
@@ -160,7 +160,7 @@ var LoginForm = React.createClass({displayName: "LoginForm",
 
 module.exports = LoginForm;
 
-},{"../../actions/actions.js":1,"../../stores/UserStore.js":241,"../buttons/event-button.js":2,"../inputs/basics/basic-input.js":7,"../inputs/basics/error.js":8,"../inputs/basics/label.js":9,"react":216,"reflux":233}],5:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/UserStore.js":241,"../buttons/event-button.js":2,"../inputs/basics/basic-input.js":7,"../inputs/basics/feedback.js":8,"../inputs/basics/label.js":9,"react":216,"reflux":233}],5:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -181,16 +181,15 @@ var CheckboxList = require('../inputs/checkbox-list.js');
 var Checkbox = require('../inputs/checkbox.js');
 var Password = require('../inputs/password.js');
 var Submit = require('../buttons/event-button.js');
-var Error = require('../inputs/basics/error.js');
+var Feedback = require('../inputs/basics/feedback.js');
 
 var SignUpForm = React.createClass({displayName: "SignUpForm",
   mixins: [Router.NavigatableMixin, Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
       router: Navigatable,
-      emailError: {
-        message: 'Email already in use!',
-        isVisible: false
+      email: {
+        isUnique: true
       },
       conductError: {
         message: 'AGREE WITH IT, DAMN IT!',
@@ -210,7 +209,9 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
           text: 'Networking'
         }
       ],
-      interactionsMessage: 'What opportunities are you looking for?'
+      opportunities: {
+        message: 'What opportunities are you looking for?'
+      }
     };
   },
   isValid: function(e) {
@@ -246,16 +247,15 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
         React.createElement("div", {className: "profile-information"}, 
           React.createElement("div", {className: "grouping"}, 
             React.createElement(Name, {ref: "name", label: "Name"}), 
-            React.createElement(Email, {ref: "email"}), 
-            React.createElement(Error, {isVisible: this.state.emailError.isVisible, errorMessage: this.state.emailError.message})
+            React.createElement(Email, {ref: "email", isUnique: this.state.email.isUnique})
           ), 
           React.createElement("div", {className: "grouping"}, 
             React.createElement(Username, {ref: "username"}), 
             React.createElement(Password, {ref: "password"})
           ), 
           React.createElement("div", {className: "grouping"}, 
-            React.createElement("h2", null, this.state.interactionsMessage), 
-            React.createElement(CheckboxList, {ref: "interactionsList", refName: "interactionsList", checklistClassName: "interactions-list", checkboxes: this.state.checkboxes})
+            React.createElement("h2", null, this.state.opportunities.message), 
+            React.createElement(CheckboxList, {ref: "opportunities", className: "opportunities-list", checkboxes: this.state.checkboxes})
           ), 
           React.createElement("div", {className: "grouping"}, 
             React.createElement("h2", null, "Where are you located?")
@@ -267,7 +267,7 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
             "Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly." + ' ' +
             "Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly."
           ), 
-          React.createElement(Checkbox, {ref: "conduct", checkboxClassName: "conduct-agreement", value: "conduct", text: "I agree to the Code of Awesome"}), 
+          React.createElement(Checkbox, {ref: "conduct", className: "conduct-agreement", value: "conduct", text: "I agree to the Code of Awesome"}), 
           React.createElement(Submit, {onClick: this.isValid}, "Start making connections")
         )
       )
@@ -277,7 +277,7 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
 
 module.exports = SignUpForm;
 
-},{"../../actions/actions.js":1,"../../stores/UserStore.js":241,"../buttons/event-button.js":2,"../inputs/basics/error.js":8,"../inputs/checkbox-list.js":10,"../inputs/checkbox.js":11,"../inputs/email.js":12,"../inputs/name.js":13,"../inputs/password.js":14,"../inputs/username.js":16,"lodash":21,"react":216,"react-router-component":24,"reflux":233}],6:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/UserStore.js":241,"../buttons/event-button.js":2,"../inputs/basics/feedback.js":8,"../inputs/checkbox-list.js":10,"../inputs/checkbox.js":11,"../inputs/email.js":12,"../inputs/name.js":13,"../inputs/password.js":14,"../inputs/username.js":16,"lodash":21,"react":216,"react-router-component":24,"reflux":233}],6:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -334,31 +334,38 @@ module.exports = Input;
 
 var React = require('react/addons');
 
-var Error = React.createClass({displayName: "Error",
+var Feedback = React.createClass({displayName: "Feedback",
   getDefaultProps: function() {
     return {
+      isError: false,
       isVisible: false
     }
   },
   propTypes: {
+    isError: React.PropTypes.bool,
     isVisible: React.PropTypes.bool,
-    errorMessage: React.PropTypes.string
+    message: React.PropTypes.string
   },
   render: function() {
     var cx = React.addons.classSet;
     var classes = cx({
-      'ob-error': true,
+      'ob-feedback': true,
+      'ob-error': this.props.isError,
       'ob-state-hidden': !this.props.isVisible,
       'ob-state-visible': this.props.isVisible
     });
 
     return (
-      React.createElement("span", {className: classes}, this.props.errorMessage)
+      React.createElement("div", {className: classes}, 
+        React.createElement("span", null, 
+          this.props.message
+        )
+      )
     );
   }
 });
 
-module.exports = Error;
+module.exports = Feedback;
 
 },{"react/addons":44}],9:[function(require,module,exports){
 /** @jsx React.DOM */
@@ -379,7 +386,7 @@ module.exports = Label;
 /** @jsx React.DOM */
 
 var React = require('react');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 var Checkbox = require('./checkbox.js');
 
 var CheckboxList = React.createClass({displayName: "CheckboxList",
@@ -391,7 +398,7 @@ var CheckboxList = React.createClass({displayName: "CheckboxList",
   },
   getDefaultProps: function() {
     return {
-      errorMessage: 'Select an option above.'
+      message: 'Select at least one option'
     }
   },
   propTypes: {
@@ -440,10 +447,12 @@ var CheckboxList = React.createClass({displayName: "CheckboxList",
       return React.createElement(Checkbox, React.__spread({key: checkboxRef, ref: checkboxRef},  checkboxProps))
     });
 
+    var classes = 'ob-checklist ' + this.props.className;
+
     return (
-      React.createElement("div", {className: this.props.checklistClassName}, 
+      React.createElement("div", {className: classes}, 
         checklist, 
-        React.createElement(Error, {isVisible: this.state.isVisible, errorMessage: this.props.errorMessage})
+        React.createElement(Feedback, {isError: this.state.isValid, message: this.props.message})
       )
     );
   }
@@ -451,7 +460,7 @@ var CheckboxList = React.createClass({displayName: "CheckboxList",
 
 module.exports = CheckboxList;
 
-},{"./basics/error.js":8,"./checkbox.js":11,"react":216}],11:[function(require,module,exports){
+},{"./basics/feedback.js":8,"./checkbox.js":11,"react":216}],11:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -489,8 +498,10 @@ var Checkbox = React.createClass({displayName: "Checkbox",
     value: React.PropTypes.string
   },
   render: function() {
+    var classes = 'ob-checkbox ' + this.props.className;
+
     return (
-      React.createElement("label", {className: this.props.checkboxClassName}, 
+      React.createElement("label", {className: classes}, 
         React.createElement("input", {
           type: "checkbox", 
           ref: "checkbox", 
@@ -511,25 +522,27 @@ module.exports = Checkbox;
 
 var React = require('react');
 var Input = require('./basics/basic-input.js');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 
 var EmailAddress = React.createClass({displayName: "EmailAddress",
   getInitialState: function() {
     return {
-      isVisible: false,
-      isValid: false
+      isVisible: true,
+      isValid: true,
+      isError: false
     }
   },
   getDefaultProps: function() {
     return {
+      isUnique: true,
       label: 'Email',
-      errorMessage: 'Are you sure that\'s a valid e-mail address?'
+      message: 'This email will never be shown or shared'
     }
   },
   propTypes: {
+    isUnique: React.PropTypes.bool,
     label: React.PropTypes.string,
-    placeholder: React.PropTypes.string,
-    errorMessage: React.PropTypes.string
+    placeholder: React.PropTypes.string
   },
   isValid: function() {
     // check that email address is valid
@@ -539,9 +552,15 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
     var isValidEmail = regex.test(value);
 
     if (!isValidEmail) {
-      this.setState({isVisible: true, isValid: false});
+      this.setState({
+        isValid: false,
+        isError: true,
+      });
     } else {
-      this.setState({isVisible: false, isValid: true});
+      this.setState({
+        isValid: true,
+        isError: false
+      });
     }
 
     return {
@@ -550,11 +569,16 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
     };
   },
   render: function() {
+    var errorMessage = this.props.isUnique ? 'Are you sure that\'s a valid e-mail address?' : 'An account with that email address already exists';
+    var message = this.state.isValid ? this.props.message : errorMessage;
+
     return (
       React.createElement("div", {className: "ob-input email"}, 
-        React.createElement("label", null, this.props.label), 
-        React.createElement(Input, {type: "text", ref: "email", onInputBlur: this.isValid, placeholder: this.props.placeholder}), 
-        React.createElement(Error, {isVisible: this.state.isVisible, errorMessage: this.props.errorMessage})
+        React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: message}), 
+        React.createElement("div", {className: "input"}, 
+          React.createElement("label", null, this.props.label), 
+          React.createElement(Input, {type: "text", ref: "email", onInputBlur: this.isValid, placeholder: this.props.placeholder})
+        )
       )
     );
   }
@@ -562,26 +586,30 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
 
 module.exports = EmailAddress;
 
-},{"./basics/basic-input.js":7,"./basics/error.js":8,"react":216}],13:[function(require,module,exports){
+},{"./basics/basic-input.js":7,"./basics/feedback.js":8,"react":216}],13:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
 var Input = require('./basics/basic-input.js');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 
 var Name = React.createClass({displayName: "Name",
   getInitialState: function() {
     return {
-      isVisible: false,
-      isValid: false
+      isVisible: true,
+      isValid: true,
+      isError: false
     }
   },
   getDefaultProps: function() {
     return {
-      errorMessage: 'Must be 1-30 characters. Special characters not allowed.'
+      message: 'Your name will be public',
+      errorMessage: 'Must be 1-30 characters; no special characters'
     }
   },
   propTypes: {
+    message: React.PropTypes.string,
+    errorMessage: React.PropTypes.string,
     label: React.PropTypes.string
   },
   isValid: function() {
@@ -593,13 +621,13 @@ var Name = React.createClass({displayName: "Name",
 
     if (!isValidName) {
       this.setState({
-        isVisible: true,
-        isValid: false
+        isValid: false,
+        isError: true
       });
     } else {
       this.setState({
-        isVisible: false,
-        isValid: true
+        isValid: true,
+        isError: false
       });
     }
 
@@ -611,11 +639,15 @@ var Name = React.createClass({displayName: "Name",
     return returnValue;
   },
   render: function() {
+    var message = this.state.isValid ? this.props.message : this.props.errorMessage;
+
     return (
       React.createElement("div", {className: "ob-input name"}, 
-        React.createElement("label", null, this.props.label), 
-        React.createElement(Input, {type: "text", ref: "name", onInputBlur: this.isValid, placeholder: this.props.placeholder, value: this.props.value}), 
-        React.createElement(Error, {isVisible: this.state.isVisible, errorMessage: this.props.errorMessage})
+        React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: message}), 
+        React.createElement("div", {className: "input"}, 
+          React.createElement("label", null, this.props.label), 
+          React.createElement(Input, {type: "text", ref: "name", onInputBlur: this.isValid, placeholder: this.props.placeholder, value: this.props.value})
+        )
       )
     );
   }
@@ -623,28 +655,29 @@ var Name = React.createClass({displayName: "Name",
 
 module.exports = Name;
 
-},{"./basics/basic-input.js":7,"./basics/error.js":8,"react":216}],14:[function(require,module,exports){
+},{"./basics/basic-input.js":7,"./basics/feedback.js":8,"react":216}],14:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
 var Input = require('./basics/basic-input.js');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 
 var Password = React.createClass({displayName: "Password",
   getInitialState: function() {
     return {
-      isVisible: false,
+      isVisible: true,
       isValid: false
     }
   },
   getDefaultProps: function() {
     return {
       label: 'Password',
-      errorMessage: 'Must be 6-18 characters. Can contain letters, numbers, !@?$ symbols only.'
+      message: 'Must be 6-18 characters; Letters, numbers, !@?$ symbols only'
     }
   },
   propTypes: {
     label: React.PropTypes.string,
+    message: React.PropTypes.string,
     placeholder: React.PropTypes.string,
     errorMessage: React.PropTypes.string
   },
@@ -669,9 +702,11 @@ var Password = React.createClass({displayName: "Password",
   render: function() {
     return (
       React.createElement("div", {className: "ob-input password"}, 
-        React.createElement("label", null, this.props.label), 
-        React.createElement(Input, {type: "password", ref: "password", onInputBlur: this.isValid, placeholder: this.props.placeholder}), 
-        React.createElement(Error, {isVisible: this.state.isVisible, errorMessage: this.props.errorMessage})
+        React.createElement(Feedback, {isError: this.state.isValid, message: this.props.message}), 
+        React.createElement("div", {className: "input"}, 
+          React.createElement("label", null, this.props.label), 
+          React.createElement(Input, {type: "password", ref: "password", onInputBlur: this.isValid, placeholder: this.props.placeholder})
+        )
       )
     );
   }
@@ -679,12 +714,12 @@ var Password = React.createClass({displayName: "Password",
 
 module.exports = Password;
 
-},{"./basics/basic-input.js":7,"./basics/error.js":8,"react":216}],15:[function(require,module,exports){
+},{"./basics/basic-input.js":7,"./basics/feedback.js":8,"react":216}],15:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react/addons');
 var Input = require('./basics/basic-input.js');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 
 var TextBox = React.createClass({displayName: "TextBox",
   getInitialState: function() {
@@ -733,10 +768,12 @@ var TextBox = React.createClass({displayName: "TextBox",
     });
     return (
       React.createElement("div", {className: "ob-input textbox"}, 
-        React.createElement("label", null, this.props.label), 
-        React.createElement("textarea", {ref: "text", onChange: this.updateCharacterCount, onBlur: this.isValid}), 
-        React.createElement("span", {className: classes}, this.state.characterCount), 
-        React.createElement(Error, {isVisible: this.state.isVisible, errorMessage: this.props.errorMessage})
+        React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isValid, message: this.state.errorMessage}), 
+        React.createElement("div", {className: "input"}, 
+          React.createElement("label", null, this.props.label), 
+          React.createElement("textarea", {ref: "text", onChange: this.updateCharacterCount, onBlur: this.isValid}), 
+          React.createElement("span", {className: classes}, this.state.characterCount)
+        )
       )
     );
   }
@@ -744,7 +781,7 @@ var TextBox = React.createClass({displayName: "TextBox",
 
 module.exports = TextBox;
 
-},{"./basics/basic-input.js":7,"./basics/error.js":8,"react/addons":44}],16:[function(require,module,exports){
+},{"./basics/basic-input.js":7,"./basics/feedback.js":8,"react/addons":44}],16:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -752,65 +789,80 @@ var Reflux = require('reflux');
 var UserStore = require('../../stores/UserStore.js');
 var Actions = require('../../actions/actions.js');
 var Input = require('./basics/basic-input.js');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 
 var Username = React.createClass({displayName: "Username",
   mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
-      isUnique: true,
+      isVisible: true,
       isValid: true,
-      invalidUsernameMessage: 'Must be 3-18 characters. Letters, numbers, - and _ allowed.',
-      takenUsernameMessage: 'Username is taken!'
+      isUnique: true,
+      msg: 'Create a username'
     }
   },
   getDefaultProps: function() {
     return {
-      label: 'Username'
+      label: 'Username',
+      message: 'Create a username',
     }
   },
   propTypes: {
     label: React.PropTypes.string,
-    placeholder: React.PropTypes.string
-  },
-  isUnique: function() {
-    var username = this.refs.username.getDOMNode().value;
-    Actions.checkUsername(username);
-
-    // If username is unique, check if it's valid
-    if (this.state.isUnique) {
-      this.isValid();
-    }
+    placeholder: React.PropTypes.string,
+    message: React.PropTypes.string
   },
   isValid: function() {
     var username = this.refs.username.getDOMNode().value;
-    // Check that username contains ONLY letters/numbers & >= 4 characters
-    var regex = /^[a-zA-Z0-9_-]{3,18}$/;
+    // Check that username contains ONLY letters/numbers & >= 3 characters
+    var regex = /^[a-zA-Z0-9_]{3,18}$/;
     var isValidUsername = regex.test(username);
 
     if (!isValidUsername) {
       this.setState({
-        isValid: false
+        msg: '# & letters only',
+        isValid: false,
+        isError: true
       });
     } else {
       this.setState({
-        isValid: true
+        msg: 'Create a username',
+        isValid: true,
+        isError: false
       });
+
+      this.isUnique();
     }
+
+    console.log('isValidUsername', isValidUsername, 'STATE', this.state);
 
     return {
       username: isValidUsername,
       value: username
     };
   },
+  isUnique: function() {
+    var username = this.refs.username.getDOMNode().value;
+    console.log(username);
+    Actions.checkUsername(username);
+
+    console.log('isUnique state', this.state);
+
+    // If username is unique, check if it's valid
+    console.log('is unique? ', this.state.isUnique);
+  },
   render: function() {
+    console.log('render');
+    // var errorMessage = this.state.isUnique ? 'Must be 3-18 characters; letters and numbers only' : 'Sorry, that username is taken';
+    // var message = this.state.isValid ? this.props.message : errorMessage;
+    // console.log('USERNAME: ', this.state, this.props, errorMessage, message);
     return (
       React.createElement("div", {className: "ob-input username"}, 
-        React.createElement("label", null, this.props.label), 
-        React.createElement("span", null, this.state.isUnique), 
-        React.createElement(Input, {type: "text", ref: "username", onInputBlur: this.isUnique, placeholder: this.props.placeholder}), 
-        React.createElement(Error, {isVisible: !this.state.isValid, errorMessage: this.state.invalidUsernameMessage}), 
-        React.createElement(Error, {isVisible: !this.state.isUnique, errorMessage: this.state.takenUsernameMessage})
+        React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: this.state.msg}), 
+        React.createElement("div", {className: "input"}, 
+          React.createElement("label", null, this.props.label), 
+          React.createElement(Input, {type: "text", ref: "username", onInputBlur: this.isValid, placeholder: this.props.placeholder})
+        )
       )
     );
   }
@@ -818,7 +870,7 @@ var Username = React.createClass({displayName: "Username",
 
 module.exports = Username;
 
-},{"../../actions/actions.js":1,"../../stores/UserStore.js":241,"./basics/basic-input.js":7,"./basics/error.js":8,"react":216,"reflux":233}],17:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/UserStore.js":241,"./basics/basic-input.js":7,"./basics/feedback.js":8,"react":216,"reflux":233}],17:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -38438,7 +38490,11 @@ var SignUpPage = React.createClass({displayName: "SignUpPage",
   render: function() {
     return (
       React.createElement("main", {className: "page-profile-creation"}, 
-        React.createElement(SignUpForm, null)
+        React.createElement("section", {className: "profile"}, 
+          React.createElement("div", {className: "inner"}, 
+            React.createElement(SignUpForm, null)
+          )
+        )
       )
     );
   }
@@ -38534,9 +38590,22 @@ var UserStore = Reflux.createStore({
   },
   onCheckUsername: function(username) {
     var checkIfExists = function(snapshot) {
-      this.trigger({
-        isUnique: !(snapshot.exists())
-      });
+      var state;
+      console.log(snapshot.exists());
+
+      if (snapshot.exists()) {
+       state = {
+          isUnique: false,
+          msg: 'Username taken!',
+          isError: true
+        }
+      } else {
+        state = {
+          isUnique: true
+        }
+      }
+
+      this.trigger(state);
     }.bind(this);
 
     Users.orderByChild('username')

@@ -18,16 +18,15 @@ var CheckboxList = require('../inputs/checkbox-list.js');
 var Checkbox = require('../inputs/checkbox.js');
 var Password = require('../inputs/password.js');
 var Submit = require('../buttons/event-button.js');
-var Error = require('../inputs/basics/error.js');
+var Feedback = require('../inputs/basics/feedback.js');
 
 var SignUpForm = React.createClass({
   mixins: [Router.NavigatableMixin, Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
       router: Navigatable,
-      emailError: {
-        message: 'Email already in use!',
-        isVisible: false
+      email: {
+        isUnique: true
       },
       conductError: {
         message: 'AGREE WITH IT, DAMN IT!',
@@ -47,7 +46,9 @@ var SignUpForm = React.createClass({
           text: 'Networking'
         }
       ],
-      interactionsMessage: 'What opportunities are you looking for?'
+      opportunities: {
+        message: 'What opportunities are you looking for?'
+      }
     };
   },
   isValid: function(e) {
@@ -83,16 +84,15 @@ var SignUpForm = React.createClass({
         <div className="profile-information">
           <div className="grouping">
             <Name ref="name" label="Name" />
-            <Email ref="email"/>
-            <Error isVisible={this.state.emailError.isVisible} errorMessage={this.state.emailError.message} />
+            <Email ref="email" isUnique={this.state.email.isUnique}/>
           </div>
           <div className="grouping">
             <Username ref="username" />
             <Password ref="password" />
           </div>
           <div className="grouping">
-            <h2>{this.state.interactionsMessage}</h2>
-            <CheckboxList ref="interactionsList" refName="interactionsList" checklistClassName="interactions-list" checkboxes={this.state.checkboxes} />
+            <h2>{this.state.opportunities.message}</h2>
+            <CheckboxList ref="opportunities" className="opportunities-list" checkboxes={this.state.checkboxes} />
           </div>
           <div className="grouping">
             <h2>Where are you located?</h2>
@@ -104,7 +104,7 @@ var SignUpForm = React.createClass({
             Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.
             Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.
           </p>
-          <Checkbox ref="conduct" checkboxClassName="conduct-agreement" value="conduct" text="I agree to the Code of Awesome"/>
+          <Checkbox ref="conduct" className="conduct-agreement" value="conduct" text="I agree to the Code of Awesome"/>
           <Submit onClick={this.isValid}>Start making connections</Submit>
         </div>
       </form>

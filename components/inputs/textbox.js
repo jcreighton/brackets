@@ -2,7 +2,7 @@
 
 var React = require('react/addons');
 var Input = require('./basics/basic-input.js');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 
 var TextBox = React.createClass({
   getInitialState: function() {
@@ -51,10 +51,12 @@ var TextBox = React.createClass({
     });
     return (
       <div className="ob-input textbox">
-        <label>{this.props.label}</label>
-        <textarea ref="text" onChange={this.updateCharacterCount} onBlur={this.isValid}></textarea>
-        <span className={classes}>{this.state.characterCount}</span>
-        <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
+        <Feedback isVisible={this.state.isVisible} isError={this.state.isValid} message={this.state.errorMessage} />
+        <div className="input">
+          <label>{this.props.label}</label>
+          <textarea ref="text" onChange={this.updateCharacterCount} onBlur={this.isValid}></textarea>
+          <span className={classes}>{this.state.characterCount}</span>
+        </div>
       </div>
     );
   }

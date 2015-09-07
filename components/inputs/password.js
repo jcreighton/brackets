@@ -2,23 +2,24 @@
 
 var React = require('react');
 var Input = require('./basics/basic-input.js');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 
 var Password = React.createClass({
   getInitialState: function() {
     return {
-      isVisible: false,
+      isVisible: true,
       isValid: false
     }
   },
   getDefaultProps: function() {
     return {
       label: 'Password',
-      errorMessage: 'Must be 6-18 characters. Can contain letters, numbers, !@?$ symbols only.'
+      message: 'Must be 6-18 characters; Letters, numbers, !@?$ symbols only'
     }
   },
   propTypes: {
     label: React.PropTypes.string,
+    message: React.PropTypes.string,
     placeholder: React.PropTypes.string,
     errorMessage: React.PropTypes.string
   },
@@ -43,9 +44,11 @@ var Password = React.createClass({
   render: function() {
     return (
       <div className="ob-input password">
-        <label>{this.props.label}</label>
-        <Input type="password" ref="password" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
-        <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
+        <Feedback isError={this.state.isValid} message={this.props.message} />
+        <div className="input">
+          <label>{this.props.label}</label>
+          <Input type="password" ref="password" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
+        </div>
       </div>
     );
   }

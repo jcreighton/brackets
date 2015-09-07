@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Error = require('./basics/error.js');
+var Feedback = require('./basics/feedback.js');
 var Checkbox = require('./checkbox.js');
 
 var CheckboxList = React.createClass({
@@ -13,7 +13,7 @@ var CheckboxList = React.createClass({
   },
   getDefaultProps: function() {
     return {
-      errorMessage: 'Select an option above.'
+      message: 'Select at least one option'
     }
   },
   propTypes: {
@@ -62,10 +62,12 @@ var CheckboxList = React.createClass({
       return <Checkbox key={checkboxRef} ref={checkboxRef} {...checkboxProps} />
     });
 
+    var classes = 'ob-checklist ' + this.props.className;
+
     return (
-      <div className={this.props.checklistClassName}>
+      <div className={classes}>
         {checklist}
-        <Error isVisible={this.state.isVisible} errorMessage={this.props.errorMessage} />
+        <Feedback isError={this.state.isValid} message={this.props.message} />
       </div>
     );
   }
