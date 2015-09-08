@@ -9,6 +9,10 @@ var Checkbox = React.createClass({
       isValid: false
     }
   },
+  handleChange: function() {
+    this.props.handleChange();
+    this.isValid();
+  },
   isValid: function() {
     // Checkboxes are valid when checked === true
     var checkboxNode = this.refs.checkbox.getDOMNode();
@@ -43,7 +47,7 @@ var Checkbox = React.createClass({
           type="checkbox"
           ref="checkbox"
           name={this.props.name}
-          onChange={this.isValid}
+          onChange={this.handleChange}
           checked={this.state.checked}
           value={this.props.value} />
           {this.props.text}
