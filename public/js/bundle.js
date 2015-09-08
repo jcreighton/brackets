@@ -497,6 +497,10 @@ var Checkbox = React.createClass({displayName: "Checkbox",
     return returnValue;
   },
   handleChange: function(isChecked) {
+    if (this.props.handleChange) {
+      this.props.handleChange();
+    }
+
     this.setState({
       checked: isChecked,
       isValid: isChecked
@@ -508,7 +512,11 @@ var Checkbox = React.createClass({displayName: "Checkbox",
     value: React.PropTypes.string
   },
   render: function() {
-    var classes = 'ob-checkbox ' + this.props.className;
+    var classes = 'ob-input ob-checkbox ' + 'type-' + this.props.type + ' ' + this.props.className;
+
+    if (this.state.checked === true) {
+      classes += ' selected';
+    }
 
     return (
       React.createElement("label", {className: classes}, 
@@ -657,7 +665,7 @@ var Geolocation = React.createClass({displayName: "Geolocation",
 
     return (
       React.createElement("div", {className: "ob-geolocation"}, 
-        React.createElement(Checkbox, {name: "geolocation", value: "geolocation", text: this.props.text, onChange: this.handleGeolocation})
+        React.createElement(Checkbox, {type: "tag", name: "geolocation", className: "geolocation", value: "geolocation", text: this.props.text, handleChange: this.handleGeolocation})
       )
     );
   }
@@ -697,9 +705,9 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
   },
   render: function() {
     return (
-      React.createElement("div", {className: "ob-location-finder"}, 
+      React.createElement("div", {className: "location"}, 
         React.createElement(PostalCode, {ref: "postalcode"}), 
-        React.createElement("span", null, "or"), 
+        React.createElement("span", {className: "or"}, "or"), 
         React.createElement(Geolocation, {ref: "geolocation"})
       )
     );
@@ -841,6 +849,7 @@ module.exports = Password;
 
 var React = require('react/addons');
 var Input = require('./basics/basic-input.js');
+var Feedback = require('./basics/feedback.js');
 
 var PostalCode = React.createClass({displayName: "PostalCode",
   getInitialState: function() {
@@ -865,11 +874,13 @@ var PostalCode = React.createClass({displayName: "PostalCode",
 
     if (value) {
       this.setState({
-        isValid: true
+        isValid: true,
+        isError: false
       });
     } else {
       this.setState({
-        isValid: false
+        isValid: false,
+        isError: true
       });
     }
 
@@ -879,10 +890,15 @@ var PostalCode = React.createClass({displayName: "PostalCode",
     };
   },
   render: function() {
+    var message = this.state.isValid ? this.props.message : 'Enter a postalcode or use current location';
+
     return (
       React.createElement("div", {className: "ob-input postalcode"}, 
-        React.createElement("label", null, this.props.label), 
-        React.createElement(Input, {type: "text", ref: "postalcode", onInputBlur: this.isValid, placeholder: this.props.placeholder})
+        React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: message}), 
+        React.createElement("div", {className: "input"}, 
+          React.createElement("label", null, this.props.label), 
+          React.createElement(Input, {type: "text", ref: "postalcode", onInputBlur: this.isValid, placeholder: this.props.placeholder})
+        )
       )
     );
   }
@@ -890,7 +906,7 @@ var PostalCode = React.createClass({displayName: "PostalCode",
 
 module.exports = PostalCode;
 
-},{"./basics/basic-input.js":7,"react/addons":47}],18:[function(require,module,exports){
+},{"./basics/basic-input.js":7,"./basics/feedback.js":8,"react/addons":47}],18:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react/addons');

@@ -48,7 +48,36 @@
 
     input[type="checkbox"] {
       font-size: 14px;
-      cursor: pointer;
+    }
+  }
+
+  &.ob-checkbox {
+    cursor: pointer;
+
+    &.type-tag {
+      display: inline-block;
+      vertical-align: top;
+      height: 70px;
+      font-size: 12px;
+      color: @teal-light;
+      background-color: @gray-medium;
+      border: 1px solid @green;
+      padding: 0 10px;
+
+      input {
+        display: none;
+      }
+
+      span {
+        position: relative;
+        top: 24px;
+        left: 0;
+      }
+
+      &:hover, &.selected {
+        background-color: @teal;
+        color: @gray-medium;
+      }
     }
   }
 

@@ -58,7 +58,7 @@ var Geolocation = React.createClass({
 
     return (
       <div className="ob-geolocation">
-        <Checkbox name="geolocation" value="geolocation" text={this.props.text} handleChange={this.handleGeolocation} />
+        <Checkbox type="tag" name="geolocation" className="geolocation" value="geolocation" text={this.props.text} handleChange={this.handleGeolocation} />
       </div>
     );
   }

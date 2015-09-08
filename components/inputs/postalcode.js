@@ -2,6 +2,7 @@
 
 var React = require('react/addons');
 var Input = require('./basics/basic-input.js');
+var Feedback = require('./basics/feedback.js');
 
 var PostalCode = React.createClass({
   getInitialState: function() {
@@ -26,11 +27,13 @@ var PostalCode = React.createClass({
 
     if (value) {
       this.setState({
-        isValid: true
+        isValid: true,
+        isError: false
       });
     } else {
       this.setState({
-        isValid: false
+        isValid: false,
+        isError: true
       });
     }
 
@@ -40,10 +43,15 @@ var PostalCode = React.createClass({
     };
   },
   render: function() {
+    var message = this.state.isValid ? this.props.message : 'Enter a postalcode or use current location';
+
     return (
       <div className="ob-input postalcode">
-        <label>{this.props.label}</label>
-        <Input type="text" ref="postalcode" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
+        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={message} />
+        <div className="input">
+          <label>{this.props.label}</label>
+          <Input type="text" ref="postalcode" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
+        </div>
       </div>
     );
   }

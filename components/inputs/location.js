@@ -29,9 +29,9 @@ var LocationFinder = React.createClass({
   },
   render: function() {
     return (
-      <div className="ob-location-finder">
+      <div className="location">
         <PostalCode ref="postalcode" />
-        <span>or</span>
+        <span className="or">or</span>
         <Geolocation ref="geolocation" />
       </div>
     );

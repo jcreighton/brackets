@@ -9,10 +9,6 @@ var Checkbox = React.createClass({
       isValid: false
     }
   },
-  handleChange: function() {
-    this.props.handleChange();
-    this.isValid();
-  },
   isValid: function() {
     // Checkboxes are valid when checked === true
     var checkboxNode = this.refs.checkbox.getDOMNode();
@@ -28,6 +24,10 @@ var Checkbox = React.createClass({
     return returnValue;
   },
   handleChange: function(isChecked) {
+    if (this.props.handleChange) {
+      this.props.handleChange();
+    }
+
     this.setState({
       checked: isChecked,
       isValid: isChecked
@@ -39,7 +39,11 @@ var Checkbox = React.createClass({
     value: React.PropTypes.string
   },
   render: function() {
-    var classes = 'ob-checkbox ' + this.props.className;
+    var classes = 'ob-input ob-checkbox ' + 'type-' + this.props.type + ' ' + this.props.className;
+
+    if (this.state.checked === true) {
+      classes += ' selected';
+    }
 
     return (
       <label className={classes}>
@@ -47,7 +51,7 @@ var Checkbox = React.createClass({
           type="checkbox"
           ref="checkbox"
           name={this.props.name}
-          onChange={this.handleChange}
+          onChange={this.isValid}
           checked={this.state.checked}
           value={this.props.value} />
           {this.props.text}
