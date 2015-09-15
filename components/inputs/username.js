@@ -57,7 +57,6 @@ var Username = React.createClass({
   },
   isUnique: function() {
     var username = this.refs.username.getDOMNode().value;
-    console.log(username);
     Actions.checkUsername(username);
   },
   render: function() {

@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
-var React = require('react/addons');
+var React = require('react');
+var classNames = require('classnames');
 
 var Feedback = React.createClass({
   getDefaultProps: function() {
@@ -15,13 +16,14 @@ var Feedback = React.createClass({
     message: React.PropTypes.string
   },
   render: function() {
-    var cx = React.addons.classSet;
-    var classes = cx({
-      'ob-feedback': true,
-      'ob-error': this.props.isError,
-      'ob-state-hidden': !this.props.isVisible,
-      'ob-state-visible': this.props.isVisible
-    });
+    var classes = classNames(
+      'ob-feedback',
+      {
+        'ob-error': this.props.isError,
+        'ob-state-hidden': !this.props.isVisible,
+        'ob-state-visible': this.props.isVisible
+      }
+    );
 
     return (
       <div className={classes}>

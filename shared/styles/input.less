@@ -60,6 +60,7 @@
       height: 70px;
       font-size: 12px;
       color: @teal-light;
+      text-transform: uppercase;
       background-color: @gray-medium;
       border: 1px solid @green;
       padding: 0 10px;
@@ -70,13 +71,12 @@
 
       span {
         position: relative;
-        top: 24px;
+        top: 27px;
         left: 0;
       }
 
       &:hover, &.selected {
-        background-color: @teal;
-        color: @gray-medium;
+        .hover-state();
       }
     }
   }

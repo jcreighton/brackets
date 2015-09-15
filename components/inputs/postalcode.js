@@ -1,20 +1,21 @@
 /** @jsx React.DOM */
 
 var React = require('react/addons');
+var Reflux = require('reflux');
 var Input = require('./basics/basic-input.js');
-var Feedback = require('./basics/feedback.js');
+var MapStore = require('../../stores/MapStore.js');
+var Actions = require('../../actions/actions.js');
 
 var PostalCode = React.createClass({
+  mixins: [Reflux.connect(MapStore)],
   getInitialState: function() {
     return {
-      isVisible: true,
       isValid: false
     }
   },
   getDefaultProps: function() {
     return {
-      label: 'postal Code',
-      message: 'You can edit where your pin appears on the next page',
+      label: 'Postal Code'
     }
   },
   propTypes: {
@@ -22,18 +23,21 @@ var PostalCode = React.createClass({
     placeholder: React.PropTypes.string,
     message: React.PropTypes.string
   },
-  isValid: function() {
+  findLatLong: function() {
     var value = this.refs.postalcode.getDOMNode().value;
+    // geocode postalcode
+    // call isValid
+  },
+  isValid: function() {
+
 
     if (value) {
       this.setState({
-        isValid: true,
-        isError: false
+        isValid: true
       });
     } else {
       this.setState({
-        isValid: false,
-        isError: true
+        isValid: false
       });
     }
 
@@ -43,11 +47,8 @@ var PostalCode = React.createClass({
     };
   },
   render: function() {
-    var message = this.state.isValid ? this.props.message : 'Enter a postalcode or use current location';
-
     return (
       <div className="ob-input postalcode">
-        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={message} />
         <div className="input">
           <label>{this.props.label}</label>
           <Input type="text" ref="postalcode" onInputBlur={this.isValid} placeholder={this.props.placeholder} />

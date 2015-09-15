@@ -1,63 +1,51 @@
+/** @jsx React.DOM */
+
 var React = require('react');
+var Reflux = require('reflux');
+var classNames = require('classnames');
 var Checkbox = require('./checkbox.js');
+var MapStore = require('../../stores/MapStore.js');
+var Actions = require('../../actions/actions.js');
 
 var Geolocation = React.createClass({
+  mixins: [Reflux.connect(MapStore)],
   getInitialState: function() {
     return {
-      isValid: false
-    }
+      isValid: false,
+      position: {
+        lat: -73.952404,
+        long: 40.801816
+      },
+      location: 'New York, NY',
+      isBlocked: false
+    };
   },
   getDefaultProps: function() {
     return {
-      text: 'Use my current location'
+      text: 'Use current location'
     };
   },
   propTypes: {
-    text: React.PropTypes.string
-  },
-  isValid: function(isValid, position) {
-    var state;
-    var returnObject = {
-      geolocation: isValid
-    };
-
-    if (isValid) {
-      var location = [position.coords.latitude, position.coords.longitude];
-      state = {
-        isValid: true,
-        location: location
-      };
-
-      returnObject.location = location;
-    } else {
-      state = {
-        isValid: false
-      };
-    }
-
-    this.setState(state);
-
-    return returnObject;
+    text: React.PropTypes.string,
+    className: React.PropTypes.string
   },
   handleGeolocation: function() {
-    var setLocation = function(position) {
-      this.isValid(true, position);
-      console.log('position', position);
-    };
-
-    var handleError = function(err) {
-
-      console.log(err);
-      // check error is 2 or 3, then something went wrong
-    };
-
-    navigator.geolocation.getCurrentPosition(setLocation, handleError);
+    Actions.geolocateCurrentLocation();
+  },
+  isValid: function() {
+    handleGeolocation();
   },
   render: function() {
-    var classes = 'ob-checkbox ' + this.props.className;
+    var classes = classNames(
+      'ob-geolocation',
+      this.props.className,
+      {
+        'disabled': this.state.isBlocked
+      }
+    );
 
     return (
-      <div className="ob-geolocation">
+      <div className={classes}>
         <Checkbox type="tag" name="geolocation" className="geolocation" value="geolocation" text={this.props.text} handleChange={this.handleGeolocation} />
       </div>
     );

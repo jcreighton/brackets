@@ -6,7 +6,10 @@ var Actions = Reflux.createActions([
   'userLogin',
   'router',
   'navigate',
-  'profileCreation'
+  'profileCreation',
+  'geolocateCurrentLocation',
+  'geolocatePostalCode',
+  'reverseGeolocate'
 ]);
 
 module.exports = Actions;

@@ -3,12 +3,16 @@
 var React = require('react');
 var PostalCode = require('../inputs/postalcode.js');
 var Geolocation = require('../inputs/geolocation.js');
+var Feedback = require('./basics/feedback.js');
 
 var LocationFinder = React.createClass({
   getInitialState: function() {
     return {
-      message: 'Set your location'
-    };
+      isVisible: true,
+      isValid: true,
+      isError: false,
+      message: 'You can edit where your pin appears on the next page'
+    }
   },
   isValid: function() {
     var postalCode = this.refs.postalcode.isValid();
@@ -21,7 +25,7 @@ var LocationFinder = React.createClass({
         isValid: true,
         location: isValidLocation
       });
-    } else {
+    } else if (postcode) {
        this.setState({
         isValid: false
       });
@@ -29,7 +33,8 @@ var LocationFinder = React.createClass({
   },
   render: function() {
     return (
-      <div className="location">
+      <div className="ob-input location">
+        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={this.state.message} />
         <PostalCode ref="postalcode" />
         <span className="or">or</span>
         <Geolocation ref="geolocation" />

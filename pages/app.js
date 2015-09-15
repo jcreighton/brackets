@@ -10,13 +10,13 @@ var SignUpPage = React.createElement(require('./signup.js'));
 var UserPage = React.createElement(require('./home.js'));
 
 var Actions = require('../actions/actions.js');
-var LocationStore = require('../stores/LocationStore.js');
+var RouterStore = require('../stores/RouterStore.js');
 
 var Locations = Router.Locations;
 var Location = Router.Location;
 
 var App = React.createClass({
-  mixins: [Reflux.connect(LocationStore)],
+  mixins: [Reflux.connect(RouterStore)],
   componentDidMount: function () {
     Actions.router(this.refs.router);
   },
