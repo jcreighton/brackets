@@ -97,7 +97,7 @@ var SignUpForm = React.createClass({
           </div>
           <div className="grouping">
             <h2>Where are you located?</h2>
-            <Location />
+            <Location ref="location" />
           </div>
         </div>
         <div className="code-of-conduct">

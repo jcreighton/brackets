@@ -261,7 +261,7 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
           ), 
           React.createElement("div", {className: "grouping"}, 
             React.createElement("h2", null, "Where are you located?"), 
-            React.createElement(Location, null)
+            React.createElement(Location, {ref: "location"})
           )
         ), 
         React.createElement("div", {className: "code-of-conduct"}, 
@@ -621,22 +621,13 @@ module.exports = EmailAddress;
 /** @jsx React.DOM */
 
 var React = require('react');
-var Reflux = require('reflux');
 var classNames = require('classnames');
 var Checkbox = require('./checkbox.js');
-var MapStore = require('../../stores/MapStore.js');
 var Actions = require('../../actions/actions.js');
 
 var Geolocation = React.createClass({displayName: "Geolocation",
-  mixins: [Reflux.connect(MapStore)],
   getInitialState: function() {
     return {
-      isValid: false,
-      position: {
-        lat: -73.952404,
-        long: 40.801816
-      },
-      location: 'New York, NY',
       isBlocked: false
     };
   },
@@ -651,12 +642,6 @@ var Geolocation = React.createClass({displayName: "Geolocation",
   },
   handleGeolocation: function() {
     Actions.geolocateCurrentLocation();
-  },
-  isValid: function() {
-    return {
-      geolocation: this.state.isValue,
-      value: this.state.position
-    };
   },
   render: function() {
     var classes = classNames(
@@ -682,38 +667,41 @@ var Geolocation = React.createClass({displayName: "Geolocation",
 
 module.exports = Geolocation;
 
-},{"../../actions/actions.js":1,"../../stores/MapStore.js":300,"./checkbox.js":11,"classnames":28,"react":277,"reflux":294}],14:[function(require,module,exports){
+},{"../../actions/actions.js":1,"./checkbox.js":11,"classnames":28,"react":277}],14:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
+var Reflux = require('reflux');
 var PostalCode = require('../inputs/postalcode.js');
 var Geolocation = require('../inputs/geolocation.js');
 var Feedback = require('./basics/feedback.js');
+var MapStore = require('../../stores/MapStore.js');
+var Actions = require('../../actions/actions.js');
 
 var LocationFinder = React.createClass({displayName: "LocationFinder",
+  mixins: [Reflux.connect(MapStore)],
   getInitialState: function() {
     return {
       isVisible: true,
-      isValid: true,
+      isValid: false,
       isError: false,
+      userLocation: null,
       message: 'You can edit where your pin appears on the next page'
     }
   },
   isValid: function() {
-    var postalCode = this.refs.postalcode.isValid();
-    var geolocation = this.refs.geolocation.isValid();
+    // var postalcode = this.refs.postalcode.isValid();
+    // var geolocation = this.refs.geolocation.isValid();
 
-    var isValidLocation = postalcode || geolocation;
-
-    if (isValidLocation) {
-      this.setState({
-        isValid: true,
-        location: isValidLocation
-      });
-    } else if (postcode) {
-       this.setState({
-        isValid: false
-      });
+    // var isValidLocation = (postalcode.value || geolocation.value);
+    // console.log('isValidLocation', isValidLocation, postalcode.value || geolocation.value);
+    console.log({
+      location: this.state.isValid,
+      value: this.state.userLocation
+    });
+    return {
+      location: this.state.isValid,
+      value: this.state.userLocation
     }
   },
   render: function() {
@@ -730,7 +718,7 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
 
 module.exports = LocationFinder;
 
-},{"../inputs/geolocation.js":13,"../inputs/postalcode.js":17,"./basics/feedback.js":8,"react":277}],15:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/MapStore.js":300,"../inputs/geolocation.js":13,"../inputs/postalcode.js":17,"./basics/feedback.js":8,"react":277,"reflux":294}],15:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -862,19 +850,10 @@ module.exports = Password;
 /** @jsx React.DOM */
 
 var React = require('react/addons');
-var Reflux = require('reflux');
 var Input = require('./basics/basic-input.js');
-var MapStore = require('../../stores/MapStore.js');
 var Actions = require('../../actions/actions.js');
 
 var PostalCode = React.createClass({displayName: "PostalCode",
-  mixins: [Reflux.connect(MapStore)],
-  getInitialState: function() {
-    return {
-      isValid: false,
-      postalcode: null
-    }
-  },
   getDefaultProps: function() {
     return {
       label: 'Postal Code'
@@ -886,14 +865,7 @@ var PostalCode = React.createClass({displayName: "PostalCode",
   },
   handleGeocodePostalCode: function() {
     var value = this.refs.postalcode.getDOMNode().value;
-    // Geocode postalcode
     Actions.geolocatePostalCode(value);
-  },
-  isValid: function() {
-    return {
-      postalcode: this.state.isValid,
-      value: this.state.postalcode
-    };
   },
   render: function() {
     return (
@@ -909,7 +881,7 @@ var PostalCode = React.createClass({displayName: "PostalCode",
 
 module.exports = PostalCode;
 
-},{"../../actions/actions.js":1,"../../stores/MapStore.js":300,"./basics/basic-input.js":7,"react/addons":105,"reflux":294}],18:[function(require,module,exports){
+},{"../../actions/actions.js":1,"./basics/basic-input.js":7,"react/addons":105}],18:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -18359,7 +18331,6 @@ var interceptor = require('rest/interceptor');
 
 var callbackify = interceptor({
   success: function (response) {
-    console.log('RESPONSE', response);
     var request = response && response.request;
     var callback = request && request.callback;
 
@@ -18408,7 +18379,7 @@ module.exports = function(config) {
 // revisions.
 module.exports.DEFAULT_ENDPOINT = 'https://api.mapbox.com';
 module.exports.API_GEOCODER_FORWARD = '/v4/geocode/{dataset}/{query}.json';
-module.exports.API_GEOCODER_REVERSE = '/v4/geocode/{dataset}/{latitude},{longitude}.json';
+module.exports.API_GEOCODER_REVERSE = '/v4/geocode/{dataset}/{longitude},{latitude}.json';
 module.exports.API_DIRECTIONS = '/v4/directions/{profile}/{encodedWaypoints}.json';
 module.exports.API_DISTANCE = '/distances/v1/mapbox/{profile}';
 module.exports.API_SURFACE = '/v4/surface/{mapid}.json{?layer,fields,points,geojson,interpolate,encoded_polyline}';
@@ -18636,12 +18607,12 @@ MapboxGeocoder.prototype.geocodeReverse = function(location, options, callback) 
     invariant(typeof options.dataset === 'string', 'dataset option must be string');
     dataset = options.dataset;
   }
-  console.log('geocodeReverse location', location);
+
   this.client({
     path: constants.API_GEOCODER_REVERSE,
     params: {
-      latitude: location.latitude,
       longitude: location.longitude,
+      latitude: location.latitude,
       dataset: dataset
     },
     callback: callback
@@ -48329,7 +48300,6 @@ var MapStore = Reflux.createStore({
           postalcode: null
         });
       } else {
-        console.log('geocodeForward', geocode);
         var coordinates = geocode.features[0].center;
         this.onReverseGeocode(coordinates);
       }
@@ -48341,16 +48311,34 @@ var MapStore = Reflux.createStore({
     );
   },
   onReverseGeocode: function(coordinates) {
-    console.log('coordinates', coordinates);
     var location = {
-      latitude: coordinates[0],
-      longitude: coordinates[1]
+      longitude: coordinates[0],
+      latitude: coordinates[1]
     };
 
     var handleReverseGeocode = function(err, geocode) {
-      console.log('err', err, 'geocode', geocode);
+      if (err) {
+        this.trigger({
+          isValid: false,
+          userLocation: null
+        });
+      } else {
+        var geocodeContext = geocode.features[0].context;
+        var userLocation = {
+          position: location,
+          city: geocodeContext[0].text,
+          postalcode: geocodeContext[1].text,
+          state: geocodeContext[2].text,
+          country: geocodeContext[3].text
+        };
+      }
+
+      this.trigger({
+        isValid: true,
+        userLocation: userLocation
+      });
     };
-    console.log('location', location);
+
     client.geocodeReverse(
       location,
       handleReverseGeocode.bind(this)
