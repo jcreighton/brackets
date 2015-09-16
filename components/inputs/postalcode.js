@@ -10,7 +10,8 @@ var PostalCode = React.createClass({
   mixins: [Reflux.connect(MapStore)],
   getInitialState: function() {
     return {
-      isValid: false
+      isValid: false,
+      postalcode: null
     }
   },
   getDefaultProps: function() {
@@ -20,30 +21,17 @@ var PostalCode = React.createClass({
   },
   propTypes: {
     label: React.PropTypes.string,
-    placeholder: React.PropTypes.string,
-    message: React.PropTypes.string
+    placeholder: React.PropTypes.string
   },
-  findLatLong: function() {
+  handleGeocodePostalCode: function() {
     var value = this.refs.postalcode.getDOMNode().value;
-    // geocode postalcode
-    // call isValid
+    // Geocode postalcode
+    Actions.geolocatePostalCode(value);
   },
   isValid: function() {
-
-
-    if (value) {
-      this.setState({
-        isValid: true
-      });
-    } else {
-      this.setState({
-        isValid: false
-      });
-    }
-
     return {
-      postalcode: (value),
-      value: value
+      postalcode: this.state.isValid,
+      value: this.state.postalcode
     };
   },
   render: function() {
@@ -51,7 +39,7 @@ var PostalCode = React.createClass({
       <div className="ob-input postalcode">
         <div className="input">
           <label>{this.props.label}</label>
-          <Input type="text" ref="postalcode" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
+          <Input type="text" ref="postalcode" onInputBlur={this.handleGeocodePostalCode} placeholder={this.props.placeholder} />
         </div>
       </div>
     );

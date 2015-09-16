@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
-var React = require('react/addons');
+var React = require('react');
+var classNames = require('classnames');
 var Input = require('./basics/basic-input.js');
 var Feedback = require('./basics/feedback.js');
 
@@ -43,12 +44,14 @@ var TextBox = React.createClass({
     return {text: isValidText && value};
   },
   render: function() {
-    var cx = React.addons.classSet;
-    var classes = cx({
-      'character-counter': true,
-      'warning': (this.state.characterCount < 10),
-      'hidden': (this.state.characterCount == 0)
-    });
+    var classes = classNames(
+      'character-counter',
+      {
+        'warning': (this.state.characterCount < 10),
+        'hidden': (this.state.characterCount == 0)
+      }
+    );
+
     return (
       <div className="ob-input textbox">
         <Feedback isVisible={this.state.isVisible} isError={this.state.isValid} message={this.state.errorMessage} />

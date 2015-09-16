@@ -24,6 +24,7 @@
     "handlebars": "~3.0.0",
     "leaflet": "^0.7.4",
     "lodash": "^3.10.1",
+    "mapbox": "^0.8.1",
     "mapbox-geocoding": "^0.1.3",
     "node-jsx": "^0.13.3",
     "react": "^0.13.3",

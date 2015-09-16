@@ -33,20 +33,28 @@ var Geolocation = React.createClass({
     Actions.geolocateCurrentLocation();
   },
   isValid: function() {
-    handleGeolocation();
+    return {
+      geolocation: this.state.isValue,
+      value: this.state.position
+    };
   },
   render: function() {
     var classes = classNames(
       'ob-geolocation',
-      this.props.className,
-      {
-        'disabled': this.state.isBlocked
-      }
+      this.props.className
     );
 
     return (
       <div className={classes}>
-        <Checkbox type="tag" name="geolocation" className="geolocation" value="geolocation" text={this.props.text} handleChange={this.handleGeolocation} />
+        <Checkbox
+          type="tag"
+          name="geolocation"
+          className="geolocation"
+          value="geolocation"
+          text={this.props.text}
+          disabled={this.state.isBlocked}
+          handleChange={this.handleGeolocation}
+        />
       </div>
     );
   }

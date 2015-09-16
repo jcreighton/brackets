@@ -16,7 +16,7 @@ var LocationFinder = React.createClass({
   },
   isValid: function() {
     var postalCode = this.refs.postalcode.isValid();
-    var geolocation = this.refs.postalcode.isValid();
+    var geolocation = this.refs.geolocation.isValid();
 
     var isValidLocation = postalcode || geolocation;
 

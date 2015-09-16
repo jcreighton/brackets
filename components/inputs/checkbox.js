@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var classNames = require('classnames');
 
 var Checkbox = React.createClass({
   getInitialState: function() {
@@ -39,11 +40,18 @@ var Checkbox = React.createClass({
     value: React.PropTypes.string
   },
   render: function() {
-    var classes = 'ob-input ob-checkbox ' + 'type-' + this.props.type + ' ' + this.props.className;
+    var type = {};
+    type['type-' + this.props.type] = this.props.type;
 
-    if (this.state.checked === true) {
-      classes += ' selected';
-    }
+    var classes = classNames(
+      'ob-input ob-checkbox',
+      this.props.className,
+      {
+        'selected': this.state.checked && !this.props.disabled,
+        'disabled': this.props.disabled
+      },
+      type
+    );
 
     return (
       <label className={classes}>

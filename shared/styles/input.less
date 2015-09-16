@@ -75,8 +75,24 @@
         left: 0;
       }
 
-      &:hover, &.selected {
+      &:hover {
         .hover-state();
+      }
+
+      &.selected {
+        color: @gray-medium;
+        background-color: @green;
+        border: 1px solid @white;
+      }
+
+      &.disabled {
+        opacity: .2;
+
+        &:hover {
+          color: @teal-light;
+          background-color: @gray-medium;
+          opacity: .2;
+        }
       }
     }
   }
