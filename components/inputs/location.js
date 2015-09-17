@@ -2,6 +2,7 @@
 
 var React = require('react');
 var Reflux = require('reflux');
+var classNames = require('classnames');
 var PostalCode = require('../inputs/postalcode.js');
 var Geolocation = require('../inputs/geolocation.js');
 var Feedback = require('./basics/feedback.js');
@@ -19,28 +20,55 @@ var LocationFinder = React.createClass({
       message: 'You can edit where your pin appears on the next page'
     }
   },
-  isValid: function() {
-    // var postalcode = this.refs.postalcode.isValid();
-    // var geolocation = this.refs.geolocation.isValid();
-
-    // var isValidLocation = (postalcode.value || geolocation.value);
-    // console.log('isValidLocation', isValidLocation, postalcode.value || geolocation.value);
-    console.log({
-      location: this.state.isValid,
-      value: this.state.userLocation
+  disableGeolocation: function() {
+    this.setState({
+      isGeolocationBlocked: true
     });
+  },
+  handleGeocodePostalCode: function(postalcode) {
+    Actions.geolocatePostalCode(postalcode);
+  },
+  handleGeolocation: function() {
+    Actions.geolocateCurrentLocation();
+  },
+  isValid: function() {
+    if (!this.state.userLocation) {
+      this.setState({
+        isError: true,
+        errorMessage: 'You must provide a location'
+      });
+    }
+
     return {
       location: this.state.isValid,
       value: this.state.userLocation
     }
   },
   render: function() {
+    var message = this.state.isError ? this.state.errorMessage : this.state.message;
+
+    var classes = classNames(
+      'or',
+      {
+        disabled: this.state.isGeolocationBlocked
+      }
+    );
+
     return (
       <div className="ob-input location">
-        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={this.state.message} />
-        <PostalCode ref="postalcode" />
-        <span className="or">or</span>
-        <Geolocation ref="geolocation" isBlocked={this.state.isGeolocationBlocked}/>
+        <Feedback
+          isVisible={this.state.isVisible}
+          isError={this.state.isError}
+          message={message} />
+        <PostalCode
+          ref="postalcode"
+          handleChange={this.disableGeolocation}
+          handleBlur={this.handleGeocodePostalCode} />
+        <span className={classes}>or</span>
+        <Geolocation
+          ref="geolocation"
+          handleClick={this.handleGeolocation}
+          isBlocked={this.state.isGeolocationBlocked} />
       </div>
     );
   }

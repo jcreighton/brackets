@@ -17,14 +17,22 @@ var MapStore = Reflux.createStore({
   onGeolocatePostalCode: function(postalcode) {
 
     var handleGeocode = function(err, geocode) {
-      if (err) {
-        this.trigger({
-          isValid: false
-        });
+      var state = {};
+      var isError = (err || (geocode.features.length < 1));
+
+      if (isError) {
+        state = {
+          isValid: false,
+          isError: true,
+          errorMessage: 'We\'re having an issue finding that location',
+          userLocation: null
+        };
       } else {
         var coordinates = geocode.features[0].center;
         this.onReverseGeocode(coordinates);
       }
+
+      this.trigger(state);
     };
 
     client.geocodeForward(
@@ -42,21 +50,29 @@ var MapStore = Reflux.createStore({
       if (err) {
         this.trigger({
           isValid: false,
+          isError: true,
+          errorMessage: 'We\'re having an issue finding that location',
           userLocation: null
         });
       } else {
         var geocodeContext = geocode.features[0].context;
-        var userLocation = {
-          position: location,
-          city: geocodeContext[0].text,
-          postalcode: geocodeContext[1].text,
-          state: geocodeContext[2].text,
-          country: geocodeContext[3].text
+        var userLocation = {};
+
+        function createUserLocation(context) {
+          var end = context.id.indexOf('.');
+          var type = context.id.slice(0, end);
+          userLocation[type] = context.text;
         };
+
+        geocodeContext.forEach(createUserLocation);
+
+        userLocation.position = location;
       }
 
       this.trigger({
         isValid: true,
+        isError: false,
+        message: 'Your location has been found!',
         userLocation: userLocation
       });
     };
@@ -68,6 +84,10 @@ var MapStore = Reflux.createStore({
   },
   onGeolocateCurrentLocation: function() {
     var setLocation = function(position) {
+      this.trigger({
+        isGeolocationBlocked: false
+      });
+
       // Get reverse geocode to set city, state
       var coordinates = [
         position.coords.longitude,
@@ -84,12 +104,14 @@ var MapStore = Reflux.createStore({
       if (code === 1 || code === 2) {
         this.trigger({
           isValid: false,
-          isBlocked: true
+          isError: false,
+          isGeolocationBlocked: true
         });
       } else {
         this.trigger({
           isValid: false,
-          isBlocked: false,
+          isError: true,
+          isGeolocationBlocked: false,
           errorMessage: 'Sorry, the server is having issues.'
         });
       }

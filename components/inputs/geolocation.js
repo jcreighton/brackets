@@ -3,10 +3,8 @@
 var React = require('react');
 var classNames = require('classnames');
 var Checkbox = require('./checkbox.js');
-var Actions = require('../../actions/actions.js');
 
 var Geolocation = React.createClass({
-  mixins: [Reflux.connect(MapStore)],
   getDefaultProps: function() {
     return {
       isBlocked: false,
@@ -17,8 +15,8 @@ var Geolocation = React.createClass({
     text: React.PropTypes.string,
     className: React.PropTypes.string
   },
-  handleGeolocation: function() {
-    Actions.geolocateCurrentLocation();
+  handleClick: function() {
+    this.props.handleClick();
   },
   render: function() {
     var classes = classNames(
@@ -35,7 +33,7 @@ var Geolocation = React.createClass({
           value="geolocation"
           text={this.props.text}
           disabled={this.props.isBlocked}
-          handleChange={this.handleGeolocation}
+          handleChange={this.handleClick}
         />
       </div>
     );

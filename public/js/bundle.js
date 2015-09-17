@@ -623,16 +623,11 @@ module.exports = EmailAddress;
 var React = require('react');
 var classNames = require('classnames');
 var Checkbox = require('./checkbox.js');
-var Actions = require('../../actions/actions.js');
 
 var Geolocation = React.createClass({displayName: "Geolocation",
-  getInitialState: function() {
-    return {
-      isBlocked: false
-    };
-  },
   getDefaultProps: function() {
     return {
+      isBlocked: false,
       text: 'Use current location'
     };
   },
@@ -640,8 +635,8 @@ var Geolocation = React.createClass({displayName: "Geolocation",
     text: React.PropTypes.string,
     className: React.PropTypes.string
   },
-  handleGeolocation: function() {
-    Actions.geolocateCurrentLocation();
+  handleClick: function() {
+    this.props.handleClick();
   },
   render: function() {
     var classes = classNames(
@@ -657,8 +652,8 @@ var Geolocation = React.createClass({displayName: "Geolocation",
           className: "geolocation", 
           value: "geolocation", 
           text: this.props.text, 
-          disabled: this.state.isBlocked, 
-          handleChange: this.handleGeolocation}
+          disabled: this.props.isBlocked, 
+          handleChange: this.handleClick}
         )
       )
     );
@@ -667,11 +662,12 @@ var Geolocation = React.createClass({displayName: "Geolocation",
 
 module.exports = Geolocation;
 
-},{"../../actions/actions.js":1,"./checkbox.js":11,"classnames":28,"react":277}],14:[function(require,module,exports){
+},{"./checkbox.js":11,"classnames":28,"react":277}],14:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
 var Reflux = require('reflux');
+var classNames = require('classnames');
 var PostalCode = require('../inputs/postalcode.js');
 var Geolocation = require('../inputs/geolocation.js');
 var Feedback = require('./basics/feedback.js');
@@ -689,28 +685,55 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
       message: 'You can edit where your pin appears on the next page'
     }
   },
-  isValid: function() {
-    // var postalcode = this.refs.postalcode.isValid();
-    // var geolocation = this.refs.geolocation.isValid();
-
-    // var isValidLocation = (postalcode.value || geolocation.value);
-    // console.log('isValidLocation', isValidLocation, postalcode.value || geolocation.value);
-    console.log({
-      location: this.state.isValid,
-      value: this.state.userLocation
+  disableGeolocation: function() {
+    this.setState({
+      isGeolocationBlocked: true
     });
+  },
+  handleGeocodePostalCode: function(postalcode) {
+    Actions.geolocatePostalCode(postalcode);
+  },
+  handleGeolocation: function() {
+    Actions.geolocateCurrentLocation();
+  },
+  isValid: function() {
+    if (!this.state.userLocation) {
+      this.setState({
+        isError: true,
+        errorMessage: 'You must provide a location'
+      });
+    }
+
     return {
       location: this.state.isValid,
       value: this.state.userLocation
     }
   },
   render: function() {
+    var message = this.state.isError ? this.state.errorMessage : this.state.message;
+
+    var classes = classNames(
+      'or',
+      {
+        disabled: this.state.isGeolocationBlocked
+      }
+    );
+
     return (
       React.createElement("div", {className: "ob-input location"}, 
-        React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: this.state.message}), 
-        React.createElement(PostalCode, {ref: "postalcode"}), 
-        React.createElement("span", {className: "or"}, "or"), 
-        React.createElement(Geolocation, {ref: "geolocation"})
+        React.createElement(Feedback, {
+          isVisible: this.state.isVisible, 
+          isError: this.state.isError, 
+          message: message}), 
+        React.createElement(PostalCode, {
+          ref: "postalcode", 
+          handleChange: this.disableGeolocation, 
+          handleBlur: this.handleGeocodePostalCode}), 
+        React.createElement("span", {className: classes}, "or"), 
+        React.createElement(Geolocation, {
+          ref: "geolocation", 
+          handleClick: this.handleGeolocation, 
+          isBlocked: this.state.isGeolocationBlocked})
       )
     );
   }
@@ -718,7 +741,7 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
 
 module.exports = LocationFinder;
 
-},{"../../actions/actions.js":1,"../../stores/MapStore.js":300,"../inputs/geolocation.js":13,"../inputs/postalcode.js":17,"./basics/feedback.js":8,"react":277,"reflux":294}],15:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/MapStore.js":300,"../inputs/geolocation.js":13,"../inputs/postalcode.js":17,"./basics/feedback.js":8,"classnames":28,"react":277,"reflux":294}],15:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -851,7 +874,6 @@ module.exports = Password;
 
 var React = require('react/addons');
 var Input = require('./basics/basic-input.js');
-var Actions = require('../../actions/actions.js');
 
 var PostalCode = React.createClass({displayName: "PostalCode",
   getDefaultProps: function() {
@@ -863,16 +885,24 @@ var PostalCode = React.createClass({displayName: "PostalCode",
     label: React.PropTypes.string,
     placeholder: React.PropTypes.string
   },
-  handleGeocodePostalCode: function() {
+  handleChange: function() {
+    this.props.handleChange();
+  },
+  handleBlur: function() {
     var value = this.refs.postalcode.getDOMNode().value;
-    Actions.geolocatePostalCode(value);
+    this.props.handleBlur(value);
   },
   render: function() {
     return (
       React.createElement("div", {className: "ob-input postalcode"}, 
         React.createElement("div", {className: "input"}, 
           React.createElement("label", null, this.props.label), 
-          React.createElement(Input, {type: "text", ref: "postalcode", onInputBlur: this.handleGeocodePostalCode, placeholder: this.props.placeholder})
+          React.createElement(Input, {
+            type: "text", 
+            ref: "postalcode", 
+            onInputChange: this.handleChange, 
+            onInputBlur: this.handleBlur, 
+            placeholder: this.props.placeholder})
         )
       )
     );
@@ -881,7 +911,7 @@ var PostalCode = React.createClass({displayName: "PostalCode",
 
 module.exports = PostalCode;
 
-},{"../../actions/actions.js":1,"./basics/basic-input.js":7,"react/addons":105}],18:[function(require,module,exports){
+},{"./basics/basic-input.js":7,"react/addons":105}],18:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -48294,15 +48324,22 @@ var MapStore = Reflux.createStore({
   onGeolocatePostalCode: function(postalcode) {
 
     var handleGeocode = function(err, geocode) {
-      if (err) {
-        this.trigger({
+      var state = {};
+      var isError = (err || (geocode.features.length < 1));
+
+      if (isError) {
+        state = {
           isValid: false,
-          postalcode: null
-        });
+          isError: true,
+          errorMessage: 'We\'re having an issue finding that location',
+          userLocation: null
+        };
       } else {
         var coordinates = geocode.features[0].center;
         this.onReverseGeocode(coordinates);
       }
+
+      this.trigger(state);
     };
 
     client.geocodeForward(
@@ -48320,21 +48357,29 @@ var MapStore = Reflux.createStore({
       if (err) {
         this.trigger({
           isValid: false,
+          isError: true,
+          errorMessage: 'We\'re having an issue finding that location',
           userLocation: null
         });
       } else {
         var geocodeContext = geocode.features[0].context;
-        var userLocation = {
-          position: location,
-          city: geocodeContext[0].text,
-          postalcode: geocodeContext[1].text,
-          state: geocodeContext[2].text,
-          country: geocodeContext[3].text
+        var userLocation = {};
+
+        function createUserLocation(context) {
+          var end = context.id.indexOf('.');
+          var type = context.id.slice(0, end);
+          userLocation[type] = context.text;
         };
+
+        geocodeContext.forEach(createUserLocation);
+
+        userLocation.position = location;
       }
 
       this.trigger({
         isValid: true,
+        isError: false,
+        message: 'Your location has been found!',
         userLocation: userLocation
       });
     };
@@ -48346,18 +48391,17 @@ var MapStore = Reflux.createStore({
   },
   onGeolocateCurrentLocation: function() {
     var setLocation = function(position) {
-      // Get reverse geocode to set city, state
-      // this.onReverseGeocode(coordinates);
-      console.log('position', position);
       this.trigger({
-        isValid: true,
-        position: {
-          lat: position.coords.latitude,
-          long: position.coords.longitude
-        },
-        location: 'New York, NY',
-        isBlocked: false
+        isGeolocationBlocked: false
       });
+
+      // Get reverse geocode to set city, state
+      var coordinates = [
+        position.coords.longitude,
+        position.coords.latitude
+      ];
+
+      this.onReverseGeocode(coordinates);
     };
 
     var handleError = function(err) {
@@ -48367,16 +48411,14 @@ var MapStore = Reflux.createStore({
       if (code === 1 || code === 2) {
         this.trigger({
           isValid: false,
-          position: null,
-          location: null,
-          isBlocked: true
+          isError: false,
+          isGeolocationBlocked: true
         });
       } else {
         this.trigger({
           isValid: false,
-          position: null,
-          location: null,
-          isBlocked: false,
+          isError: true,
+          isGeolocationBlocked: false,
           errorMessage: 'Sorry, the server is having issues.'
         });
       }
