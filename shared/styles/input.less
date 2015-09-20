@@ -49,6 +49,16 @@
     input[type="checkbox"] {
       font-size: 14px;
     }
+
+    &.disabled {
+      opacity: .2;
+
+      &:hover {
+        color: @teal-light;
+        background-color: @gray-medium;
+        opacity: .4;
+      }
+    }
   }
 
   &.ob-checkbox {
@@ -91,7 +101,7 @@
         &:hover {
           color: @teal-light;
           background-color: @gray-medium;
-          opacity: .2;
+          opacity: .4;
         }
       }
     }

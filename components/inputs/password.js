@@ -29,17 +29,26 @@ var Password = React.createClass({
     var value = this.refs.password.getDOMNode().value;
 
     var isValidPassword = regex.test(value);
+    var state;
 
     if (!isValidPassword) {
-      this.setState({isVisible: true, isValid: false});
+      state = {
+        isVisible: true,
+        isValid: false
+      };
     } else {
-      this.setState({isVisible: false, isValid: true});
+      state = {
+        isVisible: false,
+        isValid: true
+      };
     }
 
-    return {
-      password: isValidPassword,
+    this.setState(state);
+
+    this.props.onValidation('password', {
+      isValid: isValidPassword,
       value: value
-    };
+    });
   },
   render: function() {
     return (

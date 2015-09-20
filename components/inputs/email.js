@@ -20,6 +20,7 @@ var EmailAddress = React.createClass({
     }
   },
   propTypes: {
+    callback: React.PropTypes.func,
     isUnique: React.PropTypes.bool,
     label: React.PropTypes.string,
     placeholder: React.PropTypes.string
@@ -30,23 +31,26 @@ var EmailAddress = React.createClass({
     var value = this.refs.email.getDOMNode().value;
 
     var isValidEmail = regex.test(value);
+    var state;
 
     if (!isValidEmail) {
-      this.setState({
+      state = {
         isValid: false,
         isError: true,
-      });
+      };
     } else {
-      this.setState({
+      state = {
         isValid: true,
         isError: false
-      });
+      };
     }
 
-    return {
-      email: isValidEmail,
+    this.setState(state);
+
+    this.props.onValidation('email', {
+      isValid: isValidEmail,
       value: value
-    };
+    });
   },
   render: function() {
     var errorMessage = this.props.isUnique ? 'Are you sure that\'s a valid e-mail address?' : 'An account with that email address already exists';
@@ -55,7 +59,7 @@ var EmailAddress = React.createClass({
     return (
       <div className="ob-input email">
         <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={message} />
-        <div className="input">
+        <div onClick={this.handleClick} className="input">
           <label>{this.props.label}</label>
           <Input type="text" ref="email" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
         </div>

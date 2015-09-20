@@ -9,6 +9,9 @@ var Feedback = require('./basics/feedback.js');
 var MapStore = require('../../stores/MapStore.js');
 var Actions = require('../../actions/actions.js');
 
+// UTILITIES
+var _ = require('lodash');
+
 var LocationFinder = React.createClass({
   mixins: [Reflux.connect(MapStore)],
   getInitialState: function() {
@@ -16,33 +19,40 @@ var LocationFinder = React.createClass({
       isVisible: true,
       isValid: false,
       isError: false,
-      userLocation: null,
+      isPostalcodeDisabled: false,
+      isGeolocationDisabled: false,
+      userLocation: {},
       message: 'You can edit where your pin appears on the next page'
     }
   },
   disableGeolocation: function() {
     this.setState({
-      isGeolocationBlocked: true
+      isPostalcodeDisabled: false,
+      isGeolocationDisabled: true
     });
   },
-  handleGeocodePostalCode: function(postalcode) {
-    Actions.geolocatePostalCode(postalcode);
-  },
-  handleGeolocation: function() {
-    Actions.geolocateCurrentLocation();
+  disablePostalcode: function() {
+    this.setState({
+      isPostalcodeDisabled: true,
+      isGeolocationDisabled: false
+    });
   },
   isValid: function() {
-    if (!this.state.userLocation) {
+    var isValidLocation = !(_.isEmpty(this.state.userLocation));
+    console.log('isValidLocation', isValidLocation, this.state.userLocation);
+    if (!isValidLocation) {
       this.setState({
+        isValid: false,
         isError: true,
+        userLocation: {},
         errorMessage: 'You must provide a location'
       });
     }
 
-    return {
-      location: this.state.isValid,
+    this.props.onValidation('location', {
+      isValid: isValidLocation,
       value: this.state.userLocation
-    }
+    });
   },
   render: function() {
     var message = this.state.isError ? this.state.errorMessage : this.state.message;
@@ -50,7 +60,8 @@ var LocationFinder = React.createClass({
     var classes = classNames(
       'or',
       {
-        disabled: this.state.isGeolocationBlocked
+        disabled: this.state.isGeolocationDisabled ||
+                  this.state.isPostalcodeDisabled
       }
     );
 
@@ -62,13 +73,13 @@ var LocationFinder = React.createClass({
           message={message} />
         <PostalCode
           ref="postalcode"
-          handleChange={this.disableGeolocation}
-          handleBlur={this.handleGeocodePostalCode} />
+          handleFocus={this.disableGeolocation}
+          isDisabled={this.state.isPostalcodeDisabled}  />
         <span className={classes}>or</span>
         <Geolocation
           ref="geolocation"
-          handleClick={this.handleGeolocation}
-          isBlocked={this.state.isGeolocationBlocked} />
+          handleClick={this.disablePostalcode}
+          isDisabled={this.state.isGeolocationDisabled} />
       </div>
     );
   }

@@ -1,8 +1,6 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Router = require('react-router-component');
-var Navigatable = Router.NavigatableMixin;
 var Reflux = require('reflux');
 var UserStore = require('../../stores/UserStore.js');
 var Actions = require('../../actions/actions.js');
@@ -22,13 +20,11 @@ var Submit = require('../buttons/event-button.js');
 var Feedback = require('../inputs/basics/feedback.js');
 
 var SignUpForm = React.createClass({
-  mixins: [Router.NavigatableMixin, Reflux.connect(UserStore)],
+  mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
-      router: Navigatable,
-      email: {
-        isUnique: true
-      },
+      inputs: {},
+      isValidForm: false,
       conductError: {
         message: 'AGREE WITH IT, DAMN IT!',
         isVisible: false
@@ -55,50 +51,76 @@ var SignUpForm = React.createClass({
   isValid: function(e) {
     e.preventDefault();
 
-    // Get validity information from invididual inputs
+    // Check if form is valid
+    var isValidForm = this.onFormValidation();
+    var state;
+    console.log('isValidForm: ', isValidForm);
+
+    if (isValidForm) {
+      state = {
+        isValidForm: false
+      };
+      // Create clean data object
+      var inputs = this.state.inputs;
+      var data = {};
+      _.forEach(inputs, function(input, key) {
+        data[key] = input.value;
+      });
+      console.log('everything is cool! now create profile', data);
+      // Create user
+      // Actions.createUser(data);
+    } else {
+      state = {
+        isValidForm: false
+      };
+      console.log('such errors! much disappointment!');
+    }
+
+    this.setState(state);
+  },
+  onFormValidation: function() {
+    console.log('BEFORE onFormValidation this.state.inputs', this.state.inputs);
+    // Call isValid callback for each referenced input
     var keys = Object.keys(this.refs);
-    var inputs = keys.map(function(key) {
+    keys.map(function(key) {
       return this.refs[key].isValid();
     }, this);
-
-    // Determine if any are invalid
-    var invalidInputs = inputs.filter(function(input, i) {
-      return input[keys[i]] === false;
+    console.log('AFTER onFormValidation this.state.inputs', this.state.inputs);
+    // Check if any inputs are invalid
+    var inputs = this.state.inputs;
+    var invalidInputs = _.filter(inputs, function(input) {
+      return input.isValid === false;
     });
+    console.log('are there invalid inputs?', invalidInputs);
+    return (invalidInputs.length === 0);
+  },
+  onInputValidation: function(name, inputState) {
+    this.state.inputs[name] = inputState;
+    console.log('input state: ', this.state.inputs);
 
-    // All inputs are valid
-    if (invalidInputs.length === 0) {
-      // Create a clean object
-      this.data = {};
-      inputs.forEach(function(input, i) {
-        this.data[keys[i]] = input.value;
-      }, this);
-
-      // Create user
-      Actions.createUser(this.data);
-    }
+    // Handle updating progress bar component
   },
   render: function() {
     return (
-      <form className="ob-signup-form">
+      <form className="ob-signup-form" noValidate>
         <h2>Welcome! Create a profile & find lady engineers near you.</h2>
         <div className="profile-information">
-          <div className="grouping">
-            <Name ref="name" label="Name" />
-            <Email ref="email" isUnique={this.state.email.isUnique}/>
-          </div>
-          <div className="grouping">
-            <Username ref="username" />
-            <Password ref="password" />
-          </div>
-          <div className="grouping">
+          <fieldset>
+            <Name ref="name" onValidation={this.onInputValidation} />
+            <Email ref="email" onValidation={this.onInputValidation} />
+          </fieldset>
+          <fieldset>
+            <Username ref="username" onValidation={this.onInputValidation} />
+            <Password ref="password" onValidation={this.onInputValidation} />
+          </fieldset>
+          <fieldset>
             <h2>{this.state.opportunities.message}</h2>
-            <CheckboxList ref="opportunities" className="opportunities-list" checkboxes={this.state.checkboxes} />
-          </div>
-          <div className="grouping">
+            <CheckboxList onValidation={this.onInputValidation} className="opportunities-list" checkboxes={this.state.checkboxes} />
+          </fieldset>
+          <fieldset>
             <h2>Where are you located?</h2>
-            <Location ref="location" />
-          </div>
+            <Location ref="location" onValidation={this.onInputValidation} />
+          </fieldset>
         </div>
         <div className="code-of-conduct">
           <h3>Code of Awesome</h3>
@@ -116,7 +138,7 @@ var SignUpForm = React.createClass({
               Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.
             </p>
           </div>
-          <Checkbox ref="conduct" className="conduct-agreement" value="conduct" text="I agree to the Code of Awesome"/>
+          <Checkbox ref="conduct" className="conduct-agreement" value="conduct" text="I agree to the Code of Awesome" onValidation={this.onInputValidation} />
           <Submit onClick={this.isValid}>Start making connections</Submit>
         </div>
       </form>

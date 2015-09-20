@@ -14,6 +14,7 @@ var Name = React.createClass({
   },
   getDefaultProps: function() {
     return {
+      label: 'Name',
       message: 'Your name will be public',
       errorMessage: 'Must be 1-30 characters; no special characters'
     }
@@ -26,28 +27,29 @@ var Name = React.createClass({
   isValid: function() {
     // Check that name contains ONLY letters & length is >=1 <= 60
     var regex = /^[a-zA-Z]{1,60}$/;
-    var value = this.refs.name.getDOMNode().value.split(' ');
+    var name = this.refs.name.getDOMNode().value.split(' ');
 
-    var isValidName = value.length > 1 ? regex.test(value[0]) && regex.test(value[1]) : regex.test(value[0]);
+    var isValidName = name.length > 1 ? regex.test(name[0]) && regex.test(name[1]) : regex.test(name[0]);
+    var state;
 
     if (!isValidName) {
-      this.setState({
+      state = {
         isValid: false,
         isError: true
-      });
+      };
     } else {
-      this.setState({
+      state = {
         isValid: true,
         isError: false
-      });
+      };
     }
 
-    var returnValue = {
-      name: isValidName,
-      value: value
-    };
+    this.setState(state);
 
-    return returnValue;
+    this.props.onValidation('name', {
+      isValid: isValidName,
+      value: name
+    });
   },
   render: function() {
     var message = this.state.isValid ? this.props.message : this.props.errorMessage;

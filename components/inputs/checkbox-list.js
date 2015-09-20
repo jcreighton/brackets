@@ -38,20 +38,24 @@ var CheckboxList = React.createClass({
 
     this.handleChange();
 
-    return returnValue;
+    this.props.onValidation('checklist', returnValue);
   },
   handleChange: function() {
+    var state;
+
     if (this.checked.length > 0) {
-      this.setState({
+      state = {
         isValid: false,
         isVisible: false
-      });
+      };
     } else {
-      this.setState({
+      state = {
         isValid: true,
         isVisible: true
-      });
+      };
     }
+
+    this.setState(state);
   },
   propTypes: {
     checkboxes: React.PropTypes.array

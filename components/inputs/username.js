@@ -13,8 +13,8 @@ var Username = React.createClass({
     return {
       isVisible: true,
       isValid: true,
-      isUnique: true,
-      msg: 'Create a username'
+      isUniqueEmail: true,
+      message: 'Create a username'
     }
   },
   getDefaultProps: function() {
@@ -36,33 +36,28 @@ var Username = React.createClass({
 
     if (!isValidUsername) {
       this.setState({
-        msg: '# & letters only',
+        message: '# & letters only',
         isValid: false,
         isError: true
       });
     } else {
-      this.setState({
-        msg: 'Create a username',
-        isValid: true,
-        isError: false
-      });
-
-      this.isUnique();
+      this.isUnique(username);
     }
-
-    return {
-      username: isValidUsername,
-      value: username
-    };
   },
-  isUnique: function() {
-    var username = this.refs.username.getDOMNode().value;
-    Actions.checkUsername(username);
+  isUnique: function(username) {
+    Actions.checkUsername(username, this.onValidation);
+  },
+  onValidation: function(username) {
+    this.props.onValidation('username', {
+      isValid: this.state.isValid,
+      value: username
+    });
+
   },
   render: function() {
     return (
       <div className="ob-input username">
-        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={this.state.msg} />
+        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={this.state.message} />
         <div className="input">
           <label>{this.props.label}</label>
           <Input type="text" ref="username" onInputBlur={this.isValid} placeholder={this.props.placeholder} />

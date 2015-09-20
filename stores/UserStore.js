@@ -53,24 +53,28 @@ var UserStore = Reflux.createStore({
         }
     });
   },
-  onCheckUsername: function(username) {
+  onCheckUsername: function(username, callback) {
     var checkIfExists = function(snapshot) {
       var state;
       console.log(snapshot.exists());
 
       if (snapshot.exists()) {
        state = {
-          isUnique: false,
-          msg: 'Username taken!',
+          isUniqueEmail: false,
+          message: 'Username taken!',
           isError: true
         }
       } else {
         state = {
-          isUnique: true
+          isUniqueEmail: true,
+          message: 'Create a username',
+          isValid: true,
+          isError: false
         }
       }
 
       this.trigger(state);
+      callback(username);
     }.bind(this);
 
     Users.orderByChild('username')

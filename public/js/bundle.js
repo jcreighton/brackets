@@ -165,8 +165,6 @@ module.exports = LoginForm;
 /** @jsx React.DOM */
 
 var React = require('react');
-var Router = require('react-router-component');
-var Navigatable = Router.NavigatableMixin;
 var Reflux = require('reflux');
 var UserStore = require('../../stores/UserStore.js');
 var Actions = require('../../actions/actions.js');
@@ -186,13 +184,11 @@ var Submit = require('../buttons/event-button.js');
 var Feedback = require('../inputs/basics/feedback.js');
 
 var SignUpForm = React.createClass({displayName: "SignUpForm",
-  mixins: [Router.NavigatableMixin, Reflux.connect(UserStore)],
+  mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
-      router: Navigatable,
-      email: {
-        isUnique: true
-      },
+      inputs: {},
+      isValidForm: false,
       conductError: {
         message: 'AGREE WITH IT, DAMN IT!',
         isVisible: false
@@ -219,49 +215,75 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
   isValid: function(e) {
     e.preventDefault();
 
-    // Get validity information from invididual inputs
+    // Check if form is valid
+    var isValidForm = this.onFormValidation();
+    var state;
+    console.log('isValidForm: ', isValidForm);
+
+    if (isValidForm) {
+      state = {
+        isValidForm: false
+      };
+      // Create clean data object
+      var inputs = this.state.inputs;
+      var data = {};
+      _.forEach(inputs, function(input, key) {
+        data[key] = input.value;
+      });
+      console.log('everything is cool! now create profile', data);
+      // Create user
+      // Actions.createUser(data);
+    } else {
+      state = {
+        isValidForm: false
+      };
+      console.log('such errors! much disappointment!');
+    }
+
+    this.setState(state);
+  },
+  onFormValidation: function() {
+    console.log('BEFORE onFormValidation this.state.inputs', this.state.inputs);
+    // Call isValid callback for each referenced input
     var keys = Object.keys(this.refs);
-    var inputs = keys.map(function(key) {
+    keys.map(function(key) {
       return this.refs[key].isValid();
     }, this);
-
-    // Determine if any are invalid
-    var invalidInputs = inputs.filter(function(input, i) {
-      return input[keys[i]] === false;
+    console.log('AFTER onFormValidation this.state.inputs', this.state.inputs);
+    // Check if any inputs are invalid
+    var inputs = this.state.inputs;
+    var invalidInputs = _.filter(inputs, function(input) {
+      return input.isValid === false;
     });
+    console.log('are there invalid inputs?', invalidInputs);
+    return (invalidInputs.length === 0);
+  },
+  onInputValidation: function(name, inputState) {
+    this.state.inputs[name] = inputState;
+    console.log('input state: ', this.state.inputs);
 
-    // All inputs are valid
-    if (invalidInputs.length === 0) {
-      // Create a clean object
-      this.data = {};
-      inputs.forEach(function(input, i) {
-        this.data[keys[i]] = input.value;
-      }, this);
-
-      // Create user
-      Actions.createUser(this.data);
-    }
+    // Handle updating progress bar component
   },
   render: function() {
     return (
-      React.createElement("form", {className: "ob-signup-form"}, 
+      React.createElement("form", {className: "ob-signup-form", noValidate: true}, 
         React.createElement("h2", null, "Welcome! Create a profile & find lady engineers near you."), 
         React.createElement("div", {className: "profile-information"}, 
-          React.createElement("div", {className: "grouping"}, 
-            React.createElement(Name, {ref: "name", label: "Name"}), 
-            React.createElement(Email, {ref: "email", isUnique: this.state.email.isUnique})
+          React.createElement("fieldset", null, 
+            React.createElement(Name, {ref: "name", onValidation: this.onInputValidation}), 
+            React.createElement(Email, {ref: "email", onValidation: this.onInputValidation})
           ), 
-          React.createElement("div", {className: "grouping"}, 
-            React.createElement(Username, {ref: "username"}), 
-            React.createElement(Password, {ref: "password"})
+          React.createElement("fieldset", null, 
+            React.createElement(Username, {ref: "username", onValidation: this.onInputValidation}), 
+            React.createElement(Password, {ref: "password", onValidation: this.onInputValidation})
           ), 
-          React.createElement("div", {className: "grouping"}, 
+          React.createElement("fieldset", null, 
             React.createElement("h2", null, this.state.opportunities.message), 
-            React.createElement(CheckboxList, {ref: "opportunities", className: "opportunities-list", checkboxes: this.state.checkboxes})
+            React.createElement(CheckboxList, {onValidation: this.onInputValidation, className: "opportunities-list", checkboxes: this.state.checkboxes})
           ), 
-          React.createElement("div", {className: "grouping"}, 
+          React.createElement("fieldset", null, 
             React.createElement("h2", null, "Where are you located?"), 
-            React.createElement(Location, {ref: "location"})
+            React.createElement(Location, {ref: "location", onValidation: this.onInputValidation})
           )
         ), 
         React.createElement("div", {className: "code-of-conduct"}, 
@@ -280,7 +302,7 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
               "Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly."
             )
           ), 
-          React.createElement(Checkbox, {ref: "conduct", className: "conduct-agreement", value: "conduct", text: "I agree to the Code of Awesome"}), 
+          React.createElement(Checkbox, {ref: "conduct", className: "conduct-agreement", value: "conduct", text: "I agree to the Code of Awesome", onValidation: this.onInputValidation}), 
           React.createElement(Submit, {onClick: this.isValid}, "Start making connections")
         )
       )
@@ -290,7 +312,7 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
 
 module.exports = SignUpForm;
 
-},{"../../actions/actions.js":1,"../../stores/UserStore.js":303,"../buttons/event-button.js":2,"../inputs/basics/feedback.js":8,"../inputs/checkbox-list.js":10,"../inputs/checkbox.js":11,"../inputs/email.js":12,"../inputs/location.js":14,"../inputs/name.js":15,"../inputs/password.js":16,"../inputs/username.js":19,"lodash":32,"react":277,"react-router-component":85,"reflux":294}],6:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/UserStore.js":303,"../buttons/event-button.js":2,"../inputs/basics/feedback.js":8,"../inputs/checkbox-list.js":10,"../inputs/checkbox.js":11,"../inputs/email.js":12,"../inputs/location.js":14,"../inputs/name.js":15,"../inputs/password.js":16,"../inputs/username.js":19,"lodash":32,"react":277,"reflux":294}],6:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -331,6 +353,7 @@ var Input = React.createClass({displayName: "Input",
     return (
       React.createElement("input", {
         type: this.props.type, 
+        onFocus: this.props.onInputFocus, 
         onBlur: this.props.onInputBlur, 
         onChange: this.props.onInputChange, 
         placeholder: this.props.placeholder, 
@@ -438,20 +461,24 @@ var CheckboxList = React.createClass({displayName: "CheckboxList",
 
     this.handleChange();
 
-    return returnValue;
+    this.props.onValidation('checklist', returnValue);
   },
   handleChange: function() {
+    var state;
+
     if (this.checked.length > 0) {
-      this.setState({
+      state = {
         isValid: false,
         isVisible: false
-      });
+      };
     } else {
-      this.setState({
+      state = {
         isValid: true,
         isVisible: true
-      });
+      };
     }
+
+    this.setState(state);
   },
   propTypes: {
     checkboxes: React.PropTypes.array
@@ -571,6 +598,7 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
     }
   },
   propTypes: {
+    callback: React.PropTypes.func,
     isUnique: React.PropTypes.bool,
     label: React.PropTypes.string,
     placeholder: React.PropTypes.string
@@ -581,23 +609,26 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
     var value = this.refs.email.getDOMNode().value;
 
     var isValidEmail = regex.test(value);
+    var state;
 
     if (!isValidEmail) {
-      this.setState({
+      state = {
         isValid: false,
         isError: true,
-      });
+      };
     } else {
-      this.setState({
+      state = {
         isValid: true,
         isError: false
-      });
+      };
     }
 
-    return {
-      email: isValidEmail,
+    this.setState(state);
+
+    this.props.onValidation('email', {
+      isValid: isValidEmail,
       value: value
-    };
+    });
   },
   render: function() {
     var errorMessage = this.props.isUnique ? 'Are you sure that\'s a valid e-mail address?' : 'An account with that email address already exists';
@@ -606,7 +637,7 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
     return (
       React.createElement("div", {className: "ob-input email"}, 
         React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: message}), 
-        React.createElement("div", {className: "input"}, 
+        React.createElement("div", {onClick: this.handleClick, className: "input"}, 
           React.createElement("label", null, this.props.label), 
           React.createElement(Input, {type: "text", ref: "email", onInputBlur: this.isValid, placeholder: this.props.placeholder})
         )
@@ -623,6 +654,7 @@ module.exports = EmailAddress;
 var React = require('react');
 var classNames = require('classnames');
 var Checkbox = require('./checkbox.js');
+var Actions = require('../../actions/actions.js');
 
 var Geolocation = React.createClass({displayName: "Geolocation",
   getDefaultProps: function() {
@@ -635,8 +667,12 @@ var Geolocation = React.createClass({displayName: "Geolocation",
     text: React.PropTypes.string,
     className: React.PropTypes.string
   },
-  handleClick: function() {
-    this.props.handleClick();
+  handleGeolocation: function() {
+    Actions.geolocateCurrentLocation();
+
+    if (this.props.handleClick) {
+      this.props.handleClick();
+    }
   },
   render: function() {
     var classes = classNames(
@@ -652,8 +688,8 @@ var Geolocation = React.createClass({displayName: "Geolocation",
           className: "geolocation", 
           value: "geolocation", 
           text: this.props.text, 
-          disabled: this.props.isBlocked, 
-          handleChange: this.handleClick}
+          disabled: this.props.isDisabled, 
+          handleChange: this.handleGeolocation}
         )
       )
     );
@@ -662,7 +698,7 @@ var Geolocation = React.createClass({displayName: "Geolocation",
 
 module.exports = Geolocation;
 
-},{"./checkbox.js":11,"classnames":28,"react":277}],14:[function(require,module,exports){
+},{"../../actions/actions.js":1,"./checkbox.js":11,"classnames":28,"react":277}],14:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -674,6 +710,9 @@ var Feedback = require('./basics/feedback.js');
 var MapStore = require('../../stores/MapStore.js');
 var Actions = require('../../actions/actions.js');
 
+// UTILITIES
+var _ = require('lodash');
+
 var LocationFinder = React.createClass({displayName: "LocationFinder",
   mixins: [Reflux.connect(MapStore)],
   getInitialState: function() {
@@ -681,33 +720,40 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
       isVisible: true,
       isValid: false,
       isError: false,
-      userLocation: null,
+      isPostalcodeDisabled: false,
+      isGeolocationDisabled: false,
+      userLocation: {},
       message: 'You can edit where your pin appears on the next page'
     }
   },
   disableGeolocation: function() {
     this.setState({
-      isGeolocationBlocked: true
+      isPostalcodeDisabled: false,
+      isGeolocationDisabled: true
     });
   },
-  handleGeocodePostalCode: function(postalcode) {
-    Actions.geolocatePostalCode(postalcode);
-  },
-  handleGeolocation: function() {
-    Actions.geolocateCurrentLocation();
+  disablePostalcode: function() {
+    this.setState({
+      isPostalcodeDisabled: true,
+      isGeolocationDisabled: false
+    });
   },
   isValid: function() {
-    if (!this.state.userLocation) {
+    var isValidLocation = !(_.isEmpty(this.state.userLocation));
+    console.log('isValidLocation', isValidLocation, this.state.userLocation);
+    if (!isValidLocation) {
       this.setState({
+        isValid: false,
         isError: true,
+        userLocation: {},
         errorMessage: 'You must provide a location'
       });
     }
 
-    return {
-      location: this.state.isValid,
+    this.props.onValidation('location', {
+      isValid: isValidLocation,
       value: this.state.userLocation
-    }
+    });
   },
   render: function() {
     var message = this.state.isError ? this.state.errorMessage : this.state.message;
@@ -715,7 +761,8 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
     var classes = classNames(
       'or',
       {
-        disabled: this.state.isGeolocationBlocked
+        disabled: this.state.isGeolocationDisabled ||
+                  this.state.isPostalcodeDisabled
       }
     );
 
@@ -727,13 +774,13 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
           message: message}), 
         React.createElement(PostalCode, {
           ref: "postalcode", 
-          handleChange: this.disableGeolocation, 
-          handleBlur: this.handleGeocodePostalCode}), 
+          handleFocus: this.disableGeolocation, 
+          isDisabled: this.state.isPostalcodeDisabled}), 
         React.createElement("span", {className: classes}, "or"), 
         React.createElement(Geolocation, {
           ref: "geolocation", 
-          handleClick: this.handleGeolocation, 
-          isBlocked: this.state.isGeolocationBlocked})
+          handleClick: this.disablePostalcode, 
+          isDisabled: this.state.isGeolocationDisabled})
       )
     );
   }
@@ -741,7 +788,7 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
 
 module.exports = LocationFinder;
 
-},{"../../actions/actions.js":1,"../../stores/MapStore.js":300,"../inputs/geolocation.js":13,"../inputs/postalcode.js":17,"./basics/feedback.js":8,"classnames":28,"react":277,"reflux":294}],15:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/MapStore.js":300,"../inputs/geolocation.js":13,"../inputs/postalcode.js":17,"./basics/feedback.js":8,"classnames":28,"lodash":32,"react":277,"reflux":294}],15:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -758,6 +805,7 @@ var Name = React.createClass({displayName: "Name",
   },
   getDefaultProps: function() {
     return {
+      label: 'Name',
       message: 'Your name will be public',
       errorMessage: 'Must be 1-30 characters; no special characters'
     }
@@ -770,28 +818,29 @@ var Name = React.createClass({displayName: "Name",
   isValid: function() {
     // Check that name contains ONLY letters & length is >=1 <= 60
     var regex = /^[a-zA-Z]{1,60}$/;
-    var value = this.refs.name.getDOMNode().value.split(' ');
+    var name = this.refs.name.getDOMNode().value.split(' ');
 
-    var isValidName = value.length > 1 ? regex.test(value[0]) && regex.test(value[1]) : regex.test(value[0]);
+    var isValidName = name.length > 1 ? regex.test(name[0]) && regex.test(name[1]) : regex.test(name[0]);
+    var state;
 
     if (!isValidName) {
-      this.setState({
+      state = {
         isValid: false,
         isError: true
-      });
+      };
     } else {
-      this.setState({
+      state = {
         isValid: true,
         isError: false
-      });
+      };
     }
 
-    var returnValue = {
-      name: isValidName,
-      value: value
-    };
+    this.setState(state);
 
-    return returnValue;
+    this.props.onValidation('name', {
+      isValid: isValidName,
+      value: name
+    });
   },
   render: function() {
     var message = this.state.isValid ? this.props.message : this.props.errorMessage;
@@ -842,17 +891,26 @@ var Password = React.createClass({displayName: "Password",
     var value = this.refs.password.getDOMNode().value;
 
     var isValidPassword = regex.test(value);
+    var state;
 
     if (!isValidPassword) {
-      this.setState({isVisible: true, isValid: false});
+      state = {
+        isVisible: true,
+        isValid: false
+      };
     } else {
-      this.setState({isVisible: false, isValid: true});
+      state = {
+        isVisible: false,
+        isValid: true
+      };
     }
 
-    return {
-      password: isValidPassword,
+    this.setState(state);
+
+    this.props.onValidation('password', {
+      isValid: isValidPassword,
       value: value
-    };
+    });
   },
   render: function() {
     return (
@@ -874,6 +932,7 @@ module.exports = Password;
 
 var React = require('react/addons');
 var Input = require('./basics/basic-input.js');
+var classNames = require('classnames');
 
 var PostalCode = React.createClass({displayName: "PostalCode",
   getDefaultProps: function() {
@@ -885,23 +944,40 @@ var PostalCode = React.createClass({displayName: "PostalCode",
     label: React.PropTypes.string,
     placeholder: React.PropTypes.string
   },
-  handleChange: function() {
-    this.props.handleChange();
+  handleFocus: function() {
+    if (this.props.handleFocus) {
+      this.props.handleFocus();
+    }
   },
-  handleBlur: function() {
+  handleChange: function() {
+    if (this.props.handleChange) {
+      this.props.handleChange();
+    }
+  },
+  handleGeocodePostalCode: function(postalcode) {
     var value = this.refs.postalcode.getDOMNode().value;
-    this.props.handleBlur(value);
+    if (value) {
+      Actions.geolocatePostalCode(postalcode);
+    }
   },
   render: function() {
+    var classes = classNames(
+      'input',
+      {
+        'disabled': this.props.isDisabled
+      }
+    );
+
     return (
       React.createElement("div", {className: "ob-input postalcode"}, 
-        React.createElement("div", {className: "input"}, 
+        React.createElement("div", {className: classes}, 
           React.createElement("label", null, this.props.label), 
           React.createElement(Input, {
             type: "text", 
             ref: "postalcode", 
             onInputChange: this.handleChange, 
-            onInputBlur: this.handleBlur, 
+            onInputFocus: this.handleFocus, 
+            onInputBlur: this.handleGeocodePostalCode, 
             placeholder: this.props.placeholder})
         )
       )
@@ -911,7 +987,7 @@ var PostalCode = React.createClass({displayName: "PostalCode",
 
 module.exports = PostalCode;
 
-},{"./basics/basic-input.js":7,"react/addons":105}],18:[function(require,module,exports){
+},{"./basics/basic-input.js":7,"classnames":28,"react/addons":105}],18:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -997,8 +1073,8 @@ var Username = React.createClass({displayName: "Username",
     return {
       isVisible: true,
       isValid: true,
-      isUnique: true,
-      msg: 'Create a username'
+      isUniqueEmail: true,
+      message: 'Create a username'
     }
   },
   getDefaultProps: function() {
@@ -1020,33 +1096,28 @@ var Username = React.createClass({displayName: "Username",
 
     if (!isValidUsername) {
       this.setState({
-        msg: '# & letters only',
+        message: '# & letters only',
         isValid: false,
         isError: true
       });
     } else {
-      this.setState({
-        msg: 'Create a username',
-        isValid: true,
-        isError: false
-      });
-
-      this.isUnique();
+      this.isUnique(username);
     }
-
-    return {
-      username: isValidUsername,
-      value: username
-    };
   },
-  isUnique: function() {
-    var username = this.refs.username.getDOMNode().value;
-    Actions.checkUsername(username);
+  isUnique: function(username) {
+    Actions.checkUsername(username, this.onValidation);
+  },
+  onValidation: function(username) {
+    this.props.onValidation('username', {
+      isValid: this.state.isValid,
+      value: username
+    });
+
   },
   render: function() {
     return (
       React.createElement("div", {className: "ob-input username"}, 
-        React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: this.state.msg}), 
+        React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: this.state.message}), 
         React.createElement("div", {className: "input"}, 
           React.createElement("label", null, this.props.label), 
           React.createElement(Input, {type: "text", ref: "username", onInputBlur: this.isValid, placeholder: this.props.placeholder})
@@ -48520,24 +48591,28 @@ var UserStore = Reflux.createStore({
         }
     });
   },
-  onCheckUsername: function(username) {
+  onCheckUsername: function(username, callback) {
     var checkIfExists = function(snapshot) {
       var state;
       console.log(snapshot.exists());
 
       if (snapshot.exists()) {
        state = {
-          isUnique: false,
-          msg: 'Username taken!',
+          isUniqueEmail: false,
+          message: 'Username taken!',
           isError: true
         }
       } else {
         state = {
-          isUnique: true
+          isUniqueEmail: true,
+          message: 'Create a username',
+          isValid: true,
+          isError: false
         }
       }
 
       this.trigger(state);
+      callback(username);
     }.bind(this);
 
     Users.orderByChild('username')
