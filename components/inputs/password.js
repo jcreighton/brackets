@@ -8,13 +8,14 @@ var Password = React.createClass({
   getInitialState: function() {
     return {
       isVisible: true,
-      isValid: false
+      isValid: false,
+      isError: false
     }
   },
   getDefaultProps: function() {
     return {
       label: 'Password',
-      message: 'Must be 6-18 characters; Letters, numbers, !@?$ symbols only'
+      message: '6-18 characters; Letters, numbers, !@?$ symbols only'
     }
   },
   propTypes: {
@@ -24,22 +25,22 @@ var Password = React.createClass({
     errorMessage: React.PropTypes.string
   },
   isValid: function() {
-    // check that password is only letters, numbers, !@? & > 8 characters
+    // check that password is only letters, numbers, !@? &; 6-18 characters
     var regex = /^[a-zA-Z0-9$!?@]{6,18}$/;
-    var value = this.refs.password.getDOMNode().value;
+    var password = this.refs.password.getDOMNode().value;
 
-    var isValidPassword = regex.test(value);
+    var isValidPassword = regex.test(password);
     var state;
 
     if (!isValidPassword) {
       state = {
-        isVisible: true,
-        isValid: false
+        isValid: false,
+        isError: true
       };
     } else {
       state = {
-        isVisible: false,
-        isValid: true
+        isValid: true,
+        isError: false
       };
     }
 
@@ -47,13 +48,13 @@ var Password = React.createClass({
 
     this.props.onValidation('password', {
       isValid: isValidPassword,
-      value: value
+      value: password
     });
   },
   render: function() {
     return (
       <div className="ob-input password">
-        <Feedback isError={this.state.isValid} message={this.props.message} />
+        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={this.props.message} />
         <div className="input">
           <label>{this.props.label}</label>
           <Input type="password" ref="password" onInputBlur={this.isValid} placeholder={this.props.placeholder} />

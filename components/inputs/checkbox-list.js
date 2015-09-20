@@ -4,74 +4,81 @@ var React = require('react');
 var Feedback = require('./basics/feedback.js');
 var Checkbox = require('./checkbox.js');
 
+// UTILITIES
+var _ = require('lodash');
+
 var CheckboxList = React.createClass({
   getInitialState: function() {
     return {
+      checklist: {},
       isValid: false,
-      isVisible: false
+      isVisible: false,
+      isError: false
     }
   },
   getDefaultProps: function() {
     return {
+      limit: 0,
       message: 'Select at least one option'
     }
   },
   propTypes: {
-    errorMessage: React.PropTypes.string
+    checkboxes: React.PropTypes.array,
+    limit: React.PropTypes.number,
+    message: React.PropTypes.string
   },
   isValid: function() {
-    var keys = Object.keys(this.refs);
+    // Find which checkboxes are valid (checked)
+    var checked = _.filter(this.state.checklist, function(checkbox) {
+      return checkbox.isValid;
+    });
 
-    this.checked = [];
-    keys.forEach(function(key) {
-      var validObject = this.refs[key].isValid();
-
-      if (validObject[validObject.value]) {
-        this.checked.push(validObject.value);
-      }
-    }, this);
-
-    var returnValue = {
-      value: this.checked
-    };
-    returnValue[this.props.refName] = (this.checked.length > 0);
-
-    this.handleChange();
-
-    this.props.onValidation('checklist', returnValue);
-  },
-  handleChange: function() {
+    var isValidChecklist = (checked.length >= this.props.limit);
     var state;
 
-    if (this.checked.length > 0) {
+    if (isValidChecklist) {
       state = {
-        isValid: false,
-        isVisible: false
+        isValid: true,
+        isVisible: false,
+        isError: false
       };
     } else {
       state = {
-        isValid: true,
-        isVisible: true
+        isValid: false,
+        isVisible: true,
+        isError: true
       };
     }
 
     this.setState(state);
+
+    this.props.onValidation('checklist', {
+      isValid: isValidChecklist,
+      value: checked
+    });
   },
-  propTypes: {
-    checkboxes: React.PropTypes.array
+  onSelection: function(name, inputState) {
+    this.state.checklist[name] = inputState;
+
+    this.isValid();
   },
   render: function() {
-    var checklist = this.props.checkboxes.map(function(checkboxProps, index) {
+    var checklist = this.props.checkboxes.map(function(props, index) {
       var checkboxRef = 'checkbox_' + index;
-      return <Checkbox key={checkboxRef} ref={checkboxRef} {...checkboxProps} />
-    });
+      props.onSelection = this.onSelection;
 
-    var classes = 'ob-checklist ' + this.props.className;
+      return <Checkbox
+              key={checkboxRef}
+              ref={checkboxRef}
+              {...props} />
+    }, this);
+
+    var classes = 'ob-input ob-checklist ' + this.props.className;
 
     return (
       <div className={classes}>
         {checklist}
-        <Feedback isError={this.state.isValid} message={this.props.message} />
+        <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={this.props.message} />
       </div>
     );
   }

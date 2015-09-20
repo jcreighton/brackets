@@ -29,20 +29,26 @@ var SignUpForm = React.createClass({
         message: 'AGREE WITH IT, DAMN IT!',
         isVisible: false
       },
-      checkboxes: [
-        {
-          value: 'social',
-          text: 'Social'
-        },
-        {
-          value: 'mentorship',
-          text: 'Mentorship'
-        },
-        {
-          value: 'networking',
-          text: 'Networking'
-        }
-      ],
+      checkboxes: {
+        limit: 1,
+        settings: [
+          {
+            value: 'social',
+            text: 'Social',
+            type: 'tag'
+          },
+          {
+            value: 'mentorship',
+            text: 'Mentorship',
+            type: 'tag'
+          },
+          {
+            value: 'networking',
+            text: 'Networking',
+            type: 'tag'
+          }
+        ]
+      },
       opportunities: {
         message: 'What opportunities are you looking for?'
       }
@@ -115,7 +121,11 @@ var SignUpForm = React.createClass({
           </fieldset>
           <fieldset>
             <h2>{this.state.opportunities.message}</h2>
-            <CheckboxList onValidation={this.onInputValidation} className="opportunities-list" checkboxes={this.state.checkboxes} />
+            <CheckboxList ref="checklist"
+              className="opportunities-list"
+              onValidation={this.onInputValidation}
+              limit={this.state.checkboxes.limit}
+              checkboxes={this.state.checkboxes.settings} />
           </fieldset>
           <fieldset>
             <h2>Where are you located?</h2>
@@ -138,7 +148,7 @@ var SignUpForm = React.createClass({
               Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.
             </p>
           </div>
-          <Checkbox ref="conduct" className="conduct-agreement" value="conduct" text="I agree to the Code of Awesome" onValidation={this.onInputValidation} />
+          <Checkbox ref="conduct" className="conduct-agreement" value="conduct" text="I agree to the Code of Awesome" onSelection={this.onInputValidation} />
           <Submit onClick={this.isValid}>Start making connections</Submit>
         </div>
       </form>

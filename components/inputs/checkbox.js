@@ -16,28 +16,27 @@ var Checkbox = React.createClass({
     var isChecked = checkboxNode.checked;
     var value = checkboxNode.value;
 
-    this.handleChange(isChecked);
-
-    var returnValue = {
-      value: value
-    };
-    returnValue[value] = isChecked;
-    return returnValue;
-  },
-  handleChange: function(isChecked) {
-    if (this.props.handleChange) {
-      this.props.handleChange();
-    }
-
     this.setState({
       checked: isChecked,
       isValid: isChecked
     });
+
+    this.props.onSelection(value, {
+      isValid: isChecked,
+      value: value
+    });
+
+    // If callback has been set, call it
+    if (this.props.handleChange) {
+      this.props.handleChange();
+    }
   },
   propTypes: {
     checked: React.PropTypes.bool,
     name: React.PropTypes.string,
-    value: React.PropTypes.string
+    value: React.PropTypes.string,
+    onSelection: React.PropTypes.func,
+    handleChange: React.PropTypes.func
   },
   render: function() {
     var type = {};

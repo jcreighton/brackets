@@ -193,20 +193,26 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
         message: 'AGREE WITH IT, DAMN IT!',
         isVisible: false
       },
-      checkboxes: [
-        {
-          value: 'social',
-          text: 'Social'
-        },
-        {
-          value: 'mentorship',
-          text: 'Mentorship'
-        },
-        {
-          value: 'networking',
-          text: 'Networking'
-        }
-      ],
+      checkboxes: {
+        limit: 1,
+        settings: [
+          {
+            value: 'social',
+            text: 'Social',
+            type: 'tag'
+          },
+          {
+            value: 'mentorship',
+            text: 'Mentorship',
+            type: 'tag'
+          },
+          {
+            value: 'networking',
+            text: 'Networking',
+            type: 'tag'
+          }
+        ]
+      },
       opportunities: {
         message: 'What opportunities are you looking for?'
       }
@@ -279,7 +285,11 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
           ), 
           React.createElement("fieldset", null, 
             React.createElement("h2", null, this.state.opportunities.message), 
-            React.createElement(CheckboxList, {onValidation: this.onInputValidation, className: "opportunities-list", checkboxes: this.state.checkboxes})
+            React.createElement(CheckboxList, {ref: "checklist", 
+              className: "opportunities-list", 
+              onValidation: this.onInputValidation, 
+              limit: this.state.checkboxes.limit, 
+              checkboxes: this.state.checkboxes.settings})
           ), 
           React.createElement("fieldset", null, 
             React.createElement("h2", null, "Where are you located?"), 
@@ -302,7 +312,7 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
               "Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly."
             )
           ), 
-          React.createElement(Checkbox, {ref: "conduct", className: "conduct-agreement", value: "conduct", text: "I agree to the Code of Awesome", onValidation: this.onInputValidation}), 
+          React.createElement(Checkbox, {ref: "conduct", className: "conduct-agreement", value: "conduct", text: "I agree to the Code of Awesome", onSelection: this.onInputValidation}), 
           React.createElement(Submit, {onClick: this.isValid}, "Start making connections")
         )
       )
@@ -427,74 +437,81 @@ var React = require('react');
 var Feedback = require('./basics/feedback.js');
 var Checkbox = require('./checkbox.js');
 
+// UTILITIES
+var _ = require('lodash');
+
 var CheckboxList = React.createClass({displayName: "CheckboxList",
   getInitialState: function() {
     return {
+      checklist: {},
       isValid: false,
-      isVisible: false
+      isVisible: false,
+      isError: false
     }
   },
   getDefaultProps: function() {
     return {
+      limit: 0,
       message: 'Select at least one option'
     }
   },
   propTypes: {
-    errorMessage: React.PropTypes.string
+    checkboxes: React.PropTypes.array,
+    limit: React.PropTypes.number,
+    message: React.PropTypes.string
   },
   isValid: function() {
-    var keys = Object.keys(this.refs);
+    // Find which checkboxes are valid (checked)
+    var checked = _.filter(this.state.checklist, function(checkbox) {
+      return checkbox.isValid;
+    });
 
-    this.checked = [];
-    keys.forEach(function(key) {
-      var validObject = this.refs[key].isValid();
-
-      if (validObject[validObject.value]) {
-        this.checked.push(validObject.value);
-      }
-    }, this);
-
-    var returnValue = {
-      value: this.checked
-    };
-    returnValue[this.props.refName] = (this.checked.length > 0);
-
-    this.handleChange();
-
-    this.props.onValidation('checklist', returnValue);
-  },
-  handleChange: function() {
+    var isValidChecklist = (checked.length >= this.props.limit);
     var state;
 
-    if (this.checked.length > 0) {
+    if (isValidChecklist) {
       state = {
-        isValid: false,
-        isVisible: false
+        isValid: true,
+        isVisible: false,
+        isError: false
       };
     } else {
       state = {
-        isValid: true,
-        isVisible: true
+        isValid: false,
+        isVisible: true,
+        isError: true
       };
     }
 
     this.setState(state);
+
+    this.props.onValidation('checklist', {
+      isValid: isValidChecklist,
+      value: checked
+    });
   },
-  propTypes: {
-    checkboxes: React.PropTypes.array
+  onSelection: function(name, inputState) {
+    this.state.checklist[name] = inputState;
+
+    this.isValid();
   },
   render: function() {
-    var checklist = this.props.checkboxes.map(function(checkboxProps, index) {
+    var checklist = this.props.checkboxes.map(function(props, index) {
       var checkboxRef = 'checkbox_' + index;
-      return React.createElement(Checkbox, React.__spread({key: checkboxRef, ref: checkboxRef},  checkboxProps))
-    });
+      props.onSelection = this.onSelection;
 
-    var classes = 'ob-checklist ' + this.props.className;
+      return React.createElement(Checkbox, React.__spread({
+              key: checkboxRef, 
+              ref: checkboxRef}, 
+              props))
+    }, this);
+
+    var classes = 'ob-input ob-checklist ' + this.props.className;
 
     return (
       React.createElement("div", {className: classes}, 
         checklist, 
-        React.createElement(Feedback, {isError: this.state.isValid, message: this.props.message})
+        React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: this.props.message})
       )
     );
   }
@@ -502,7 +519,7 @@ var CheckboxList = React.createClass({displayName: "CheckboxList",
 
 module.exports = CheckboxList;
 
-},{"./basics/feedback.js":8,"./checkbox.js":11,"react":277}],11:[function(require,module,exports){
+},{"./basics/feedback.js":8,"./checkbox.js":11,"lodash":32,"react":277}],11:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -521,28 +538,27 @@ var Checkbox = React.createClass({displayName: "Checkbox",
     var isChecked = checkboxNode.checked;
     var value = checkboxNode.value;
 
-    this.handleChange(isChecked);
-
-    var returnValue = {
-      value: value
-    };
-    returnValue[value] = isChecked;
-    return returnValue;
-  },
-  handleChange: function(isChecked) {
-    if (this.props.handleChange) {
-      this.props.handleChange();
-    }
-
     this.setState({
       checked: isChecked,
       isValid: isChecked
     });
+
+    this.props.onSelection(value, {
+      isValid: isChecked,
+      value: value
+    });
+
+    // If callback has been set, call it
+    if (this.props.handleChange) {
+      this.props.handleChange();
+    }
   },
   propTypes: {
     checked: React.PropTypes.bool,
     name: React.PropTypes.string,
-    value: React.PropTypes.string
+    value: React.PropTypes.string,
+    onSelection: React.PropTypes.func,
+    handleChange: React.PropTypes.func
   },
   render: function() {
     var type = {};
@@ -870,13 +886,14 @@ var Password = React.createClass({displayName: "Password",
   getInitialState: function() {
     return {
       isVisible: true,
-      isValid: false
+      isValid: false,
+      isError: false
     }
   },
   getDefaultProps: function() {
     return {
       label: 'Password',
-      message: 'Must be 6-18 characters; Letters, numbers, !@?$ symbols only'
+      message: '6-18 characters; Letters, numbers, !@?$ symbols only'
     }
   },
   propTypes: {
@@ -886,22 +903,22 @@ var Password = React.createClass({displayName: "Password",
     errorMessage: React.PropTypes.string
   },
   isValid: function() {
-    // check that password is only letters, numbers, !@? & > 8 characters
+    // check that password is only letters, numbers, !@? &; 6-18 characters
     var regex = /^[a-zA-Z0-9$!?@]{6,18}$/;
-    var value = this.refs.password.getDOMNode().value;
+    var password = this.refs.password.getDOMNode().value;
 
-    var isValidPassword = regex.test(value);
+    var isValidPassword = regex.test(password);
     var state;
 
     if (!isValidPassword) {
       state = {
-        isVisible: true,
-        isValid: false
+        isValid: false,
+        isError: true
       };
     } else {
       state = {
-        isVisible: false,
-        isValid: true
+        isValid: true,
+        isError: false
       };
     }
 
@@ -909,13 +926,13 @@ var Password = React.createClass({displayName: "Password",
 
     this.props.onValidation('password', {
       isValid: isValidPassword,
-      value: value
+      value: password
     });
   },
   render: function() {
     return (
       React.createElement("div", {className: "ob-input password"}, 
-        React.createElement(Feedback, {isError: this.state.isValid, message: this.props.message}), 
+        React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: this.props.message}), 
         React.createElement("div", {className: "input"}, 
           React.createElement("label", null, this.props.label), 
           React.createElement(Input, {type: "password", ref: "password", onInputBlur: this.isValid, placeholder: this.props.placeholder})
