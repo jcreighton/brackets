@@ -21,12 +21,15 @@ var Checkbox = React.createClass({
       isValid: isChecked
     });
 
-    this.props.onSelection(value, {
-      isValid: isChecked,
-      value: value
-    });
+    // Call onSelection callback if provided
+    if (this.props.onSelection) {
+      this.props.onSelection(value, {
+        isValid: isChecked,
+        value: value
+      });
+    }
 
-    // If callback has been set, call it
+    // Call handleChange callback if provided
     if (this.props.handleChange) {
       this.props.handleChange();
     }
