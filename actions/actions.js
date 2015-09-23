@@ -21,15 +21,17 @@ Actions.createUser.listen(function(userData) {
   })
 });
 
+Actions.checkUsername.listen(function(username) {
+  checkUsername(username);
+  })
+});
+
 
 // *** USER CREATION & LOGIN *** //
 
 var createProfile = function(id, profile) {
-  console.log('id & profile', id, profile);
   // Create profile for user
-  Users.child(id).set(profile, function(res) {
-    console.log('create profile', res);
-  });
+  Users.child(id).set(profile);
 };
 
 var userLogin = function(userData) {
@@ -39,7 +41,7 @@ var userLogin = function(userData) {
     } else {
       console.log("Authenticated successfully:", authData);
       var path = '/' + userData.username;
-      onLogin(path);
+      Actions.nagivate(path);
     }
   };
 
@@ -75,7 +77,7 @@ var createUser = function(userData) {
         'username': userData.username,
         'email': userData.email,
         'conductAgreementSigned': true,
-        // 'interactions': userData.interactionsList
+        'interactions': userData.checklist
       };
 
       // If user sent full name, assign last name to profile property
@@ -89,11 +91,23 @@ var createUser = function(userData) {
         //   step_one: complete
         // });
       }.bind(this);
-      console.log('authdata', authData);
+
       createProfile(authData.uid, profile);
-      userLogin(onLogin);
+      userLogin(userData);
     }
   });
+};
+
+var checkUsername = function() {
+  var checkIfExists = function(snapshot) {
+    var isUnique = snapshot.exists();
+
+    Actions.onCheckUsernameUnique(isUnique);
+  };
+
+    Users.orderByChild('username')
+               .equalTo(username)
+               .once('value', checkIfExists);
 };
 
 

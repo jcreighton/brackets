@@ -95,7 +95,7 @@ var SignUpForm = React.createClass({
     var invalidInputs = _.filter(inputs, function(input) {
       return input.isValid === false;
     });
-    console.log('invalidInputs', invalidInputs, invalidInputs.length);
+
     return (invalidInputs.length === 0);
   },
   onInputValidation: function(name, inputState) {
@@ -117,7 +117,7 @@ var SignUpForm = React.createClass({
           </fieldset>
           <fieldset>
             <h2>{this.state.opportunities.message}</h2>
-            <CheckboxList ref="interactions"
+            <CheckboxList ref="checklist"
               className="opportunities-list"
               onValidation={this.onInputValidation}
               limit={this.state.checkboxes.limit}
