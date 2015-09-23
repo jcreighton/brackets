@@ -26,7 +26,8 @@ var Username = React.createClass({
   propTypes: {
     label: React.PropTypes.string,
     placeholder: React.PropTypes.string,
-    message: React.PropTypes.string
+    message: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   isValid: function() {
     var username = this.refs.username.getDOMNode().value;
@@ -60,7 +61,7 @@ var Username = React.createClass({
         <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={this.state.message} />
         <div className="input">
           <label>{this.props.label}</label>
-          <Input type="text" ref="username" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
+          <Input type="text" ref="username" onInputBlur={this.isValid} placeholder={this.props.placeholder} defaultValue={this.props.defaultValue} />
         </div>
       </div>
     );

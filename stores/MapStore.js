@@ -15,7 +15,7 @@ var client = new MapboxClient(config.MAPBOX_GEOCODE);
 var MapStore = Reflux.createStore({
   listenables: [Actions],
   onGeolocatePostalCode: function(postalcode) {
-
+    console.log('postalcode', postalcode);
     var handleGeocode = function(err, geocode) {
       var state = {};
       var isError = (err || (geocode.features.length < 1));

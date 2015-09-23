@@ -25,6 +25,9 @@ var LocationFinder = React.createClass({
       message: 'You can edit where your pin appears on the next page'
     }
   },
+  propTypes: {
+    defaultValue: React.PropTypes.string
+  },
   disableGeolocation: function() {
     this.setState({
       isPostalcodeDisabled: false,
@@ -46,6 +49,11 @@ var LocationFinder = React.createClass({
         isError: true,
         userLocation: {},
         errorMessage: 'You must provide a location'
+      });
+    } else {
+      this.setState({
+        isValid: true,
+        isError: false
       });
     }
 
@@ -74,7 +82,8 @@ var LocationFinder = React.createClass({
         <PostalCode
           ref="postalcode"
           handleFocus={this.disableGeolocation}
-          isDisabled={this.state.isPostalcodeDisabled}  />
+          isDisabled={this.state.isPostalcodeDisabled}
+          defaultValue={this.props.defaultValue}  />
         <span className={classes}>or</span>
         <Geolocation
           ref="geolocation"

@@ -22,7 +22,8 @@ var Name = React.createClass({
   propTypes: {
     message: React.PropTypes.string,
     errorMessage: React.PropTypes.string,
-    label: React.PropTypes.string
+    label: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   isValid: function() {
     // Check that name contains ONLY letters & length is >=1 <= 60
@@ -59,7 +60,7 @@ var Name = React.createClass({
         <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={message} />
         <div className="input">
           <label>{this.props.label}</label>
-          <Input type="text" ref="name" onInputBlur={this.isValid} placeholder={this.props.placeholder} value={this.props.value} />
+          <Input type="text" ref="name" onInputBlur={this.isValid} placeholder={this.props.placeholder} defaultValue={this.props.defaultValue} />
         </div>
       </div>
     );

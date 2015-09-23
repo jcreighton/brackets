@@ -22,7 +22,8 @@ var TextBox = React.createClass({
   propTypes: {
     label: React.PropTypes.string,
     placeholder: React.PropTypes.string,
-    errorMessage: React.PropTypes.string
+    errorMessage: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   updateCharacterCount: function() {
     var length = this.refs.text.getDOMNode().value.length;
@@ -57,7 +58,7 @@ var TextBox = React.createClass({
         <Feedback isVisible={this.state.isVisible} isError={this.state.isValid} message={this.state.errorMessage} />
         <div className="input">
           <label>{this.props.label}</label>
-          <textarea ref="text" onChange={this.updateCharacterCount} onBlur={this.isValid}></textarea>
+          <textarea ref="text" defaultValue={this.props.defaultValue} onChange={this.updateCharacterCount} onBlur={this.isValid}></textarea>
           <span className={classes}>{this.state.characterCount}</span>
         </div>
       </div>

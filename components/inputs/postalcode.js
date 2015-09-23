@@ -2,6 +2,7 @@
 
 var React = require('react/addons');
 var Input = require('./basics/basic-input.js');
+var Actions = require('../../actions/actions.js');
 var classNames = require('classnames');
 
 var PostalCode = React.createClass({
@@ -12,7 +13,8 @@ var PostalCode = React.createClass({
   },
   propTypes: {
     label: React.PropTypes.string,
-    placeholder: React.PropTypes.string
+    placeholder: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   handleFocus: function() {
     if (this.props.handleFocus) {
@@ -24,9 +26,10 @@ var PostalCode = React.createClass({
       this.props.handleChange();
     }
   },
-  handleGeocodePostalCode: function(postalcode) {
-    var value = this.refs.postalcode.getDOMNode().value;
-    if (value) {
+  handleGeocodePostalCode: function() {
+    var postalcode = this.refs.postalcode.getDOMNode().value;
+
+    if (postalcode) {
       Actions.geolocatePostalCode(postalcode);
     }
   },
@@ -48,7 +51,8 @@ var PostalCode = React.createClass({
             onInputChange={this.handleChange}
             onInputFocus={this.handleFocus}
             onInputBlur={this.handleGeocodePostalCode}
-            placeholder={this.props.placeholder} />
+            placeholder={this.props.placeholder}
+            defaultValue={this.props.defaultValue} />
         </div>
       </div>
     );

@@ -22,7 +22,8 @@ var Password = React.createClass({
     label: React.PropTypes.string,
     message: React.PropTypes.string,
     placeholder: React.PropTypes.string,
-    errorMessage: React.PropTypes.string
+    errorMessage: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   isValid: function() {
     // check that password is only letters, numbers, !@? &; 6-18 characters
@@ -57,7 +58,7 @@ var Password = React.createClass({
         <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={this.props.message} />
         <div className="input">
           <label>{this.props.label}</label>
-          <Input type="password" ref="password" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
+          <Input type="password" ref="password" onInputBlur={this.isValid} placeholder={this.props.placeholder} defaultValue={this.props.defaultValue}/>
         </div>
       </div>
     );

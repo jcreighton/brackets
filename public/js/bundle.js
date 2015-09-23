@@ -1,5 +1,8 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var Reflux = require('reflux');
+var Firebase = require('firebase');
+var OpenBracket = new Firebase('https://openbracket.firebaseio.com');
+var Users = new Firebase('https://openbracket.firebaseio.com/users');
 
 var Actions = Reflux.createActions([
   'createUser',
@@ -13,9 +16,91 @@ var Actions = Reflux.createActions([
   'reverseGeolocate'
 ]);
 
+Actions.createUser.listen(function(userData) {
+  createUser(userData, function(path) {
+    Actions.navigate(path);
+  })
+});
+
+
+// *** USER CREATION & LOGIN *** //
+
+var createProfile = function(id, profile) {
+  console.log('id & profile', id, profile);
+  // Create profile for user
+  Users.child(id).set(profile, function(res) {
+    console.log('create profile', res);
+  });
+};
+
+var userLogin = function(userData) {
+  var handleLogin = function(error, authData) {
+    if (error) {
+      console.log("Login Failed!", error);
+    } else {
+      console.log("Authenticated successfully:", authData);
+      var path = '/' + userData.username;
+      onLogin(path);
+    }
+  };
+
+  OpenBracket.authWithPassword({
+    email: userData.email,
+    password: userData.password
+  }, handleLogin);
+};
+
+var createUser = function(userData) {
+  console.log(userData);
+  OpenBracket.createUser({
+    email: userData.email,
+    password: userData.password
+  }, function(error, authData) {
+    if (error) {
+      // if EMAIL ERROR set error message
+      var errorCode = error.code;
+      if (errorCode === 'EMAIL_TAKEN') {
+        // _this.trigger({
+        //   emailError: {
+        //     message: 'Email already in use!',
+        //     isVisible: true
+        //   }
+        // });
+      }
+    } else {
+      // Did user send their full name?
+      var fullName = (userData.name.length > 1);
+
+      var profile = {
+        'first_name': fullName ? userData.name[0] : userData.name,
+        'username': userData.username,
+        'email': userData.email,
+        'conductAgreementSigned': true,
+        'interactions': userData.interactionsList
+      };
+
+      // If user sent full name, assign last name to profile property
+      if (fullName) {
+        profile.last_name = userData.name[1];
+      }
+
+      var triggerLocationSet = function() {
+        // this.trigger({
+        //   user: profile,
+        //   step_one: complete
+        // });
+      }.bind(this);
+      console.log('authdata', authData);
+      createProfile(authData.uid, profile);
+      userLogin(onLogin);
+    }
+  });
+};
+
+
 module.exports = Actions;
 
-},{"reflux":294}],2:[function(require,module,exports){
+},{"firebase":29,"reflux":294}],2:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -224,7 +309,6 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
     // Check if form is valid
     var isValidForm = this.onFormValidation();
     var state;
-    console.log('isValidForm: ', isValidForm);
 
     if (isValidForm) {
       state = {
@@ -236,39 +320,36 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
       _.forEach(inputs, function(input, key) {
         data[key] = input.value;
       });
-      console.log('everything is cool! now create profile', data);
+
       // Create user
-      // Actions.createUser(data);
+      Actions.createUser(data);
     } else {
       state = {
         isValidForm: false
       };
-      console.log('such errors! much disappointment!');
+
     }
 
     this.setState(state);
   },
   onFormValidation: function() {
-    console.log('BEFORE onFormValidation this.state.inputs', this.state.inputs);
     // Call isValid callback for each referenced input
     var keys = Object.keys(this.refs);
     keys.map(function(key) {
       return this.refs[key].isValid();
     }, this);
-    console.log('AFTER onFormValidation this.state.inputs', this.state.inputs);
+
     // Check if any inputs are invalid
     var inputs = this.state.inputs;
     var invalidInputs = _.filter(inputs, function(input) {
       return input.isValid === false;
     });
-    console.log('are there invalid inputs?', invalidInputs);
+    console.log('invalidInputs', invalidInputs, invalidInputs.length);
     return (invalidInputs.length === 0);
   },
   onInputValidation: function(name, inputState) {
     this.state.inputs[name] = inputState;
-    console.log('input state: ', this.state.inputs);
-
-    // Handle updating progress bar component
+    // TODO: Handle updating progress bar component
   },
   render: function() {
     return (
@@ -357,7 +438,7 @@ var Input = React.createClass({displayName: "Input",
     type: React.PropTypes.string.isRequired,
     blur: React.PropTypes.func,
     placeholder: React.PropTypes.string,
-    value: React.PropTypes.string
+    defaultValue: React.PropTypes.string
   },
   render: function() {
     return (
@@ -367,7 +448,7 @@ var Input = React.createClass({displayName: "Input",
         onBlur: this.props.onInputBlur, 
         onChange: this.props.onInputChange, 
         placeholder: this.props.placeholder, 
-        value: this.props.value}
+        defaultValue: this.props.defaultValue}
       )
     );
   }
@@ -620,7 +701,8 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
     callback: React.PropTypes.func,
     isUnique: React.PropTypes.bool,
     label: React.PropTypes.string,
-    placeholder: React.PropTypes.string
+    placeholder: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   isValid: function() {
     // check that email address is valid
@@ -658,7 +740,7 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
         React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: message}), 
         React.createElement("div", {onClick: this.handleClick, className: "input"}, 
           React.createElement("label", null, this.props.label), 
-          React.createElement(Input, {type: "text", ref: "email", onInputBlur: this.isValid, placeholder: this.props.placeholder})
+          React.createElement(Input, {type: "text", ref: "email", onInputBlur: this.isValid, placeholder: this.props.placeholder, defaultValue: this.props.defaultValue})
         )
       )
     );
@@ -684,7 +766,8 @@ var Geolocation = React.createClass({displayName: "Geolocation",
   },
   propTypes: {
     text: React.PropTypes.string,
-    className: React.PropTypes.string
+    className: React.PropTypes.string,
+    checked: React.PropTypes.bool
   },
   handleGeolocation: function() {
     Actions.geolocateCurrentLocation();
@@ -707,6 +790,7 @@ var Geolocation = React.createClass({displayName: "Geolocation",
           className: "geolocation", 
           value: "geolocation", 
           text: this.props.text, 
+          checked: this.props.checked, 
           disabled: this.props.isDisabled, 
           handleChange: this.handleGeolocation}
         )
@@ -745,6 +829,9 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
       message: 'You can edit where your pin appears on the next page'
     }
   },
+  propTypes: {
+    defaultValue: React.PropTypes.string
+  },
   disableGeolocation: function() {
     this.setState({
       isPostalcodeDisabled: false,
@@ -766,6 +853,11 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
         isError: true,
         userLocation: {},
         errorMessage: 'You must provide a location'
+      });
+    } else {
+      this.setState({
+        isValid: true,
+        isError: false
       });
     }
 
@@ -794,7 +886,8 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
         React.createElement(PostalCode, {
           ref: "postalcode", 
           handleFocus: this.disableGeolocation, 
-          isDisabled: this.state.isPostalcodeDisabled}), 
+          isDisabled: this.state.isPostalcodeDisabled, 
+          defaultValue: this.props.defaultValue}), 
         React.createElement("span", {className: classes}, "or"), 
         React.createElement(Geolocation, {
           ref: "geolocation", 
@@ -832,7 +925,8 @@ var Name = React.createClass({displayName: "Name",
   propTypes: {
     message: React.PropTypes.string,
     errorMessage: React.PropTypes.string,
-    label: React.PropTypes.string
+    label: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   isValid: function() {
     // Check that name contains ONLY letters & length is >=1 <= 60
@@ -869,7 +963,7 @@ var Name = React.createClass({displayName: "Name",
         React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: message}), 
         React.createElement("div", {className: "input"}, 
           React.createElement("label", null, this.props.label), 
-          React.createElement(Input, {type: "text", ref: "name", onInputBlur: this.isValid, placeholder: this.props.placeholder, value: this.props.value})
+          React.createElement(Input, {type: "text", ref: "name", onInputBlur: this.isValid, placeholder: this.props.placeholder, defaultValue: this.props.defaultValue})
         )
       )
     );
@@ -903,7 +997,8 @@ var Password = React.createClass({displayName: "Password",
     label: React.PropTypes.string,
     message: React.PropTypes.string,
     placeholder: React.PropTypes.string,
-    errorMessage: React.PropTypes.string
+    errorMessage: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   isValid: function() {
     // check that password is only letters, numbers, !@? &; 6-18 characters
@@ -938,7 +1033,7 @@ var Password = React.createClass({displayName: "Password",
         React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: this.props.message}), 
         React.createElement("div", {className: "input"}, 
           React.createElement("label", null, this.props.label), 
-          React.createElement(Input, {type: "password", ref: "password", onInputBlur: this.isValid, placeholder: this.props.placeholder})
+          React.createElement(Input, {type: "password", ref: "password", onInputBlur: this.isValid, placeholder: this.props.placeholder, defaultValue: this.props.defaultValue})
         )
       )
     );
@@ -952,6 +1047,7 @@ module.exports = Password;
 
 var React = require('react/addons');
 var Input = require('./basics/basic-input.js');
+var Actions = require('../../actions/actions.js');
 var classNames = require('classnames');
 
 var PostalCode = React.createClass({displayName: "PostalCode",
@@ -962,7 +1058,8 @@ var PostalCode = React.createClass({displayName: "PostalCode",
   },
   propTypes: {
     label: React.PropTypes.string,
-    placeholder: React.PropTypes.string
+    placeholder: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   handleFocus: function() {
     if (this.props.handleFocus) {
@@ -974,9 +1071,10 @@ var PostalCode = React.createClass({displayName: "PostalCode",
       this.props.handleChange();
     }
   },
-  handleGeocodePostalCode: function(postalcode) {
-    var value = this.refs.postalcode.getDOMNode().value;
-    if (value) {
+  handleGeocodePostalCode: function() {
+    var postalcode = this.refs.postalcode.getDOMNode().value;
+
+    if (postalcode) {
       Actions.geolocatePostalCode(postalcode);
     }
   },
@@ -998,7 +1096,8 @@ var PostalCode = React.createClass({displayName: "PostalCode",
             onInputChange: this.handleChange, 
             onInputFocus: this.handleFocus, 
             onInputBlur: this.handleGeocodePostalCode, 
-            placeholder: this.props.placeholder})
+            placeholder: this.props.placeholder, 
+            defaultValue: this.props.defaultValue})
         )
       )
     );
@@ -1007,7 +1106,7 @@ var PostalCode = React.createClass({displayName: "PostalCode",
 
 module.exports = PostalCode;
 
-},{"./basics/basic-input.js":7,"classnames":28,"react/addons":105}],18:[function(require,module,exports){
+},{"../../actions/actions.js":1,"./basics/basic-input.js":7,"classnames":28,"react/addons":105}],18:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -1032,7 +1131,8 @@ var TextBox = React.createClass({displayName: "TextBox",
   propTypes: {
     label: React.PropTypes.string,
     placeholder: React.PropTypes.string,
-    errorMessage: React.PropTypes.string
+    errorMessage: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   updateCharacterCount: function() {
     var length = this.refs.text.getDOMNode().value.length;
@@ -1067,7 +1167,7 @@ var TextBox = React.createClass({displayName: "TextBox",
         React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isValid, message: this.state.errorMessage}), 
         React.createElement("div", {className: "input"}, 
           React.createElement("label", null, this.props.label), 
-          React.createElement("textarea", {ref: "text", onChange: this.updateCharacterCount, onBlur: this.isValid}), 
+          React.createElement("textarea", {ref: "text", defaultValue: this.props.defaultValue, onChange: this.updateCharacterCount, onBlur: this.isValid}), 
           React.createElement("span", {className: classes}, this.state.characterCount)
         )
       )
@@ -1106,7 +1206,8 @@ var Username = React.createClass({displayName: "Username",
   propTypes: {
     label: React.PropTypes.string,
     placeholder: React.PropTypes.string,
-    message: React.PropTypes.string
+    message: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   isValid: function() {
     var username = this.refs.username.getDOMNode().value;
@@ -1140,7 +1241,7 @@ var Username = React.createClass({displayName: "Username",
         React.createElement(Feedback, {isVisible: this.state.isVisible, isError: this.state.isError, message: this.state.message}), 
         React.createElement("div", {className: "input"}, 
           React.createElement("label", null, this.props.label), 
-          React.createElement(Input, {type: "text", ref: "username", onInputBlur: this.isValid, placeholder: this.props.placeholder})
+          React.createElement(Input, {type: "text", ref: "username", onInputBlur: this.isValid, placeholder: this.props.placeholder, defaultValue: this.props.defaultValue})
         )
       )
     );
@@ -48413,7 +48514,7 @@ var client = new MapboxClient(config.MAPBOX_GEOCODE);
 var MapStore = Reflux.createStore({
   listenables: [Actions],
   onGeolocatePostalCode: function(postalcode) {
-
+    console.log('postalcode', postalcode);
     var handleGeocode = function(err, geocode) {
       var state = {};
       var isError = (err || (geocode.features.length < 1));
@@ -48565,56 +48666,55 @@ var Users = new Firebase('https://test-openbracket.firebaseio.com/users');
 var UserStore = Reflux.createStore({
   listenables: [Actions],
   onCreateUser: function(userData) {
-    var _this = this;
-    OpenBracket.createUser({
-      email: userData.email,
-      password: userData.password
-    }, function(error, authData) {
-      if (error) {
-        // if EMAIL ERROR set error message
-        var errorCode = error.code;
-        if (errorCode === 'EMAIL_TAKEN') {
-          _this.trigger({
-            emailError: {
-              message: 'Email already in use!',
-              isVisible: true
-            }
-          });
-        }
-      } else {
-        // Did user send their full name?
-        var fullName = (userData.name.length > 1);
+    // var _this = this;
+    // OpenBracket.createUser({
+    //   email: userData.email,
+    //   password: userData.password
+    // }, function(error, authData) {
+    //   if (error) {
+    //     // if EMAIL ERROR set error message
+    //     var errorCode = error.code;
+    //     if (errorCode === 'EMAIL_TAKEN') {
+    //       _this.trigger({
+    //         emailError: {
+    //           message: 'Email already in use!',
+    //           isVisible: true
+    //         }
+    //       });
+    //     }
+    //   } else {
+    //     // Did user send their full name?
+    //     var fullName = (userData.name.length > 1);
 
-        var profile = {
-          'first_name': fullName ? userData.name[0] : userData.name,
-          'username': userData.username,
-          'email': userData.email,
-          'conductAgreementSigned': true,
-          'interactions': userData.interactionsList
-        };
+    //     var profile = {
+    //       'first_name': fullName ? userData.name[0] : userData.name,
+    //       'username': userData.username,
+    //       'email': userData.email,
+    //       'conductAgreementSigned': true,
+    //       'interactions': userData.interactionsList
+    //     };
 
-        // If user sent full name, assign last name to profile property
-        if (fullName) {
-          profile.last_name = userData.name[1];
-        }
+    //     // If user sent full name, assign last name to profile property
+    //     if (fullName) {
+    //       profile.last_name = userData.name[1];
+    //     }
 
-        var triggerLocationSet = function() {
-          this.trigger({
-            user: profile,
-            step_one: complete
-          });
-        }.bind(this);
+    //     var triggerLocationSet = function() {
+    //       this.trigger({
+    //         user: profile,
+    //         step_one: complete
+    //       });
+    //     }.bind(this);
 
-        // Create profile for user
-        Users.child(authData.uid).set(profile);
-        // _this.onUserLogin(userData, '/')
-        }
-    });
+    //     // Create profile for user
+    //     Users.child(authData.uid).set(profile);
+    //     // _this.onUserLogin(userData, '/')
+    //     }
+    // });
   },
   onCheckUsername: function(username, callback) {
     var checkIfExists = function(snapshot) {
       var state;
-      console.log(snapshot.exists());
 
       if (snapshot.exists()) {
        state = {
@@ -48640,20 +48740,20 @@ var UserStore = Reflux.createStore({
                .once('value', checkIfExists);
   },
   onUserLogin: function(userData, path) {
-    var handleLogin = function(error, authData) {
-      if (error) {
-        console.log("Login Failed!", error);
-      } else {
-        console.log("Authenticated successfully:", authData);
-        var path = '/' + userData.username;
-        Actions.navigate(path);
-      }
-    };
+    // var handleLogin = function(error, authData) {
+    //   if (error) {
+    //     console.log("Login Failed!", error);
+    //   } else {
+    //     console.log("Authenticated successfully:", authData);
+    //     var path = '/' + userData.username;
+    //     Actions.navigate(path);
+    //   }
+    // };
 
-    OpenBracket.authWithPassword({
-      email: userData.email,
-      password: userData.password
-    }, handleLogin);
+    // OpenBracket.authWithPassword({
+    //   email: userData.email,
+    //   password: userData.password
+    // }, handleLogin);
   }
 });
 

@@ -12,7 +12,7 @@ var Input = React.createClass({
     type: React.PropTypes.string.isRequired,
     blur: React.PropTypes.func,
     placeholder: React.PropTypes.string,
-    value: React.PropTypes.string
+    defaultValue: React.PropTypes.string
   },
   render: function() {
     return (
@@ -22,7 +22,7 @@ var Input = React.createClass({
         onBlur={this.props.onInputBlur}
         onChange={this.props.onInputChange}
         placeholder={this.props.placeholder}
-        value={this.props.value}
+        defaultValue={this.props.defaultValue}
       />
     );
   }

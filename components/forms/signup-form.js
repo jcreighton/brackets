@@ -60,7 +60,6 @@ var SignUpForm = React.createClass({
     // Check if form is valid
     var isValidForm = this.onFormValidation();
     var state;
-    console.log('isValidForm: ', isValidForm);
 
     if (isValidForm) {
       state = {
@@ -72,39 +71,36 @@ var SignUpForm = React.createClass({
       _.forEach(inputs, function(input, key) {
         data[key] = input.value;
       });
-      console.log('everything is cool! now create profile', data);
+
       // Create user
-      // Actions.createUser(data);
+      Actions.createUser(data);
     } else {
       state = {
         isValidForm: false
       };
-      console.log('such errors! much disappointment!');
+
     }
 
     this.setState(state);
   },
   onFormValidation: function() {
-    console.log('BEFORE onFormValidation this.state.inputs', this.state.inputs);
     // Call isValid callback for each referenced input
     var keys = Object.keys(this.refs);
     keys.map(function(key) {
       return this.refs[key].isValid();
     }, this);
-    console.log('AFTER onFormValidation this.state.inputs', this.state.inputs);
+
     // Check if any inputs are invalid
     var inputs = this.state.inputs;
     var invalidInputs = _.filter(inputs, function(input) {
       return input.isValid === false;
     });
-    console.log('are there invalid inputs?', invalidInputs);
+    console.log('invalidInputs', invalidInputs, invalidInputs.length);
     return (invalidInputs.length === 0);
   },
   onInputValidation: function(name, inputState) {
     this.state.inputs[name] = inputState;
-    console.log('input state: ', this.state.inputs);
-
-    // Handle updating progress bar component
+    // TODO: Handle updating progress bar component
   },
   render: function() {
     return (
@@ -121,7 +117,7 @@ var SignUpForm = React.createClass({
           </fieldset>
           <fieldset>
             <h2>{this.state.opportunities.message}</h2>
-            <CheckboxList ref="checklist"
+            <CheckboxList ref="interactions"
               className="opportunities-list"
               onValidation={this.onInputValidation}
               limit={this.state.checkboxes.limit}

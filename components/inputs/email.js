@@ -23,7 +23,8 @@ var EmailAddress = React.createClass({
     callback: React.PropTypes.func,
     isUnique: React.PropTypes.bool,
     label: React.PropTypes.string,
-    placeholder: React.PropTypes.string
+    placeholder: React.PropTypes.string,
+    defaultValue: React.PropTypes.string
   },
   isValid: function() {
     // check that email address is valid
@@ -61,7 +62,7 @@ var EmailAddress = React.createClass({
         <Feedback isVisible={this.state.isVisible} isError={this.state.isError} message={message} />
         <div onClick={this.handleClick} className="input">
           <label>{this.props.label}</label>
-          <Input type="text" ref="email" onInputBlur={this.isValid} placeholder={this.props.placeholder} />
+          <Input type="text" ref="email" onInputBlur={this.isValid} placeholder={this.props.placeholder} defaultValue={this.props.defaultValue}/>
         </div>
       </div>
     );

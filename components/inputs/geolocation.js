@@ -14,7 +14,8 @@ var Geolocation = React.createClass({
   },
   propTypes: {
     text: React.PropTypes.string,
-    className: React.PropTypes.string
+    className: React.PropTypes.string,
+    checked: React.PropTypes.bool
   },
   handleGeolocation: function() {
     Actions.geolocateCurrentLocation();
@@ -37,6 +38,7 @@ var Geolocation = React.createClass({
           className="geolocation"
           value="geolocation"
           text={this.props.text}
+          checked={this.props.checked}
           disabled={this.props.isDisabled}
           handleChange={this.handleGeolocation}
         />
