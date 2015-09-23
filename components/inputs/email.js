@@ -3,8 +3,11 @@
 var React = require('react');
 var Input = require('./basics/basic-input.js');
 var Feedback = require('./basics/feedback.js');
+var Reflux = require('reflux');
+var EmailStore = require('../../stores/EmailStore.js');
 
 var EmailAddress = React.createClass({
+  mixins: [Reflux.connect(EmailStore)],
   getInitialState: function() {
     return {
       isVisible: true,
@@ -27,7 +30,7 @@ var EmailAddress = React.createClass({
     defaultValue: React.PropTypes.string
   },
   isValid: function() {
-    // check that email address is valid
+    // Check that email address is valid
     var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
     var value = this.refs.email.getDOMNode().value;
 

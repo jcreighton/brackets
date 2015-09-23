@@ -2,7 +2,6 @@
 
 var React = require('react');
 var Reflux = require('reflux');
-var UserStore = require('../../stores/UserStore.js');
 var Actions = require('../../actions/actions.js');
 
 // UTILITIES
@@ -20,16 +19,15 @@ var Submit = require('../buttons/event-button.js');
 var Feedback = require('../inputs/basics/feedback.js');
 
 var SignUpForm = React.createClass({
-  mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
       inputs: {},
-      isValidForm: false,
-      conductError: {
-        message: 'AGREE WITH IT, DAMN IT!',
-        isVisible: false
-      },
-      checkboxes: {
+      isValidForm: false
+    }
+  },
+  getDefaultProps: function() {
+    return {
+      checklist: {
         limit: 1,
         settings: [
           {
@@ -48,11 +46,11 @@ var SignUpForm = React.createClass({
             type: 'tag'
           }
         ]
-      },
-      opportunities: {
-        message: 'What opportunities are you looking for?'
       }
-    };
+    }
+  },
+  propTypes: {
+    checklist: React.PropTypes.object
   },
   isValid: function(e) {
     e.preventDefault();
@@ -116,12 +114,12 @@ var SignUpForm = React.createClass({
             <Password ref="password" onValidation={this.onInputValidation} />
           </fieldset>
           <fieldset>
-            <h2>{this.state.opportunities.message}</h2>
+            <h2>What opportunities are you looking for?</h2>
             <CheckboxList ref="checklist"
               className="opportunities-list"
               onValidation={this.onInputValidation}
-              limit={this.state.checkboxes.limit}
-              checkboxes={this.state.checkboxes.settings} />
+              limit={this.props.checklist.limit}
+              checkboxes={this.props.checklist.settings} />
           </fieldset>
           <fieldset>
             <h2>Where are you located?</h2>

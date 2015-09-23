@@ -46,7 +46,7 @@ var Username = React.createClass({
     }
   },
   isUnique: function(username) {
-    Actions.checkUsername(username, this.onValidation);
+    Actions.checkUsername(username);
   },
   onValidation: function(username) {
     this.props.onValidation('username', {

@@ -6,7 +6,10 @@ var Users = new Firebase('https://openbracket.firebaseio.com/users');
 var Actions = Reflux.createActions([
   'createUser',
   'checkUsername',
+  'usernameUnique',
+  'usernameExists',
   'userLogin',
+  'emailExists',
   'router',
   'navigate',
   'profileCreation',
@@ -23,7 +26,6 @@ Actions.createUser.listen(function(userData) {
 
 Actions.checkUsername.listen(function(username) {
   checkUsername(username);
-  })
 });
 
 
@@ -52,7 +54,6 @@ var userLogin = function(userData) {
 };
 
 var createUser = function(userData) {
-  console.log(userData);
   OpenBracket.createUser({
     email: userData.email,
     password: userData.password
@@ -61,12 +62,7 @@ var createUser = function(userData) {
       // if EMAIL ERROR set error message
       var errorCode = error.code;
       if (errorCode === 'EMAIL_TAKEN') {
-        // _this.trigger({
-        //   emailError: {
-        //     message: 'Email already in use!',
-        //     isVisible: true
-        //   }
-        // });
+        Actions.emailExists();
       }
     } else {
       // Did user send their full name?
@@ -85,24 +81,23 @@ var createUser = function(userData) {
         profile.last_name = userData.name[1];
       }
 
-      var triggerLocationSet = function() {
-        // this.trigger({
-        //   user: profile,
-        //   step_one: complete
-        // });
-      }.bind(this);
-
+      // Create profile
       createProfile(authData.uid, profile);
+      // Log user in
       userLogin(userData);
     }
   });
 };
 
-var checkUsername = function() {
+var checkUsername = function(username) {
   var checkIfExists = function(snapshot) {
     var isUnique = snapshot.exists();
 
-    Actions.onCheckUsernameUnique(isUnique);
+    if (isUnique) {
+      Actions.usernameUnique();
+    } else {
+      Actions.usernameExists();
+    }
   };
 
     Users.orderByChild('username')

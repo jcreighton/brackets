@@ -7,7 +7,10 @@ var Users = new Firebase('https://openbracket.firebaseio.com/users');
 var Actions = Reflux.createActions([
   'createUser',
   'checkUsername',
+  'usernameUnique',
+  'usernameExists',
   'userLogin',
+  'emailExists',
   'router',
   'navigate',
   'profileCreation',
@@ -20,6 +23,10 @@ Actions.createUser.listen(function(userData) {
   createUser(userData, function(path) {
     Actions.navigate(path);
   })
+});
+
+Actions.checkUsername.listen(function(username) {
+  checkUsername(username);
 });
 
 
@@ -48,7 +55,6 @@ var userLogin = function(userData) {
 };
 
 var createUser = function(userData) {
-  console.log(userData);
   OpenBracket.createUser({
     email: userData.email,
     password: userData.password
@@ -57,12 +63,7 @@ var createUser = function(userData) {
       // if EMAIL ERROR set error message
       var errorCode = error.code;
       if (errorCode === 'EMAIL_TAKEN') {
-        // _this.trigger({
-        //   emailError: {
-        //     message: 'Email already in use!',
-        //     isVisible: true
-        //   }
-        // });
+        Actions.emailExists();
       }
     } else {
       // Did user send their full name?
@@ -81,17 +82,28 @@ var createUser = function(userData) {
         profile.last_name = userData.name[1];
       }
 
-      var triggerLocationSet = function() {
-        // this.trigger({
-        //   user: profile,
-        //   step_one: complete
-        // });
-      }.bind(this);
-
+      // Create profile
       createProfile(authData.uid, profile);
+      // Log user in
       userLogin(userData);
     }
   });
+};
+
+var checkUsername = function(username) {
+  var checkIfExists = function(snapshot) {
+    var isUnique = snapshot.exists();
+
+    if (isUnique) {
+      Actions.usernameUnique();
+    } else {
+      Actions.usernameExists();
+    }
+  };
+
+    Users.orderByChild('username')
+               .equalTo(username)
+               .once('value', checkIfExists);
 };
 
 
@@ -243,12 +255,11 @@ var LoginForm = React.createClass({displayName: "LoginForm",
 
 module.exports = LoginForm;
 
-},{"../../actions/actions.js":1,"../../stores/UserStore.js":303,"../buttons/event-button.js":2,"../inputs/basics/basic-input.js":7,"../inputs/basics/feedback.js":8,"../inputs/basics/label.js":9,"react":277,"reflux":294}],5:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/UserStore.js":304,"../buttons/event-button.js":2,"../inputs/basics/basic-input.js":7,"../inputs/basics/feedback.js":8,"../inputs/basics/label.js":9,"react":277,"reflux":294}],5:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
 var Reflux = require('reflux');
-var UserStore = require('../../stores/UserStore.js');
 var Actions = require('../../actions/actions.js');
 
 // UTILITIES
@@ -266,16 +277,15 @@ var Submit = require('../buttons/event-button.js');
 var Feedback = require('../inputs/basics/feedback.js');
 
 var SignUpForm = React.createClass({displayName: "SignUpForm",
-  mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
       inputs: {},
-      isValidForm: false,
-      conductError: {
-        message: 'AGREE WITH IT, DAMN IT!',
-        isVisible: false
-      },
-      checkboxes: {
+      isValidForm: false
+    }
+  },
+  getDefaultProps: function() {
+    return {
+      checklist: {
         limit: 1,
         settings: [
           {
@@ -294,11 +304,11 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
             type: 'tag'
           }
         ]
-      },
-      opportunities: {
-        message: 'What opportunities are you looking for?'
       }
-    };
+    }
+  },
+  propTypes: {
+    checklist: React.PropTypes.object
   },
   isValid: function(e) {
     e.preventDefault();
@@ -362,12 +372,12 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
             React.createElement(Password, {ref: "password", onValidation: this.onInputValidation})
           ), 
           React.createElement("fieldset", null, 
-            React.createElement("h2", null, this.state.opportunities.message), 
+            React.createElement("h2", null, "What opportunities are you looking for?"), 
             React.createElement(CheckboxList, {ref: "checklist", 
               className: "opportunities-list", 
               onValidation: this.onInputValidation, 
-              limit: this.state.checkboxes.limit, 
-              checkboxes: this.state.checkboxes.settings})
+              limit: this.props.checklist.limit, 
+              checkboxes: this.props.checklist.settings})
           ), 
           React.createElement("fieldset", null, 
             React.createElement("h2", null, "Where are you located?"), 
@@ -400,7 +410,7 @@ var SignUpForm = React.createClass({displayName: "SignUpForm",
 
 module.exports = SignUpForm;
 
-},{"../../actions/actions.js":1,"../../stores/UserStore.js":303,"../buttons/event-button.js":2,"../inputs/basics/feedback.js":8,"../inputs/checkbox-list.js":10,"../inputs/checkbox.js":11,"../inputs/email.js":12,"../inputs/location.js":14,"../inputs/name.js":15,"../inputs/password.js":16,"../inputs/username.js":19,"lodash":32,"react":277,"reflux":294}],6:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../buttons/event-button.js":2,"../inputs/basics/feedback.js":8,"../inputs/checkbox-list.js":10,"../inputs/checkbox.js":11,"../inputs/email.js":12,"../inputs/location.js":14,"../inputs/name.js":15,"../inputs/password.js":16,"../inputs/username.js":19,"lodash":32,"react":277,"reflux":294}],6:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -678,8 +688,11 @@ module.exports = Checkbox;
 var React = require('react');
 var Input = require('./basics/basic-input.js');
 var Feedback = require('./basics/feedback.js');
+var Reflux = require('reflux');
+var EmailStore = require('../../stores/EmailStore.js');
 
 var EmailAddress = React.createClass({displayName: "EmailAddress",
+  mixins: [Reflux.connect(EmailStore)],
   getInitialState: function() {
     return {
       isVisible: true,
@@ -702,7 +715,7 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
     defaultValue: React.PropTypes.string
   },
   isValid: function() {
-    // check that email address is valid
+    // Check that email address is valid
     var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
     var value = this.refs.email.getDOMNode().value;
 
@@ -746,7 +759,7 @@ var EmailAddress = React.createClass({displayName: "EmailAddress",
 
 module.exports = EmailAddress;
 
-},{"./basics/basic-input.js":7,"./basics/feedback.js":8,"react":277}],13:[function(require,module,exports){
+},{"../../stores/EmailStore.js":300,"./basics/basic-input.js":7,"./basics/feedback.js":8,"react":277,"reflux":294}],13:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -897,7 +910,7 @@ var LocationFinder = React.createClass({displayName: "LocationFinder",
 
 module.exports = LocationFinder;
 
-},{"../../actions/actions.js":1,"../../stores/MapStore.js":300,"../inputs/geolocation.js":13,"../inputs/postalcode.js":17,"./basics/feedback.js":8,"classnames":28,"lodash":32,"react":277,"reflux":294}],15:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/MapStore.js":301,"../inputs/geolocation.js":13,"../inputs/postalcode.js":17,"./basics/feedback.js":8,"classnames":28,"lodash":32,"react":277,"reflux":294}],15:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -1223,7 +1236,7 @@ var Username = React.createClass({displayName: "Username",
     }
   },
   isUnique: function(username) {
-    Actions.checkUsername(username, this.onValidation);
+    Actions.checkUsername(username);
   },
   onValidation: function(username) {
     this.props.onValidation('username', {
@@ -1247,7 +1260,7 @@ var Username = React.createClass({displayName: "Username",
 
 module.exports = Username;
 
-},{"../../actions/actions.js":1,"../../stores/UserStore.js":303,"./basics/basic-input.js":7,"./basics/feedback.js":8,"react":277,"reflux":294}],20:[function(require,module,exports){
+},{"../../actions/actions.js":1,"../../stores/UserStore.js":304,"./basics/basic-input.js":7,"./basics/feedback.js":8,"react":277,"reflux":294}],20:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -48390,7 +48403,7 @@ var App = React.createClass({displayName: "App",
 
 module.exports = React.createFactory(App);
 
-},{"../actions/actions.js":1,"../components/header/header.js":6,"../stores/RouterStore.js":301,"./home.js":298,"./signup.js":299,"react":277,"react-router-component":85,"reflux":294}],298:[function(require,module,exports){
+},{"../actions/actions.js":1,"../components/header/header.js":6,"../stores/RouterStore.js":302,"./home.js":298,"./signup.js":299,"react":277,"react-router-component":85,"reflux":294}],298:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -48493,7 +48506,24 @@ var SignUpPage = React.createClass({displayName: "SignUpPage",
 
 module.exports = SignUpPage;
 
-},{"../actions/actions.js":1,"../components/forms/signup-form.js":5,"../stores/SignUpStore.js":302,"react":277,"reflux":294}],300:[function(require,module,exports){
+},{"../actions/actions.js":1,"../components/forms/signup-form.js":5,"../stores/SignUpStore.js":303,"react":277,"reflux":294}],300:[function(require,module,exports){
+var Reflux = require('reflux');
+var Actions = require('../actions/actions.js');
+
+var EmailStore = Reflux.createStore({
+  listenables: [Actions],
+  onEmailExists: function() {
+    this.trigger({
+      isUnique: false,
+      isValid: false,
+      isError: true
+    });
+  }
+});
+
+module.exports = EmailStore;
+
+},{"../actions/actions.js":1,"reflux":294}],301:[function(require,module,exports){
 var config = require('../config.js');
 var Reflux = require('reflux');
 var Actions = require('../actions/actions.js');
@@ -48623,7 +48653,7 @@ var MapStore = Reflux.createStore({
 
 module.exports = MapStore;
 
-},{"../actions/actions.js":1,"../config.js":21,"firebase":29,"geofire":30,"mapbox/lib/services/geocoder":38,"reflux":294}],301:[function(require,module,exports){
+},{"../actions/actions.js":1,"../config.js":21,"firebase":29,"geofire":30,"mapbox/lib/services/geocoder":38,"reflux":294}],302:[function(require,module,exports){
 var Reflux = require('reflux');
 var Actions = require('../actions/actions.js');
 var Firebase = require('firebase');
@@ -48641,7 +48671,7 @@ var RouterStore = Reflux.createStore({
 
 module.exports = RouterStore;
 
-},{"../actions/actions.js":1,"firebase":29,"reflux":294}],302:[function(require,module,exports){
+},{"../actions/actions.js":1,"firebase":29,"reflux":294}],303:[function(require,module,exports){
 var Reflux = require('reflux');
 var Actions = require('../actions/actions.js');
 var Firebase = require('firebase');
@@ -48653,107 +48683,37 @@ var SignUpStore = Reflux.createStore({
 
 module.exports = SignUpStore;
 
-},{"../actions/actions.js":1,"firebase":29,"reflux":294}],303:[function(require,module,exports){
+},{"../actions/actions.js":1,"firebase":29,"reflux":294}],304:[function(require,module,exports){
 var Reflux = require('reflux');
 var Actions = require('../actions/actions.js');
-var Firebase = require('firebase');
-var OpenBracket = new Firebase('https://test-openbracket.firebaseio.com');
-var Users = new Firebase('https://test-openbracket.firebaseio.com/users');
 
 var UserStore = Reflux.createStore({
   listenables: [Actions],
-  onCreateUser: function(userData) {
-    // var _this = this;
-    // OpenBracket.createUser({
-    //   email: userData.email,
-    //   password: userData.password
-    // }, function(error, authData) {
-    //   if (error) {
-    //     // if EMAIL ERROR set error message
-    //     var errorCode = error.code;
-    //     if (errorCode === 'EMAIL_TAKEN') {
-    //       _this.trigger({
-    //         emailError: {
-    //           message: 'Email already in use!',
-    //           isVisible: true
-    //         }
-    //       });
-    //     }
-    //   } else {
-    //     // Did user send their full name?
-    //     var fullName = (userData.name.length > 1);
+  onUsernameUnique: function(onComplete) {
+    this.trigger({
+      isUniqueUsername: false,
+      message: 'Username taken!',
+      isError: true
+    });
 
-    //     var profile = {
-    //       'first_name': fullName ? userData.name[0] : userData.name,
-    //       'username': userData.username,
-    //       'email': userData.email,
-    //       'conductAgreementSigned': true,
-    //       'interactions': userData.interactionsList
-    //     };
-
-    //     // If user sent full name, assign last name to profile property
-    //     if (fullName) {
-    //       profile.last_name = userData.name[1];
-    //     }
-
-    //     var triggerLocationSet = function() {
-    //       this.trigger({
-    //         user: profile,
-    //         step_one: complete
-    //       });
-    //     }.bind(this);
-
-    //     // Create profile for user
-    //     Users.child(authData.uid).set(profile);
-    //     // _this.onUserLogin(userData, '/')
-    //     }
-    // });
+    if (typeof onComplete === "function") {
+      onComplete(username);
+    }
   },
-  onCheckUsername: function(username, callback) {
-    var checkIfExists = function(snapshot) {
-      var state;
+  onUsernameExists: function(onComplete) {
+    this.trigger({
+      isUniqueUsername: true,
+      message: 'Create a username',
+      isValid: true,
+      isError: false
+    });
 
-      if (snapshot.exists()) {
-       state = {
-          isUniqueEmail: false,
-          message: 'Username taken!',
-          isError: true
-        }
-      } else {
-        state = {
-          isUniqueEmail: true,
-          message: 'Create a username',
-          isValid: true,
-          isError: false
-        }
-      }
-
-      this.trigger(state);
-      callback(username);
-    }.bind(this);
-
-    Users.orderByChild('username')
-               .equalTo(username)
-               .once('value', checkIfExists);
-  },
-  onUserLogin: function(userData, path) {
-    // var handleLogin = function(error, authData) {
-    //   if (error) {
-    //     console.log("Login Failed!", error);
-    //   } else {
-    //     console.log("Authenticated successfully:", authData);
-    //     var path = '/' + userData.username;
-    //     Actions.navigate(path);
-    //   }
-    // };
-
-    // OpenBracket.authWithPassword({
-    //   email: userData.email,
-    //   password: userData.password
-    // }, handleLogin);
+    if (typeof onComplete === "function") {
+      onComplete(username);
+    }
   }
 });
 
 module.exports = UserStore;
 
-},{"../actions/actions.js":1,"firebase":29,"reflux":294}]},{},[22]);
+},{"../actions/actions.js":1,"reflux":294}]},{},[22]);
