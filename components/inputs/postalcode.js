@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-var React = require('react/addons');
+var React = require('react');
 var Input = require('./basics/basic-input.js');
 var Actions = require('../../actions/actions.js');
 var classNames = require('classnames');
