@@ -7,7 +7,7 @@ var EmailSignUp = require('../components/forms/email-signup-form.js');
 var Home = React.createClass({
   getDefaultProps: function() {
     return{
-      message: 'An open community for lady developers',
+      message: 'An open community for women coders',
     }
   },
   propTypes: {
@@ -38,7 +38,7 @@ var Home = React.createClass({
         <section className="how">
           <div className="inner">
             <h1>Find Your Community</h1>
-            <p>Do you need a mentor? Or help with a job search? Or maybe someone to grab coffee or lunch with? You'll be able to find fellow lady developers near you, make connections and build your own awesome community.</p>
+            <p>Do you need a mentor? Or help with a job search? Or maybe someone to grab coffee or lunch with? You'll be able to find fellow women coders near you, make connections and build your own awesome community.</p>
             <div className="map-container">
               <figure className="map"><img src="/img/map-block.png" /></figure>
               <span className="location"></span>
