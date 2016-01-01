@@ -11,7 +11,6 @@ var Html = React.createClass({
           <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css' />
           <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
           <link rel="stylesheet" type="text/css" href="/css/app.css" />
-
         </head>
         <body>
           <div id="open-bracket-app">

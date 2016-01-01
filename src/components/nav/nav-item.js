@@ -1,5 +1,5 @@
 var React = require('react');
-var Link = require('react-router-component').Link;
+var Link = require('react-router').Link;
 
 var Navigation = React.createClass({
   getDefaultProps: function() {
@@ -15,7 +15,7 @@ var Navigation = React.createClass({
   },
   render: function() {
     return (
-      <li><Link href="/sign-up">Sign Up</Link></li>
+      <li><Link to="sign-up">Sign Up</Link></li>
     );
   }
 });

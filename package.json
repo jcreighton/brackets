@@ -12,7 +12,7 @@
   "main": "client.js",
   "scripts": {
     "build": "npm run gulp",
-    "start": "webpack & node server.js"
+    "start": "webpack & node /src/server.js"
   },
   "dependencies": {
     "classnames": "^2.1.3",

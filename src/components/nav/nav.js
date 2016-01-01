@@ -1,6 +1,6 @@
 var React = require('react');
 var Login = require('../forms/login-form.js');
-var Link = require('react-router-component').Link;
+var Link = require('react-router').Link;
 
 var Navigation = React.createClass({
   getDefaultProps: function() {
@@ -17,7 +17,7 @@ var Navigation = React.createClass({
     return (
       <nav>
         <ul>
-          <li><Link href="/sign-up">Sign Up</Link></li>
+          <li><Link to="sign-up">Sign Up</Link></li>
           <Login/>
         </ul>
         {this.props.children}

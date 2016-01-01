@@ -1,5 +1,5 @@
 var React = require('react');
-var Link = require('react-router-component').Link;
+var Link = require('react-router').Link;
 var EmailSignUp = require('../forms/email-signup-form.js');
 
 var Home = React.createClass({
@@ -15,6 +15,7 @@ var Home = React.createClass({
     return (
       <main className="page-home">
       {this.props.username}
+      <Link to="/sign-up">CLICK HERE</Link>
         <section className="mission">
           <div className="inner">
             <figure className="lady one"><img src="/img/lady.png" /></figure>
