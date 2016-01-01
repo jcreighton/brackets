@@ -6,7 +6,6 @@ var Match = require('react-router/lib/match');
 var RouterContext = require('react-router/lib/RouterContext');
 var ReactDOM = require('react-dom/server');
 var routes = require('./routes.js');
-var HtmlWrapper = require('./components/html/html.js');
 
 // Create an express instance and set a port variable
 var app = express();
@@ -21,7 +20,6 @@ var server = app.listen(port, function() {
 });
 
 // Set /public as the static content dir
-console.log('__dirname', __dirname);
 app.use('/', express.static('/Users/jenncreighton/personal/brackets/public'));
 
 app.get('*', function(req, res) {
@@ -33,10 +31,11 @@ app.get('*', function(req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
-      // var wrapper = React.createFactory(HtmlWrapper);
       var context = React.createFactory(RouterContext);
-      var html = ReactDOM.renderToString(context(renderProps));
-      res.status(200).send('<!doctype html>\n' + '<head></head><body><div id="open-bracket-app">' + html + '</div><script type="text/javascript" src="/js/bundle.js"></script></body></html>');
+      var application = ReactDOM.renderToString(context(renderProps));
+      // ES6 template string to assemble initial HTML
+      var html = `<!doctype html><html><head><title>Open Bracket | an open community for women coders</title><link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" /><link rel="icon" href="/img/favicon.ico" type="image/x-icon" /><link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css' /><link rel="stylesheet" type="text/css" href="/css/normalize.css" /><link rel="stylesheet" type="text/css" href="/css/app.css" /></head><body><div id="open-bracket-app">${application}</div><footer><span>Built by <a href="http://twitter.com/gurlcode" target="_blank">Jenn Creighton</a></span></footer><script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript" src="/js/bundle.js"></script></body></html>`;
+      res.status(200).send(html);
     } else {
       res.status(404).send('Not found')
     }
