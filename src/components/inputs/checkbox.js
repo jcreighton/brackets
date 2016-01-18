@@ -9,28 +9,28 @@ var Checkbox = React.createClass({
     }
   },
   isValid: function() {
-    // Checkboxes are valid when checked === true
-    var checkboxNode = this.refs.checkbox.getDOMNode();
-    var isChecked = checkboxNode.checked;
-    var value = checkboxNode.value;
+    // // Checkboxes are valid when checked === true
+    // var checkboxNode = this.refs.checkbox.getDOMNode();
+    // var isChecked = checkboxNode.checked;
+    // var value = checkboxNode.value;
 
-    this.setState({
-      checked: isChecked,
-      isValid: isChecked
-    });
+    // this.setState({
+    //   checked: isChecked,
+    //   isValid: isChecked
+    // });
 
-    // Call onSelection callback if provided
-    if (this.props.onSelection) {
-      this.props.onSelection(value, {
-        isValid: isChecked,
-        value: value
-      });
-    }
+    // // Call onSelection callback if provided
+    // if (this.props.onSelection) {
+    //   this.props.onSelection(value, {
+    //     isValid: isChecked,
+    //     value: value
+    //   });
+    // }
 
-    // Call handleChange callback if provided
-    if (this.props.handleChange) {
-      this.props.handleChange();
-    }
+    // // Call handleChange callback if provided
+    // if (this.props.handleChange) {
+    //   this.props.handleChange();
+    // }
   },
   propTypes: {
     checked: React.PropTypes.bool,

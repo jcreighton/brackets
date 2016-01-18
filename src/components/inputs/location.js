@@ -1,11 +1,8 @@
 var React = require('react');
-var Reflux = require('reflux');
 var classNames = require('classnames');
 var PostalCode = require('../inputs/postalcode.js');
 var Geolocation = require('../inputs/geolocation.js');
 var Feedback = require('./basics/feedback.js');
-var MapStore = require('../../stores/MapStore.js');
-var Actions = require('../../actions/actions.js');
 
 // UTILITIES
 var _ = require('lodash');
@@ -27,38 +24,38 @@ var LocationFinder = React.createClass({
     defaultValue: React.PropTypes.string
   },
   disableGeolocation: function() {
-    this.setState({
-      isPostalcodeDisabled: false,
-      isGeolocationDisabled: true
-    });
+    // this.setState({
+    //   isPostalcodeDisabled: false,
+    //   isGeolocationDisabled: true
+    // });
   },
   disablePostalcode: function() {
-    this.setState({
-      isPostalcodeDisabled: true,
-      isGeolocationDisabled: false
-    });
+    // this.setState({
+    //   isPostalcodeDisabled: true,
+    //   isGeolocationDisabled: false
+    // });
   },
   isValid: function() {
     var isValidLocation = !(_.isEmpty(this.state.userLocation));
-    console.log('isValidLocation', isValidLocation, this.state.userLocation);
-    if (!isValidLocation) {
-      this.setState({
-        isValid: false,
-        isError: true,
-        userLocation: {},
-        errorMessage: 'You must provide a location'
-      });
-    } else {
-      this.setState({
-        isValid: true,
-        isError: false
-      });
-    }
+    // console.log('isValidLocation', isValidLocation, this.state.userLocation);
+    // if (!isValidLocation) {
+    //   this.setState({
+    //     isValid: false,
+    //     isError: true,
+    //     userLocation: {},
+    //     errorMessage: 'You must provide a location'
+    //   });
+    // } else {
+    //   this.setState({
+    //     isValid: true,
+    //     isError: false
+    //   });
+    // }
 
-    this.props.onValidation('location', {
-      isValid: isValidLocation,
-      value: this.state.userLocation
-    });
+    // this.props.onValidation('location', {
+    //   isValid: isValidLocation,
+    //   value: this.state.userLocation
+    // });
   },
   render: function() {
     var message = this.state.isError ? this.state.errorMessage : this.state.message;

@@ -1,6 +1,4 @@
 var React = require('react');
-var Firebase = require('firebase');
-var LocListRef = new Firebase('https://glowing-inferno-6073.firebaseio.com/thedogist');
 
 var Map = React.createClass({
   getDefaultProps: function() {

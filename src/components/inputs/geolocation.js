@@ -1,7 +1,6 @@
 var React = require('react');
 var classNames = require('classnames');
 var Checkbox = require('./checkbox.js');
-var Actions = require('../../actions/actions.js');
 
 var Geolocation = React.createClass({
   getDefaultProps: function() {
@@ -16,11 +15,11 @@ var Geolocation = React.createClass({
     checked: React.PropTypes.bool
   },
   handleGeolocation: function() {
-    Actions.geolocateCurrentLocation();
+    // Actions.geolocateCurrentLocation();
 
-    if (this.props.handleClick) {
-      this.props.handleClick();
-    }
+    // if (this.props.handleClick) {
+    //   this.props.handleClick();
+    // }
   },
   render: function() {
     var classes = classNames(

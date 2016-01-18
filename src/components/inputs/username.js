@@ -1,12 +1,8 @@
 var React = require('react');
-var Reflux = require('reflux');
-var UserStore = require('../../stores/UserStore.js');
-var Actions = require('../../actions/actions.js');
 var Input = require('./basics/basic-input.js');
 var Feedback = require('./basics/feedback.js');
 
 var Username = React.createClass({
-  mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
       isVisible: true,
@@ -28,30 +24,29 @@ var Username = React.createClass({
     defaultValue: React.PropTypes.string
   },
   isValid: function() {
-    var username = this.refs.username.getDOMNode().value;
-    // Check that username contains ONLY letters/numbers & >= 3 characters
-    var regex = /^[a-zA-Z0-9_]{3,18}$/;
-    var isValidUsername = regex.test(username);
+    // var username = this.refs.username.getDOMNode().value;
+    // // Check that username contains ONLY letters/numbers & >= 3 characters
+    // var regex = /^[a-zA-Z0-9_]{3,18}$/;
+    // var isValidUsername = regex.test(username);
 
-    if (!isValidUsername) {
-      this.setState({
-        message: '# & letters only',
-        isValid: false,
-        isError: true
-      });
-    } else {
-      this.isUnique(username);
-    }
+    // if (!isValidUsername) {
+    //   this.setState({
+    //     message: '# & letters only',
+    //     isValid: false,
+    //     isError: true
+    //   });
+    // } else {
+    //   this.isUnique(username);
+    // }
   },
   isUnique: function(username) {
-    Actions.checkUsername(username);
+    // Actions.checkUsername(username);
   },
   onValidation: function(username) {
-    this.props.onValidation('username', {
-      isValid: this.state.isValid,
-      value: username
-    });
-
+    // this.props.onValidation('username', {
+    //   isValid: this.state.isValid,
+    //   value: username
+    // });
   },
   render: function() {
     return (

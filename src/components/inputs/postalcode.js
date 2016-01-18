@@ -1,6 +1,5 @@
 var React = require('react');
 var Input = require('./basics/basic-input.js');
-var Actions = require('../../actions/actions.js');
 var classNames = require('classnames');
 
 var PostalCode = React.createClass({
@@ -25,11 +24,11 @@ var PostalCode = React.createClass({
     }
   },
   handleGeocodePostalCode: function() {
-    var postalcode = this.refs.postalcode.getDOMNode().value;
+    // var postalcode = this.refs.postalcode.getDOMNode().value;
 
-    if (postalcode) {
-      Actions.geolocatePostalCode(postalcode);
-    }
+    // if (postalcode) {
+    //   Actions.geolocatePostalCode(postalcode);
+    // }
   },
   render: function() {
     var classes = classNames(

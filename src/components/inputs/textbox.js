@@ -24,23 +24,23 @@ var TextBox = React.createClass({
     defaultValue: React.PropTypes.string
   },
   updateCharacterCount: function() {
-    var length = this.refs.text.getDOMNode().value.length;
+    // var length = this.refs.text.getDOMNode().value.length;
 
-    this.setState({characterCount: (600 - length)});
+    // this.setState({characterCount: (600 - length)});
   },
   isValid: function() {
     // check that text is below 300 characters
-    var value = this.refs.text.getDOMNode().value;
+    // var value = this.refs.text.getDOMNode().value;
 
-    var isValidText = (value.length < 600);
+    // var isValidText = (value.length < 600);
 
-    if (!isValidText) {
-      this.setState({isVisible: true, isValid: false});
-    } else {
-      this.setState({isVisible: false, isValid: true});
-    }
+    // if (!isValidText) {
+    //   this.setState({isVisible: true, isValid: false});
+    // } else {
+    //   this.setState({isVisible: false, isValid: true});
+    // }
 
-    return {text: isValidText && value};
+    // return {text: isValidText && value};
   },
   render: function() {
     var classes = classNames(

@@ -24,38 +24,38 @@ var CheckboxList = React.createClass({
   },
   isValid: function() {
     // Find which checkboxes are valid (checked)
-    var checked = this.state.checklist.filter(function(checkbox) {
-      return checkbox.isValid;
-    });
+    // var checked = this.state.checklist.filter(function(checkbox) {
+    //   return checkbox.isValid;
+    // });
 
-    var isValidChecklist = (checked.length >= this.props.limit);
-    var state;
+    // var isValidChecklist = (checked.length >= this.props.limit);
+    // var state;
 
-    if (isValidChecklist) {
-      state = {
-        isValid: true,
-        isVisible: false,
-        isError: false
-      };
-    } else {
-      state = {
-        isValid: false,
-        isVisible: true,
-        isError: true
-      };
-    }
+    // if (isValidChecklist) {
+    //   state = {
+    //     isValid: true,
+    //     isVisible: false,
+    //     isError: false
+    //   };
+    // } else {
+    //   state = {
+    //     isValid: false,
+    //     isVisible: true,
+    //     isError: true
+    //   };
+    // }
 
-    this.setState(state);
+    // this.setState(state);
 
-    this.props.onValidation('checklist', {
-      isValid: isValidChecklist,
-      value: checked
-    });
+    // this.props.onValidation('checklist', {
+    //   isValid: isValidChecklist,
+    //   value: checked
+    // });
   },
   onSelection: function(name, inputState) {
-    this.state.checklist[name] = inputState;
+    // this.state.checklist[name] = inputState;
 
-    this.isValid();
+    // this.isValid();
   },
   render: function() {
     var checklist = this.props.checkboxes.map(function(props, index) {

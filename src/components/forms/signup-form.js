@@ -1,6 +1,4 @@
 var React = require('react');
-var Reflux = require('reflux');
-var Actions = require('../../actions/actions.js');
 
 // COMPONENTS
 var Email = require('../inputs/email.js');
@@ -48,51 +46,51 @@ var SignUpForm = React.createClass({
     checklist: React.PropTypes.object
   },
   isValid: function(e) {
-    e.preventDefault();
+    // e.preventDefault();
 
-    // Check if form is valid
-    var isValidForm = this.onFormValidation();
-    var state;
+    // // Check if form is valid
+    // var isValidForm = this.onFormValidation();
+    // var state;
 
-    if (isValidForm) {
-      state = {
-        isValidForm: false
-      };
-      // Create clean data object
-      var inputs = this.state.inputs;
-      var data = {};
-      inputs.forEach(function(input, key) {
-        data[key] = input.value;
-      });
+    // if (isValidForm) {
+    //   state = {
+    //     isValidForm: false
+    //   };
+    //   // Create clean data object
+    //   var inputs = this.state.inputs;
+    //   var data = {};
+    //   inputs.forEach(function(input, key) {
+    //     data[key] = input.value;
+    //   });
 
-      // Create user
-      Actions.createUser(data);
-    } else {
-      state = {
-        isValidForm: false
-      };
+    //   // Create user
+    //   Actions.createUser(data);
+    // } else {
+    //   state = {
+    //     isValidForm: false
+    //   };
 
-    }
+    // }
 
-    this.setState(state);
+    // this.setState(state);
   },
   onFormValidation: function() {
     // Call isValid callback for each referenced input
-    var keys = Object.keys(this.refs);
-    keys.map(function(key) {
-      return this.refs[key].isValid();
-    }, this);
+    // var keys = Object.keys(this.refs);
+    // keys.map(function(key) {
+    //   return this.refs[key].isValid();
+    // }, this);
 
-    // Check if any inputs are invalid
-    var inputs = this.state.inputs;
-    var invalidInputs = inputs.filter(function(input) {
-      return input.isValid === false;
-    });
+    // // Check if any inputs are invalid
+    // var inputs = this.state.inputs;
+    // var invalidInputs = inputs.filter(function(input) {
+    //   return input.isValid === false;
+    // });
 
-    return (invalidInputs.length === 0);
+    // return (invalidInputs.length === 0);
   },
   onInputValidation: function(name, inputState) {
-    this.state.inputs[name] = inputState;
+    // this.state.inputs[name] = inputState;
     // TODO: Handle updating progress bar component
   },
   render: function() {

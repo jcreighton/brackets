@@ -1,6 +1,4 @@
 var React = require('react');
-var Firebase = require('firebase');
-var EmailListRef = new Firebase('https://glowing-inferno-6073.firebaseio.com/email_list');
 var Email = require('../inputs/email.js');
 var TextBox = require('../inputs/textbox.js');
 var Submit = require('../buttons/event-button.js');
@@ -17,36 +15,36 @@ var EmailSignUpForm = React.createClass({
     };
   },
   isValid: function(e) {
-    e.preventDefault();
+    // e.preventDefault();
 
-    // get validity information from invididual input
-    var inputs = [
-      this.refs.email.isValid(),
-      this.refs.text.isValid()
-    ];
+    // // get validity information from invididual input
+    // var inputs = [
+    //   this.refs.email.isValid(),
+    //   this.refs.text.isValid()
+    // ];
 
-    // determine if any are invalid
-    var invalidInputs = inputs.filter(function(input, i) {
-      return input[Object.keys(input)] === false;
-    });
+    // // determine if any are invalid
+    // var invalidInputs = inputs.filter(function(input, i) {
+    //   return input[Object.keys(input)] === false;
+    // });
 
-    // all inputs are valid
-    if (invalidInputs.length <= 0) {
-      var _this = this;
-      // create a clean object
-      this.data = {};
-      inputs.forEach(function(input) {
-        var key = Object.keys(input);
-        _this.data[key] = input[key];
-      });
+    // // all inputs are valid
+    // if (invalidInputs.length <= 0) {
+    //   var _this = this;
+    //   // create a clean object
+    //   this.data = {};
+    //   inputs.forEach(function(input) {
+    //     var key = Object.keys(input);
+    //     _this.data[key] = input[key];
+    //   });
 
-      // send email to database
-      var ref = EmailListRef.push({
-        'email': this.data.email,
-        'suggestion': this.data.text
-      });
+    //   // send email to database
+    //   var ref = EmailListRef.push({
+    //     'email': this.data.email,
+    //     'suggestion': this.data.text
+    //   });
 
-      this.postMessage();
+    //   this.postMessage();
     }
   },
   postMessage: function(){

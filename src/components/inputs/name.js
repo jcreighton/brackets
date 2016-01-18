@@ -25,30 +25,30 @@ var Name = React.createClass({
   },
   isValid: function() {
     // Check that name contains ONLY letters & length is >=1 <= 60
-    var regex = /^[a-zA-Z]{1,60}$/;
-    var name = this.refs.name.getDOMNode().value.split(' ');
+    // var regex = /^[a-zA-Z]{1,60}$/;
+    // var name = this.refs.name.getDOMNode().value.split(' ');
 
-    var isValidName = name.length > 1 ? regex.test(name[0]) && regex.test(name[1]) : regex.test(name[0]);
-    var state;
+    // var isValidName = name.length > 1 ? regex.test(name[0]) && regex.test(name[1]) : regex.test(name[0]);
+    // var state;
 
-    if (!isValidName) {
-      state = {
-        isValid: false,
-        isError: true
-      };
-    } else {
-      state = {
-        isValid: true,
-        isError: false
-      };
-    }
+    // if (!isValidName) {
+    //   state = {
+    //     isValid: false,
+    //     isError: true
+    //   };
+    // } else {
+    //   state = {
+    //     isValid: true,
+    //     isError: false
+    //   };
+    // }
 
-    this.setState(state);
+    // this.setState(state);
 
-    this.props.onValidation('name', {
-      isValid: isValidName,
-      value: name
-    });
+    // this.props.onValidation('name', {
+    //   isValid: isValidName,
+    //   value: name
+    // });
   },
   render: function() {
     var message = this.state.isValid ? this.props.message : this.props.errorMessage;

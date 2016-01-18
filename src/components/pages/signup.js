@@ -1,7 +1,4 @@
 var React = require('react');
-var Reflux = require('reflux');
-var UserStore = require('../../stores/SignUpStore.js');
-var Actions = require('../../actions/actions.js');
 var SignUpForm = require('../forms/signup-form.js');
 
 var SignUpPage = React.createClass({

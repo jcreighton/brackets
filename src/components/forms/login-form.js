@@ -1,7 +1,4 @@
 var React = require('react');
-var Reflux = require('reflux');
-var UserStore = require('../../stores/UserStore.js');
-var Actions = require('../../actions/actions.js');
 
 // COMPONENTS
 var Label = require('../inputs/basics/label.js');
@@ -19,7 +16,6 @@ var LoginForm = React.createClass({
   },
   handleLogin: function() {
     console.log('authenticating...');
-    Actions.onUserLogin();
   },
   render: function() {
     return (

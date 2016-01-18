@@ -1,8 +1,6 @@
 var React = require('react');
 var Input = require('./basics/basic-input.js');
 var Feedback = require('./basics/feedback.js');
-var Reflux = require('reflux');
-var EmailStore = require('../../stores/EmailStore.js');
 
 var EmailAddress = React.createClass({
   mixins: [Reflux.connect(EmailStore)],
@@ -29,30 +27,30 @@ var EmailAddress = React.createClass({
   },
   isValid: function() {
     // Check that email address is valid
-    var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
-    var value = this.refs.email.getDOMNode().value;
+    // var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
+    // var value = this.refs.email.getDOMNode().value;
 
-    var isValidEmail = regex.test(value);
-    var state;
+    // var isValidEmail = regex.test(value);
+    // var state;
 
-    if (!isValidEmail) {
-      state = {
-        isValid: false,
-        isError: true,
-      };
-    } else {
-      state = {
-        isValid: true,
-        isError: false
-      };
-    }
+    // if (!isValidEmail) {
+    //   state = {
+    //     isValid: false,
+    //     isError: true,
+    //   };
+    // } else {
+    //   state = {
+    //     isValid: true,
+    //     isError: false
+    //   };
+    // }
 
-    this.setState(state);
+    // this.setState(state);
 
-    this.props.onValidation('email', {
-      isValid: isValidEmail,
-      value: value
-    });
+    // this.props.onValidation('email', {
+    //   isValid: isValidEmail,
+    //   value: value
+    // });
   },
   render: function() {
     var errorMessage = this.props.isUnique ? 'Are you sure that\'s a valid e-mail address?' : 'An account with that email address already exists';

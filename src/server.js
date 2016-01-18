@@ -1,5 +1,3 @@
-var JSX = require('node-jsx').install({harmony: true});
-var express = require('express');
 var React = require('react');
 var Router = require('react-router');
 var Match = require('react-router/lib/match');
@@ -33,8 +31,7 @@ app.get('*', function(req, res) {
     } else if (renderProps) {
       var context = React.createFactory(RouterContext);
       var application = ReactDOM.renderToString(context(renderProps));
-      // ES6 template string to assemble initial HTML
-      var html = `<!doctype html><html><head><title>Open Bracket | an open community for women coders</title><link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" /><link rel="icon" href="/img/favicon.ico" type="image/x-icon" /><link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css' /><link rel="stylesheet" type="text/css" href="/css/normalize.css" /><link rel="stylesheet" type="text/css" href="/css/app.css" /></head><body><div id="open-bracket-app">${application}</div><footer><span>Built by <a href="http://twitter.com/gurlcode" target="_blank">Jenn Creighton</a></span></footer><script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript" src="/js/bundle.js"></script></body></html>`;
+      var html = 'html';
       res.status(200).send(html);
     } else {
       res.status(404).send('Not found')
