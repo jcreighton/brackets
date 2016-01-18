@@ -1,10 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Router = require('./routes.js');
+var Routes = require('./routes.js');
 
-var renderTarget = document.getElementById('open-bracket-app');
+var renderTarget = document;
 
-ReactDOM.render(
-  Router,
-  renderTarget
-);
+ReactDOM.render(Routes, renderTarget);

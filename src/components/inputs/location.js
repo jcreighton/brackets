@@ -8,7 +8,6 @@ var Feedback = require('./basics/feedback.js');
 // var _ = require('lodash');
 
 var LocationFinder = React.createClass({
-  mixins: [Reflux.connect(MapStore)],
   getInitialState: function() {
     return {
       isVisible: true,

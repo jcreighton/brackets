@@ -3,7 +3,6 @@ var Input = require('./basics/basic-input.js');
 var Feedback = require('./basics/feedback.js');
 
 var EmailAddress = React.createClass({
-  mixins: [Reflux.connect(EmailStore)],
   getInitialState: function() {
     return {
       isVisible: true,

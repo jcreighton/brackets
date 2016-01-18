@@ -3,15 +3,15 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var fs = require('fs');
 
 module.exports = {
-  entry: './src/server.js',
+  entry: './src/client.js',
   output: {
-    filename: 'main.js',
-    path: __dirname
+    filename: 'bundle.js',
+    path: __dirname + '/public/js/'
   },
 
   module: {
     loaders: [
-      { test: /\.js$/, exclude: /node_modules/, loader: 'babel?presets[]=es2015&presets[]=stage-0&presets[]=react' },
+      { test: /\.js$/, exclude: /node_modules/, loader: 'babel', query: { presets: ['react', 'stage-0', 'es2015'] } },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader',
         'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader')
       }
@@ -23,7 +23,8 @@ module.exports = {
   ],
 
   resolve: {
-    modulesDirectories: ['node_modules', 'components']
+    // modulesDirectories: ['node_modules', 'components'],
+    extensions: ['', '.js']
   },
 
   plugins: [

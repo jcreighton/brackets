@@ -1,6 +1,9 @@
 var React = require('react');
 var Link = require('react-router').Link;
 
+// require();
+var styles = require('./button.css');
+
 var Button = React.createClass({
   getDefaultProps: function() {
     return {

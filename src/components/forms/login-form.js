@@ -8,7 +8,6 @@ var Submit = require('../buttons/event-button.js');
 
 
 var LoginForm = React.createClass({
-  mixins: [Reflux.connect(UserStore)],
   getInitialState: function() {
     return {
       message: 'Email or password is incorrect.'

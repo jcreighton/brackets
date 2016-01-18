@@ -1,6 +1,9 @@
+require('babel-core/register');
+
+var express = require('express');
 var React = require('react');
 var Router = require('react-router');
-var Match = require('react-router/lib/match');
+var match = require('react-router/lib/match');
 var RouterContext = require('react-router/lib/RouterContext');
 var ReactDOM = require('react-dom/server');
 var routes = require('./routes.js');
@@ -23,16 +26,14 @@ app.use('/', express.static('/Users/jenncreighton/personal/brackets/public'));
 app.get('*', function(req, res) {
   const location = req.url;
   console.log('routing...', req.url);
-  Match({ routes, location }, function(error, redirectLocation, renderProps) {
+  match({ routes, location }, function(error, redirectLocation, renderProps) {
     if (error) {
       res.status(500).send(error.message);
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
-      var context = React.createFactory(RouterContext);
-      var application = ReactDOM.renderToString(context(renderProps));
-      var html = 'html';
-      res.status(200).send(html);
+      var application = ReactDOM.renderToString(<RouterContext {...renderProps} />);
+      res.status(200).send(application);
     } else {
       res.status(404).send('Not found')
     }
