@@ -5,7 +5,7 @@ var Geolocation = require('../inputs/geolocation.js');
 var Feedback = require('./basics/feedback.js');
 
 // UTILITIES
-var _ = require('lodash');
+// var _ = require('lodash');
 
 var LocationFinder = React.createClass({
   mixins: [Reflux.connect(MapStore)],

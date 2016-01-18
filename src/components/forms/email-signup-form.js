@@ -45,10 +45,10 @@ var EmailSignUpForm = React.createClass({
     //   });
 
     //   this.postMessage();
-    }
+    // }
   },
   postMessage: function(){
-    this.setState({toggleMessage: true});
+    // this.setState({toggleMessage: true});
   },
   render: function() {
     var classes = this.state.toggleMessage ? 'toggle-message' : '';
