@@ -1,8 +1,7 @@
 var React = require('react');
 var Link = require('react-router').Link;
 
-// require();
-var styles = require('./button.css');
+// var styles = require('./button.css');
 
 var Button = React.createClass({
   getDefaultProps: function() {
@@ -18,7 +17,7 @@ var Button = React.createClass({
   render: function() {
     var { className, ...other } = this.props;
     return (
-      <div className="ob-button">
+      <div>
         <Link to={this.props.url}>{this.props.children}</Link>
       </div>
     );

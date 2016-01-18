@@ -1,5 +1,8 @@
 var React = require('react');
 
+var styles = require('./button.css');
+// var styles = 'button';
+
 var EventButton = React.createClass({
   getDefaultProps: function() {
     return {
@@ -15,7 +18,7 @@ var EventButton = React.createClass({
     var { className, ...other } = this.props;
     var classes = 'ob-button ' + this.props.className;
     return (
-      <div className={classes} onClick={this.props.onClick}>
+      <div className={styles.button} onClick={this.props.onClick}>
         <a>{this.props.children}</a>
       </div>
     )

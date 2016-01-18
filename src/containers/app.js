@@ -10,7 +10,7 @@ var App = React.createClass({
           <link rel="icon" href="/img/favicon.ico" type="image/x-icon" />
           <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css' />
           <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
-          <link rel="stylesheet" type="text/css" href="/css/styles.css" />
+          <link rel="stylesheet" type="text/css" href="/js/styles.css" />
         </head>
         <body>
           <div id="open-bracket-app">

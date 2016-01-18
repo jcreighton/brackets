@@ -1,4 +1,8 @@
 require('babel-core/register');
+var hook = require('css-modules-require-hook');
+hook({
+  generateScopedName: '[name]__[local]___[hash:base64:5]',
+});
 
 var express = require('express');
 var React = require('react');
@@ -10,7 +14,7 @@ var routes = require('./routes.js');
 
 // Create an express instance and set a port variable
 var app = express();
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3000;
 
 // Set app port
 app.set('port', port);
