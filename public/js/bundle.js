@@ -19663,7 +19663,7 @@
 	var browserHistory = __webpack_require__(160).browserHistory;
 	var App = __webpack_require__(218);
 	var Home = __webpack_require__(219);
-	var SignUp = __webpack_require__(228);
+	var SignUp = __webpack_require__(229);
 
 	module.exports = React.createElement(
 	  Router,
@@ -24661,7 +24661,7 @@
 	        React.createElement("link", { rel: "icon", href: "/img/favicon.ico", type: "image/x-icon" }),
 	        React.createElement("link", { href: "https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300", rel: "stylesheet", type: "text/css" }),
 	        React.createElement("link", { rel: "stylesheet", type: "text/css", href: "/css/normalize.css" }),
-	        React.createElement("link", { rel: "stylesheet", type: "text/css", href: "/js/styles.css" })
+	        React.createElement("link", { rel: "stylesheet", type: "text/css", href: "/css/styles.css" })
 	      ),
 	      React.createElement(
 	        "body",
@@ -24873,8 +24873,8 @@
 
 	var React = __webpack_require__(1);
 	var Email = __webpack_require__(221);
-	var TextBox = __webpack_require__(225);
-	var Submit = __webpack_require__(226);
+	var TextBox = __webpack_require__(226);
+	var Submit = __webpack_require__(227);
 
 	var EmailSignUpForm = React.createClass({
 	  displayName: 'EmailSignUpForm',
@@ -25083,6 +25083,8 @@
 	var React = __webpack_require__(1);
 	var classNames = __webpack_require__(224);
 
+	var styles = __webpack_require__(225);
+
 	var Feedback = React.createClass({
 	  displayName: 'Feedback',
 
@@ -25106,7 +25108,7 @@
 
 	    return React.createElement(
 	      'div',
-	      { className: classes },
+	      { className: styles.feedback },
 	      React.createElement(
 	        'span',
 	        null,
@@ -25174,6 +25176,13 @@
 
 /***/ },
 /* 225 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"feedback":"feedback__feedback___1iihz","error":"feedback__error___2EVZ_","visible":"feedback__visible___ufr2R","hidden":"feedback__hidden___3MG28"};
+
+/***/ },
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25256,7 +25265,7 @@
 	module.exports = TextBox;
 
 /***/ },
-/* 226 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25265,8 +25274,7 @@
 
 	var React = __webpack_require__(1);
 
-	var styles = __webpack_require__(227);
-	// var styles = 'button';
+	var styles = __webpack_require__(228);
 
 	var EventButton = React.createClass({
 	  displayName: 'EventButton',
@@ -25303,20 +25311,20 @@
 	module.exports = EventButton;
 
 /***/ },
-/* 227 */
+/* 228 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"button":"button__button___hMTO5"};
+	module.exports = {"button":"button__button___hMTO5","medium":"button__medium___2uqNz","small":"button__small___1yTss"};
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var SignUpForm = __webpack_require__(229);
+	var SignUpForm = __webpack_require__(230);
 
 	var SignUpPage = React.createClass({
 	  displayName: 'SignUpPage',
@@ -25347,7 +25355,7 @@
 	module.exports = SignUpPage;
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25356,13 +25364,13 @@
 
 	// COMPONENTS
 	var Email = __webpack_require__(221);
-	var Username = __webpack_require__(230);
-	var Name = __webpack_require__(231);
-	var CheckboxList = __webpack_require__(232);
-	var Checkbox = __webpack_require__(233);
-	var Password = __webpack_require__(234);
-	var Location = __webpack_require__(235);
-	var Submit = __webpack_require__(226);
+	var Username = __webpack_require__(231);
+	var Name = __webpack_require__(232);
+	var CheckboxList = __webpack_require__(233);
+	var Checkbox = __webpack_require__(234);
+	var Password = __webpack_require__(235);
+	var Location = __webpack_require__(236);
+	var Submit = __webpack_require__(227);
 	var Feedback = __webpack_require__(223);
 
 	var SignUpForm = React.createClass({
@@ -25535,7 +25543,7 @@
 	module.exports = SignUpForm;
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25614,7 +25622,7 @@
 	module.exports = Username;
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25697,7 +25705,7 @@
 	module.exports = Name;
 
 /***/ },
-/* 232 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25706,7 +25714,7 @@
 
 	var React = __webpack_require__(1);
 	var Feedback = __webpack_require__(223);
-	var Checkbox = __webpack_require__(233);
+	var Checkbox = __webpack_require__(234);
 
 	var CheckboxList = React.createClass({
 	  displayName: 'CheckboxList',
@@ -25790,7 +25798,7 @@
 	module.exports = CheckboxList;
 
 /***/ },
-/* 233 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25865,7 +25873,7 @@
 	module.exports = Checkbox;
 
 /***/ },
-/* 234 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25946,15 +25954,15 @@
 	module.exports = Password;
 
 /***/ },
-/* 235 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
 	var classNames = __webpack_require__(224);
-	var PostalCode = __webpack_require__(236);
-	var Geolocation = __webpack_require__(237);
+	var PostalCode = __webpack_require__(237);
+	var Geolocation = __webpack_require__(238);
 	var Feedback = __webpack_require__(223);
 
 	// UTILITIES
@@ -26046,7 +26054,7 @@
 	module.exports = LocationFinder;
 
 /***/ },
-/* 236 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26117,14 +26125,14 @@
 	module.exports = PostalCode;
 
 /***/ },
-/* 237 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
 	var classNames = __webpack_require__(224);
-	var Checkbox = __webpack_require__(233);
+	var Checkbox = __webpack_require__(234);
 
 	var Geolocation = React.createClass({
 	  displayName: 'Geolocation',

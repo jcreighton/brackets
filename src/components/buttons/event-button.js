@@ -1,7 +1,6 @@
 var React = require('react');
 
 var styles = require('./button.css');
-// var styles = 'button';
 
 var EventButton = React.createClass({
   getDefaultProps: function() {

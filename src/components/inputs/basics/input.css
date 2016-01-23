@@ -1,0 +1,35 @@
+input {
+  position: relative;
+  vertical-align: top;
+  left: 121px;
+  width: 313px;
+  height: @input-width;
+  font-size: 24px;
+  color: @teal-light;
+  background-color: @gray-medium;
+  border: none;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 50px @gray-medium inset; /* Change the color to your own background color */
+  -webkit-text-fill-color: @teal-light;
+}
+
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 50px @gray-medium inset;
+  -webkit-text-fill-color: @teal-light;
+}
+
+input[type="checkbox"] {
+  font-size: 14px;
+}
+
+input.disabled {
+  opacity: .2;
+}
+
+input.disabled:hover {
+  color: @teal-light;
+  background-color: @gray-medium;
+  opacity: .4;
+}

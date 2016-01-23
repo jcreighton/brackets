@@ -1,5 +1,24 @@
 .button {
-  color: aliceblue;
-  width: 300px;
-  height: 40px;
+  background-color: #53BDBA;
+  font-size: 16px;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #53BDBA;
+  text-transform: uppercase;
+  text-align: center;
+  height: 20px;
+}
+
+.button:hover {
+  color: #53BDBA;
+  background-color: #F5F5F5;
+}
+
+.medium {
+  width: 80px;
+}
+
+.small {
+  width: 60px;
 }

@@ -1,6 +1,8 @@
 var React = require('react');
 var classNames = require('classnames');
 
+var styles = require('./feedback.css');
+
 var Feedback = React.createClass({
   getDefaultProps: function() {
     return {
@@ -24,7 +26,7 @@ var Feedback = React.createClass({
     );
 
     return (
-      <div className={classes}>
+      <div className={styles.feedback}>
         <span>
           {this.props.message}
         </span>

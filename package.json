@@ -13,7 +13,9 @@
   "scripts": {
     "start": "webpack && babel-node src/server.js --presets react,es2015,stage-0"
   },
-  "browser": { "fs": false },
+  "browser": {
+    "fs": false
+  },
   "devDependencies": {
     "babel-cli": "^6.4.0",
     "babel-core": "^6.3.17",
@@ -30,6 +32,7 @@
     "extract-text-webpack-plugin": "^0.8.1",
     "file-loader": "^0.8.5",
     "firebase": "^2.3.2",
+    "flexboxgrid": "^6.3.0",
     "flightplan": "0.6.9",
     "geofire": "^3.2.3",
     "history": "1.17.0",

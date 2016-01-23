@@ -5,8 +5,8 @@ var fs = require('fs');
 module.exports = {
   entry: './src/client.js',
   output: {
-    filename: 'bundle.js',
-    path: __dirname + '/public/js/'
+    filename: 'js/bundle.js',
+    path: __dirname + '/public/'
   },
 
   module: {
@@ -28,7 +28,7 @@ module.exports = {
   },
 
   plugins: [
-    new ExtractTextPlugin('styles.css', { allChunks: true })
+    new ExtractTextPlugin('css/styles.css', { allChunks: true })
   ],
 
   node: {
