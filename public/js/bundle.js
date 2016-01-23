@@ -19658,12 +19658,22 @@
 	var React = __webpack_require__(1);
 	var Router = __webpack_require__(160).Router;
 	var Route = __webpack_require__(160).Route;
-	var Link = __webpack_require__(160).Link;
 	var IndexRoute = __webpack_require__(160).IndexRoute;
 	var browserHistory = __webpack_require__(160).browserHistory;
-	var App = __webpack_require__(218);
-	var Home = __webpack_require__(219);
-	var SignUp = __webpack_require__(229);
+
+	var _require = __webpack_require__(218);
+
+	var Provider = _require.Provider;
+
+	var store = __webpack_require__(227);
+
+	// CONTAINERS
+	var App = __webpack_require__(228);
+	var Home = __webpack_require__(229);
+	var SignUp = __webpack_require__(230);
+	var Location = __webpack_require__(231);
+	var UserMap = __webpack_require__(232);
+	var Profile = __webpack_require__(233);
 
 	module.exports = React.createElement(
 	  Router,
@@ -19672,9 +19682,14 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: Home }),
-	    React.createElement(Route, { path: 'sign-up', component: SignUp })
+	    React.createElement(Route, { path: 'sign-up', component: SignUp }),
+	    React.createElement(Route, { path: 'sign-up/location', component: Location }),
+	    React.createElement(Route, { path: 'map', component: UserMap }),
+	    React.createElement(Route, { path: ':username', component: Profile })
 	  )
 	);
+
+	// <Provider store={ store }></Provider>
 
 /***/ },
 /* 160 */
@@ -24638,12 +24653,602 @@
 /* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	exports.__esModule = true;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _createStore = __webpack_require__(219);
+
+	var _createStore2 = _interopRequireDefault(_createStore);
+
+	var _utilsCombineReducers = __webpack_require__(221);
+
+	var _utilsCombineReducers2 = _interopRequireDefault(_utilsCombineReducers);
+
+	var _utilsBindActionCreators = __webpack_require__(224);
+
+	var _utilsBindActionCreators2 = _interopRequireDefault(_utilsBindActionCreators);
+
+	var _utilsApplyMiddleware = __webpack_require__(225);
+
+	var _utilsApplyMiddleware2 = _interopRequireDefault(_utilsApplyMiddleware);
+
+	var _utilsCompose = __webpack_require__(226);
+
+	var _utilsCompose2 = _interopRequireDefault(_utilsCompose);
+
+	exports.createStore = _createStore2['default'];
+	exports.combineReducers = _utilsCombineReducers2['default'];
+	exports.bindActionCreators = _utilsBindActionCreators2['default'];
+	exports.applyMiddleware = _utilsApplyMiddleware2['default'];
+	exports.compose = _utilsCompose2['default'];
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+	exports['default'] = createStore;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _utilsIsPlainObject = __webpack_require__(220);
+
+	var _utilsIsPlainObject2 = _interopRequireDefault(_utilsIsPlainObject);
+
+	/**
+	 * These are private action types reserved by Redux.
+	 * For any unknown actions, you must return the current state.
+	 * If the current state is undefined, you must return the initial state.
+	 * Do not reference these action types directly in your code.
+	 */
+	var ActionTypes = {
+	  INIT: '@@redux/INIT'
+	};
+
+	exports.ActionTypes = ActionTypes;
+	/**
+	 * Creates a Redux store that holds the state tree.
+	 * The only way to change the data in the store is to call `dispatch()` on it.
+	 *
+	 * There should only be a single store in your app. To specify how different
+	 * parts of the state tree respond to actions, you may combine several reducers
+	 * into a single reducer function by using `combineReducers`.
+	 *
+	 * @param {Function} reducer A function that returns the next state tree, given
+	 * the current state tree and the action to handle.
+	 *
+	 * @param {any} [initialState] The initial state. You may optionally specify it
+	 * to hydrate the state from the server in universal apps, or to restore a
+	 * previously serialized user session.
+	 * If you use `combineReducers` to produce the root reducer function, this must be
+	 * an object with the same shape as `combineReducers` keys.
+	 *
+	 * @returns {Store} A Redux store that lets you read the state, dispatch actions
+	 * and subscribe to changes.
+	 */
+
+	function createStore(reducer, initialState) {
+	  if (typeof reducer !== 'function') {
+	    throw new Error('Expected the reducer to be a function.');
+	  }
+
+	  var currentReducer = reducer;
+	  var currentState = initialState;
+	  var listeners = [];
+	  var isDispatching = false;
+
+	  /**
+	   * Reads the state tree managed by the store.
+	   *
+	   * @returns {any} The current state tree of your application.
+	   */
+	  function getState() {
+	    return currentState;
+	  }
+
+	  /**
+	   * Adds a change listener. It will be called any time an action is dispatched,
+	   * and some part of the state tree may potentially have changed. You may then
+	   * call `getState()` to read the current state tree inside the callback.
+	   *
+	   * @param {Function} listener A callback to be invoked on every dispatch.
+	   * @returns {Function} A function to remove this change listener.
+	   */
+	  function subscribe(listener) {
+	    listeners.push(listener);
+	    var isSubscribed = true;
+
+	    return function unsubscribe() {
+	      if (!isSubscribed) {
+	        return;
+	      }
+
+	      isSubscribed = false;
+	      var index = listeners.indexOf(listener);
+	      listeners.splice(index, 1);
+	    };
+	  }
+
+	  /**
+	   * Dispatches an action. It is the only way to trigger a state change.
+	   *
+	   * The `reducer` function, used to create the store, will be called with the
+	   * current state tree and the given `action`. Its return value will
+	   * be considered the **next** state of the tree, and the change listeners
+	   * will be notified.
+	   *
+	   * The base implementation only supports plain object actions. If you want to
+	   * dispatch a Promise, an Observable, a thunk, or something else, you need to
+	   * wrap your store creating function into the corresponding middleware. For
+	   * example, see the documentation for the `redux-thunk` package. Even the
+	   * middleware will eventually dispatch plain object actions using this method.
+	   *
+	   * @param {Object} action A plain object representing “what changed”. It is
+	   * a good idea to keep actions serializable so you can record and replay user
+	   * sessions, or use the time travelling `redux-devtools`. An action must have
+	   * a `type` property which may not be `undefined`. It is a good idea to use
+	   * string constants for action types.
+	   *
+	   * @returns {Object} For convenience, the same action object you dispatched.
+	   *
+	   * Note that, if you use a custom middleware, it may wrap `dispatch()` to
+	   * return something else (for example, a Promise you can await).
+	   */
+	  function dispatch(action) {
+	    if (!_utilsIsPlainObject2['default'](action)) {
+	      throw new Error('Actions must be plain objects. ' + 'Use custom middleware for async actions.');
+	    }
+
+	    if (typeof action.type === 'undefined') {
+	      throw new Error('Actions may not have an undefined "type" property. ' + 'Have you misspelled a constant?');
+	    }
+
+	    if (isDispatching) {
+	      throw new Error('Reducers may not dispatch actions.');
+	    }
+
+	    try {
+	      isDispatching = true;
+	      currentState = currentReducer(currentState, action);
+	    } finally {
+	      isDispatching = false;
+	    }
+
+	    listeners.slice().forEach(function (listener) {
+	      return listener();
+	    });
+	    return action;
+	  }
+
+	  /**
+	   * Replaces the reducer currently used by the store to calculate the state.
+	   *
+	   * You might need this if your app implements code splitting and you want to
+	   * load some of the reducers dynamically. You might also need this if you
+	   * implement a hot reloading mechanism for Redux.
+	   *
+	   * @param {Function} nextReducer The reducer for the store to use instead.
+	   * @returns {void}
+	   */
+	  function replaceReducer(nextReducer) {
+	    currentReducer = nextReducer;
+	    dispatch({ type: ActionTypes.INIT });
+	  }
+
+	  // When a store is created, an "INIT" action is dispatched so that every
+	  // reducer returns their initial state. This effectively populates
+	  // the initial state tree.
+	  dispatch({ type: ActionTypes.INIT });
+
+	  return {
+	    dispatch: dispatch,
+	    subscribe: subscribe,
+	    getState: getState,
+	    replaceReducer: replaceReducer
+	  };
+	}
+
+/***/ },
+/* 220 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	exports.__esModule = true;
+	exports['default'] = isPlainObject;
+	var fnToString = function fnToString(fn) {
+	  return Function.prototype.toString.call(fn);
+	};
+	var objStringValue = fnToString(Object);
+
+	/**
+	 * @param {any} obj The object to inspect.
+	 * @returns {boolean} True if the argument appears to be a plain object.
+	 */
+
+	function isPlainObject(obj) {
+	  if (!obj || typeof obj !== 'object') {
+	    return false;
+	  }
+
+	  var proto = typeof obj.constructor === 'function' ? Object.getPrototypeOf(obj) : Object.prototype;
+
+	  if (proto === null) {
+	    return true;
+	  }
+
+	  var constructor = proto.constructor;
+
+	  return typeof constructor === 'function' && constructor instanceof constructor && fnToString(constructor) === objStringValue;
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 221 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	exports.__esModule = true;
+	exports['default'] = combineReducers;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _createStore = __webpack_require__(219);
+
+	var _isPlainObject = __webpack_require__(220);
+
+	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
+
+	var _mapValues = __webpack_require__(222);
+
+	var _mapValues2 = _interopRequireDefault(_mapValues);
+
+	var _pick = __webpack_require__(223);
+
+	var _pick2 = _interopRequireDefault(_pick);
+
+	/* eslint-disable no-console */
+
+	function getUndefinedStateErrorMessage(key, action) {
+	  var actionType = action && action.type;
+	  var actionName = actionType && '"' + actionType.toString() + '"' || 'an action';
+
+	  return 'Reducer "' + key + '" returned undefined handling ' + actionName + '. ' + 'To ignore an action, you must explicitly return the previous state.';
+	}
+
+	function getUnexpectedStateKeyWarningMessage(inputState, outputState, action) {
+	  var reducerKeys = Object.keys(outputState);
+	  var argumentName = action && action.type === _createStore.ActionTypes.INIT ? 'initialState argument passed to createStore' : 'previous state received by the reducer';
+
+	  if (reducerKeys.length === 0) {
+	    return 'Store does not have a valid reducer. Make sure the argument passed ' + 'to combineReducers is an object whose values are reducers.';
+	  }
+
+	  if (!_isPlainObject2['default'](inputState)) {
+	    return 'The ' + argumentName + ' has unexpected type of "' + ({}).toString.call(inputState).match(/\s([a-z|A-Z]+)/)[1] + '". Expected argument to be an object with the following ' + ('keys: "' + reducerKeys.join('", "') + '"');
+	  }
+
+	  var unexpectedKeys = Object.keys(inputState).filter(function (key) {
+	    return reducerKeys.indexOf(key) < 0;
+	  });
+
+	  if (unexpectedKeys.length > 0) {
+	    return 'Unexpected ' + (unexpectedKeys.length > 1 ? 'keys' : 'key') + ' ' + ('"' + unexpectedKeys.join('", "') + '" found in ' + argumentName + '. ') + 'Expected to find one of the known reducer keys instead: ' + ('"' + reducerKeys.join('", "') + '". Unexpected keys will be ignored.');
+	  }
+	}
+
+	function assertReducerSanity(reducers) {
+	  Object.keys(reducers).forEach(function (key) {
+	    var reducer = reducers[key];
+	    var initialState = reducer(undefined, { type: _createStore.ActionTypes.INIT });
+
+	    if (typeof initialState === 'undefined') {
+	      throw new Error('Reducer "' + key + '" returned undefined during initialization. ' + 'If the state passed to the reducer is undefined, you must ' + 'explicitly return the initial state. The initial state may ' + 'not be undefined.');
+	    }
+
+	    var type = '@@redux/PROBE_UNKNOWN_ACTION_' + Math.random().toString(36).substring(7).split('').join('.');
+	    if (typeof reducer(undefined, { type: type }) === 'undefined') {
+	      throw new Error('Reducer "' + key + '" returned undefined when probed with a random type. ' + ('Don\'t try to handle ' + _createStore.ActionTypes.INIT + ' or other actions in "redux/*" ') + 'namespace. They are considered private. Instead, you must return the ' + 'current state for any unknown actions, unless it is undefined, ' + 'in which case you must return the initial state, regardless of the ' + 'action type. The initial state may not be undefined.');
+	    }
+	  });
+	}
+
+	/**
+	 * Turns an object whose values are different reducer functions, into a single
+	 * reducer function. It will call every child reducer, and gather their results
+	 * into a single state object, whose keys correspond to the keys of the passed
+	 * reducer functions.
+	 *
+	 * @param {Object} reducers An object whose values correspond to different
+	 * reducer functions that need to be combined into one. One handy way to obtain
+	 * it is to use ES6 `import * as reducers` syntax. The reducers may never return
+	 * undefined for any action. Instead, they should return their initial state
+	 * if the state passed to them was undefined, and the current state for any
+	 * unrecognized action.
+	 *
+	 * @returns {Function} A reducer function that invokes every reducer inside the
+	 * passed object, and builds a state object with the same shape.
+	 */
+
+	function combineReducers(reducers) {
+	  var finalReducers = _pick2['default'](reducers, function (val) {
+	    return typeof val === 'function';
+	  });
+	  var sanityError;
+
+	  try {
+	    assertReducerSanity(finalReducers);
+	  } catch (e) {
+	    sanityError = e;
+	  }
+
+	  var defaultState = _mapValues2['default'](finalReducers, function () {
+	    return undefined;
+	  });
+
+	  return function combination(state, action) {
+	    if (state === undefined) state = defaultState;
+
+	    if (sanityError) {
+	      throw sanityError;
+	    }
+
+	    var hasChanged = false;
+	    var finalState = _mapValues2['default'](finalReducers, function (reducer, key) {
+	      var previousStateForKey = state[key];
+	      var nextStateForKey = reducer(previousStateForKey, action);
+	      if (typeof nextStateForKey === 'undefined') {
+	        var errorMessage = getUndefinedStateErrorMessage(key, action);
+	        throw new Error(errorMessage);
+	      }
+	      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
+	      return nextStateForKey;
+	    });
+
+	    if (process.env.NODE_ENV !== 'production') {
+	      var warningMessage = getUnexpectedStateKeyWarningMessage(state, finalState, action);
+	      if (warningMessage) {
+	        console.error(warningMessage);
+	      }
+	    }
+
+	    return hasChanged ? finalState : state;
+	  };
+	}
+
+	module.exports = exports['default'];
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 222 */
+/***/ function(module, exports) {
+
+	/**
+	 * Applies a function to every key-value pair inside an object.
+	 *
+	 * @param {Object} obj The source object.
+	 * @param {Function} fn The mapper function that receives the value and the key.
+	 * @returns {Object} A new object that contains the mapped values for the keys.
+	 */
+	"use strict";
+
+	exports.__esModule = true;
+	exports["default"] = mapValues;
+
+	function mapValues(obj, fn) {
+	  return Object.keys(obj).reduce(function (result, key) {
+	    result[key] = fn(obj[key], key);
+	    return result;
+	  }, {});
+	}
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 223 */
+/***/ function(module, exports) {
+
+	/**
+	 * Picks key-value pairs from an object where values satisfy a predicate.
+	 *
+	 * @param {Object} obj The object to pick from.
+	 * @param {Function} fn The predicate the values must satisfy to be copied.
+	 * @returns {Object} The object with the values that satisfied the predicate.
+	 */
+	"use strict";
+
+	exports.__esModule = true;
+	exports["default"] = pick;
+
+	function pick(obj, fn) {
+	  return Object.keys(obj).reduce(function (result, key) {
+	    if (fn(obj[key])) {
+	      result[key] = obj[key];
+	    }
+	    return result;
+	  }, {});
+	}
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 224 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+	exports['default'] = bindActionCreators;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _mapValues = __webpack_require__(222);
+
+	var _mapValues2 = _interopRequireDefault(_mapValues);
+
+	function bindActionCreator(actionCreator, dispatch) {
+	  return function () {
+	    return dispatch(actionCreator.apply(undefined, arguments));
+	  };
+	}
+
+	/**
+	 * Turns an object whose values are action creators, into an object with the
+	 * same keys, but with every function wrapped into a `dispatch` call so they
+	 * may be invoked directly. This is just a convenience method, as you can call
+	 * `store.dispatch(MyActionCreators.doSomething())` yourself just fine.
+	 *
+	 * For convenience, you can also pass a single function as the first argument,
+	 * and get a function in return.
+	 *
+	 * @param {Function|Object} actionCreators An object whose values are action
+	 * creator functions. One handy way to obtain it is to use ES6 `import * as`
+	 * syntax. You may also pass a single function.
+	 *
+	 * @param {Function} dispatch The `dispatch` function available on your Redux
+	 * store.
+	 *
+	 * @returns {Function|Object} The object mimicking the original object, but with
+	 * every action creator wrapped into the `dispatch` call. If you passed a
+	 * function as `actionCreators`, the return value will also be a single
+	 * function.
+	 */
+
+	function bindActionCreators(actionCreators, dispatch) {
+	  if (typeof actionCreators === 'function') {
+	    return bindActionCreator(actionCreators, dispatch);
+	  }
+
+	  if (typeof actionCreators !== 'object' || actionCreators === null || actionCreators === undefined) {
+	    throw new Error('bindActionCreators expected an object or a function, instead received ' + (actionCreators === null ? 'null' : typeof actionCreators) + '. ' + 'Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?');
+	  }
+
+	  return _mapValues2['default'](actionCreators, function (actionCreator) {
+	    return bindActionCreator(actionCreator, dispatch);
+	  });
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 225 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports['default'] = applyMiddleware;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _compose = __webpack_require__(226);
+
+	var _compose2 = _interopRequireDefault(_compose);
+
+	/**
+	 * Creates a store enhancer that applies middleware to the dispatch method
+	 * of the Redux store. This is handy for a variety of tasks, such as expressing
+	 * asynchronous actions in a concise manner, or logging every action payload.
+	 *
+	 * See `redux-thunk` package as an example of the Redux middleware.
+	 *
+	 * Because middleware is potentially asynchronous, this should be the first
+	 * store enhancer in the composition chain.
+	 *
+	 * Note that each middleware will be given the `dispatch` and `getState` functions
+	 * as named arguments.
+	 *
+	 * @param {...Function} middlewares The middleware chain to be applied.
+	 * @returns {Function} A store enhancer applying the middleware.
+	 */
+
+	function applyMiddleware() {
+	  for (var _len = arguments.length, middlewares = Array(_len), _key = 0; _key < _len; _key++) {
+	    middlewares[_key] = arguments[_key];
+	  }
+
+	  return function (next) {
+	    return function (reducer, initialState) {
+	      var store = next(reducer, initialState);
+	      var _dispatch = store.dispatch;
+	      var chain = [];
+
+	      var middlewareAPI = {
+	        getState: store.getState,
+	        dispatch: function dispatch(action) {
+	          return _dispatch(action);
+	        }
+	      };
+	      chain = middlewares.map(function (middleware) {
+	        return middleware(middlewareAPI);
+	      });
+	      _dispatch = _compose2['default'].apply(undefined, chain)(store.dispatch);
+
+	      return _extends({}, store, {
+	        dispatch: _dispatch
+	      });
+	    };
+	  };
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 226 */
+/***/ function(module, exports) {
+
+	/**
+	 * Composes single-argument functions from right to left.
+	 *
+	 * @param {...Function} funcs The functions to compose.
+	 * @returns {Function} A function obtained by composing functions from right to
+	 * left. For example, compose(f, g, h) is identical to arg => f(g(h(arg))).
+	 */
+	"use strict";
+
+	exports.__esModule = true;
+	exports["default"] = compose;
+
+	function compose() {
+	  for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
+	    funcs[_key] = arguments[_key];
+	  }
+
+	  return function (arg) {
+	    return funcs.reduceRight(function (composed, f) {
+	      return f(composed);
+	    }, arg);
+	  };
+	}
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 227 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+/***/ },
+/* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 
 	var React = __webpack_require__(1);
 
-	var App = React.createClass({
-	  displayName: "App",
+	var AppContainer = React.createClass({
+	  displayName: "AppContainer",
 
 	  render: function render() {
 	    return React.createElement(
@@ -24692,20 +25297,19 @@
 	  }
 	});
 
-	module.exports = App;
+	module.exports = AppContainer;
 
 /***/ },
-/* 219 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(160).Link;
-	var EmailSignUp = __webpack_require__(220);
 
-	var Home = React.createClass({
-	  displayName: 'Home',
+	var HomeContainer = React.createClass({
+	  displayName: 'HomeContainer',
 
 	  getDefaultProps: function getDefaultProps() {
 	    return {
@@ -24717,642 +25321,19 @@
 	  },
 	  render: function render() {
 	    return React.createElement(
-	      'main',
-	      { className: 'page-home' },
-	      this.props.username,
+	      'div',
+	      null,
+	      'HOME',
 	      React.createElement(
 	        Link,
-	        { to: '/sign-up' },
-	        'CLICK HERE'
-	      ),
-	      React.createElement(
-	        'section',
-	        { className: 'mission' },
-	        React.createElement(
-	          'div',
-	          { className: 'inner' },
-	          React.createElement(
-	            'figure',
-	            { className: 'lady one' },
-	            React.createElement('img', { src: '/img/lady.png' })
-	          ),
-	          React.createElement(
-	            'figure',
-	            { className: 'lady two' },
-	            React.createElement('img', { src: '/img/lady.png' })
-	          ),
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Connecting Women Coders'
-	          ),
-	          React.createElement(
-	            'figure',
-	            { className: 'bracket' },
-	            React.createElement('img', { src: '/img/bracket.png' })
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'arrow-container' },
-	        React.createElement(
-	          'div',
-	          { className: 'arrow' },
-	          React.createElement('img', { src: '/img/arrow-down.png' })
-	        )
-	      ),
-	      React.createElement(
-	        'section',
-	        { className: 'why' },
-	        React.createElement(
-	          'div',
-	          { className: 'inner' },
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Raise Your Hand'
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            '20% of developers are women. It can be difficult to connect to one another. Let\'s change that. Let\'s raise our hands so we can be visible to each other and support each other.'
-	          ),
-	          React.createElement(
-	            'figure',
-	            { className: 'people' },
-	            React.createElement('img', { src: '/img/people.png' })
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'section',
-	        { className: 'how' },
-	        React.createElement(
-	          'div',
-	          { className: 'inner' },
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Find Your Community'
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            'Do you need a mentor? Or help with a job search? Or maybe someone to grab coffee or lunch with? You\'ll be able to find fellow women coders near you, make connections and build your own awesome community.'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'map-container' },
-	            React.createElement(
-	              'figure',
-	              { className: 'map' },
-	              React.createElement('img', { src: '/img/map-block.png' })
-	            ),
-	            React.createElement('span', { className: 'location' }),
-	            React.createElement('span', { className: 'location' }),
-	            React.createElement('span', { className: 'location' }),
-	            React.createElement('span', { className: 'location' }),
-	            React.createElement('span', { className: 'location' })
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'section',
-	        { className: 'coming-soon' },
-	        React.createElement(
-	          'div',
-	          { className: 'inner' },
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Launching ',
-	            React.createElement(
-	              'span',
-	              { className: 'launch-date' },
-	              'January 2016'
-	            )
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'section',
-	        { className: 'email-suggestion' },
-	        React.createElement(
-	          'div',
-	          { className: 'inner' },
-	          React.createElement(
-	            'figure',
-	            { className: 'envelope' },
-	            React.createElement('img', { src: '/img/envelope.png' })
-	          ),
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Sign Up For Updates'
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            'We\'ll notify you when Open Bracket launches'
-	          ),
-	          React.createElement(EmailSignUp, null)
-	        )
+	        { to: 'sign-up' },
+	        'SIGN UP'
 	      )
 	    );
 	  }
 	});
 
-	module.exports = Home;
-
-/***/ },
-/* 220 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var Email = __webpack_require__(221);
-	var TextBox = __webpack_require__(226);
-	var Submit = __webpack_require__(227);
-
-	var EmailSignUpForm = React.createClass({
-	  displayName: 'EmailSignUpForm',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      message: 'Create an account:',
-	      emailError: {
-	        message: 'Email already in use!',
-	        isVisible: false
-	      },
-	      toggleMessage: false
-	    };
-	  },
-	  isValid: function isValid(e) {
-	    // e.preventDefault();
-
-	    // // get validity information from invididual input
-	    // var inputs = [
-	    //   this.refs.email.isValid(),
-	    //   this.refs.text.isValid()
-	    // ];
-
-	    // // determine if any are invalid
-	    // var invalidInputs = inputs.filter(function(input, i) {
-	    //   return input[Object.keys(input)] === false;
-	    // });
-
-	    // // all inputs are valid
-	    // if (invalidInputs.length <= 0) {
-	    //   var _this = this;
-	    //   // create a clean object
-	    //   this.data = {};
-	    //   inputs.forEach(function(input) {
-	    //     var key = Object.keys(input);
-	    //     _this.data[key] = input[key];
-	    //   });
-
-	    //   // send email to database
-	    //   var ref = EmailListRef.push({
-	    //     'email': this.data.email,
-	    //     'suggestion': this.data.text
-	    //   });
-
-	    //   this.postMessage();
-	    // }
-	  },
-	  postMessage: function postMessage() {
-	    // this.setState({toggleMessage: true});
-	  },
-	  render: function render() {
-	    var classes = this.state.toggleMessage ? 'toggle-message' : '';
-
-	    return React.createElement(
-	      'div',
-	      { className: classes },
-	      React.createElement(
-	        'div',
-	        { className: 'thanks' },
-	        'Thanks for the note!'
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'ob-email-signup-form' },
-	        React.createElement(Email, { ref: 'email' }),
-	        React.createElement(TextBox, { ref: 'text' }),
-	        React.createElement(
-	          Submit,
-	          { className: 'small', onClick: this.isValid },
-	          'SUBMIT'
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = EmailSignUpForm;
-
-/***/ },
-/* 221 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var Input = __webpack_require__(222);
-	var Feedback = __webpack_require__(223);
-
-	var EmailAddress = React.createClass({
-	  displayName: 'EmailAddress',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      isVisible: true,
-	      isValid: true,
-	      isError: false
-	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      isUnique: true,
-	      label: 'Email',
-	      message: 'This email will never be shown or shared'
-	    };
-	  },
-	  propTypes: {
-	    callback: React.PropTypes.func,
-	    isUnique: React.PropTypes.bool,
-	    label: React.PropTypes.string,
-	    placeholder: React.PropTypes.string,
-	    defaultValue: React.PropTypes.string
-	  },
-	  isValid: function isValid() {
-	    // Check that email address is valid
-	    // var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
-	    // var value = this.refs.email.getDOMNode().value;
-
-	    // var isValidEmail = regex.test(value);
-	    // var state;
-
-	    // if (!isValidEmail) {
-	    //   state = {
-	    //     isValid: false,
-	    //     isError: true,
-	    //   };
-	    // } else {
-	    //   state = {
-	    //     isValid: true,
-	    //     isError: false
-	    //   };
-	    // }
-
-	    // this.setState(state);
-
-	    // this.props.onValidation('email', {
-	    //   isValid: isValidEmail,
-	    //   value: value
-	    // });
-	  },
-	  render: function render() {
-	    var errorMessage = this.props.isUnique ? 'Are you sure that\'s a valid e-mail address?' : 'An account with that email address already exists';
-	    var message = this.state.isValid ? this.props.message : errorMessage;
-
-	    return React.createElement(
-	      'div',
-	      { className: 'ob-input email' },
-	      React.createElement(Feedback, { isVisible: this.state.isVisible, isError: this.state.isError, message: message }),
-	      React.createElement(
-	        'div',
-	        { onClick: this.handleClick, className: 'input' },
-	        React.createElement(
-	          'label',
-	          null,
-	          this.props.label
-	        ),
-	        React.createElement(Input, { type: 'text', ref: 'email', onInputBlur: this.isValid, placeholder: this.props.placeholder, defaultValue: this.props.defaultValue })
-	      )
-	    );
-	  }
-	});
-
-	module.exports = EmailAddress;
-
-/***/ },
-/* 222 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-
-	var Input = React.createClass({
-	  displayName: 'Input',
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      type: 'text'
-	    };
-	  },
-	  propTypes: {
-	    type: React.PropTypes.string.isRequired,
-	    blur: React.PropTypes.func,
-	    placeholder: React.PropTypes.string,
-	    defaultValue: React.PropTypes.string
-	  },
-	  render: function render() {
-	    return React.createElement('input', {
-	      type: this.props.type,
-	      onFocus: this.props.onInputFocus,
-	      onBlur: this.props.onInputBlur,
-	      onChange: this.props.onInputChange,
-	      placeholder: this.props.placeholder,
-	      defaultValue: this.props.defaultValue
-	    });
-	  }
-	});
-
-	module.exports = Input;
-
-/***/ },
-/* 223 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var classNames = __webpack_require__(224);
-
-	var styles = __webpack_require__(225);
-
-	var Feedback = React.createClass({
-	  displayName: 'Feedback',
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      isError: false,
-	      isVisible: false
-	    };
-	  },
-	  propTypes: {
-	    isError: React.PropTypes.bool,
-	    isVisible: React.PropTypes.bool,
-	    message: React.PropTypes.string
-	  },
-	  render: function render() {
-	    var classes = classNames('ob-feedback', {
-	      'ob-error': this.props.isError,
-	      'ob-state-hidden': !this.props.isVisible,
-	      'ob-state-visible': this.props.isVisible
-	    });
-
-	    return React.createElement(
-	      'div',
-	      { className: styles.feedback },
-	      React.createElement(
-	        'span',
-	        null,
-	        this.props.message
-	      )
-	    );
-	  }
-	});
-
-	module.exports = Feedback;
-
-/***/ },
-/* 224 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
-
-	(function () {
-		'use strict';
-
-		var hasOwn = {}.hasOwnProperty;
-
-		function classNames () {
-			var classes = [];
-
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-
-				var argType = typeof arg;
-
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
-
-			return classes.join(' ');
-		}
-
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (true) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	}());
-
-
-/***/ },
-/* 225 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-	module.exports = {"feedback":"feedback__feedback___1iihz","error":"feedback__error___2EVZ_","visible":"feedback__visible___ufr2R","hidden":"feedback__hidden___3MG28"};
-
-/***/ },
-/* 226 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var classNames = __webpack_require__(224);
-	var Input = __webpack_require__(222);
-	var Feedback = __webpack_require__(223);
-
-	var TextBox = React.createClass({
-	  displayName: 'TextBox',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      isVisible: false,
-	      isValid: false,
-	      characterCount: ''
-	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      label: 'Suggestions? We\'d Love to Hear Them!',
-	      errorMessage: 'Must be under 600 characters!'
-	    };
-	  },
-	  propTypes: {
-	    label: React.PropTypes.string,
-	    placeholder: React.PropTypes.string,
-	    errorMessage: React.PropTypes.string,
-	    defaultValue: React.PropTypes.string
-	  },
-	  updateCharacterCount: function updateCharacterCount() {
-	    // var length = this.refs.text.getDOMNode().value.length;
-
-	    // this.setState({characterCount: (600 - length)});
-	  },
-	  isValid: function isValid() {
-	    // check that text is below 300 characters
-	    // var value = this.refs.text.getDOMNode().value;
-
-	    // var isValidText = (value.length < 600);
-
-	    // if (!isValidText) {
-	    //   this.setState({isVisible: true, isValid: false});
-	    // } else {
-	    //   this.setState({isVisible: false, isValid: true});
-	    // }
-
-	    // return {text: isValidText && value};
-	  },
-	  render: function render() {
-	    var classes = classNames('character-counter', {
-	      'warning': this.state.characterCount < 10,
-	      'hidden': this.state.characterCount == 0
-	    });
-
-	    return React.createElement(
-	      'div',
-	      { className: 'ob-input textbox' },
-	      React.createElement(Feedback, { isVisible: this.state.isVisible, isError: this.state.isValid, message: this.state.errorMessage }),
-	      React.createElement(
-	        'div',
-	        { className: 'input' },
-	        React.createElement(
-	          'label',
-	          null,
-	          this.props.label
-	        ),
-	        React.createElement('textarea', { ref: 'text', defaultValue: this.props.defaultValue, onChange: this.updateCharacterCount, onBlur: this.isValid }),
-	        React.createElement(
-	          'span',
-	          { className: classes },
-	          this.state.characterCount
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = TextBox;
-
-/***/ },
-/* 227 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-	var React = __webpack_require__(1);
-
-	var styles = __webpack_require__(228);
-
-	var EventButton = React.createClass({
-	  displayName: 'EventButton',
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      label: 'Go'
-	    };
-	  },
-	  propTypes: {
-	    label: React.PropTypes.string.isRequired,
-	    className: React.PropTypes.string,
-	    onClick: React.PropTypes.func.isRequired
-	  },
-	  render: function render() {
-	    var _props = this.props;
-	    var className = _props.className;
-
-	    var other = _objectWithoutProperties(_props, ['className']);
-
-	    var classes = 'ob-button ' + this.props.className;
-	    return React.createElement(
-	      'div',
-	      { className: styles.button, onClick: this.props.onClick },
-	      React.createElement(
-	        'a',
-	        null,
-	        this.props.children
-	      )
-	    );
-	  }
-	});
-
-	module.exports = EventButton;
-
-/***/ },
-/* 228 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-	module.exports = {"button":"button__button___hMTO5","medium":"button__medium___2uqNz","small":"button__small___1yTss"};
-
-/***/ },
-/* 229 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var SignUpForm = __webpack_require__(230);
-
-	var SignUpPage = React.createClass({
-	  displayName: 'SignUpPage',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      profile_created: false,
-	      location_set: false
-	    };
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'main',
-	      { className: 'page-profile-creation' },
-	      React.createElement(
-	        'section',
-	        { className: 'profile' },
-	        React.createElement(
-	          'div',
-	          { className: 'inner' },
-	          React.createElement(SignUpForm, null)
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = SignUpPage;
+	module.exports = HomeContainer;
 
 /***/ },
 /* 230 */
@@ -25362,185 +25343,19 @@
 
 	var React = __webpack_require__(1);
 
-	// COMPONENTS
-	var Email = __webpack_require__(221);
-	var Username = __webpack_require__(231);
-	var Name = __webpack_require__(232);
-	var CheckboxList = __webpack_require__(233);
-	var Checkbox = __webpack_require__(234);
-	var Password = __webpack_require__(235);
-	var Location = __webpack_require__(236);
-	var Submit = __webpack_require__(227);
-	var Feedback = __webpack_require__(223);
+	var SignUpContainer = React.createClass({
+	  displayName: 'SignUpContainer',
 
-	var SignUpForm = React.createClass({
-	  displayName: 'SignUpForm',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      inputs: {},
-	      isValidForm: false
-	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      checklist: {
-	        limit: 1,
-	        settings: [{
-	          value: 'social',
-	          text: 'Social',
-	          type: 'tag'
-	        }, {
-	          value: 'mentorship',
-	          text: 'Mentorship',
-	          type: 'tag'
-	        }, {
-	          value: 'networking',
-	          text: 'Networking',
-	          type: 'tag'
-	        }]
-	      }
-	    };
-	  },
-	  propTypes: {
-	    checklist: React.PropTypes.object
-	  },
-	  isValid: function isValid(e) {
-	    // e.preventDefault();
-
-	    // // Check if form is valid
-	    // var isValidForm = this.onFormValidation();
-	    // var state;
-
-	    // if (isValidForm) {
-	    //   state = {
-	    //     isValidForm: false
-	    //   };
-	    //   // Create clean data object
-	    //   var inputs = this.state.inputs;
-	    //   var data = {};
-	    //   inputs.forEach(function(input, key) {
-	    //     data[key] = input.value;
-	    //   });
-
-	    //   // Create user
-	    //   Actions.createUser(data);
-	    // } else {
-	    //   state = {
-	    //     isValidForm: false
-	    //   };
-
-	    // }
-
-	    // this.setState(state);
-	  },
-	  onFormValidation: function onFormValidation() {
-	    // Call isValid callback for each referenced input
-	    // var keys = Object.keys(this.refs);
-	    // keys.map(function(key) {
-	    //   return this.refs[key].isValid();
-	    // }, this);
-
-	    // // Check if any inputs are invalid
-	    // var inputs = this.state.inputs;
-	    // var invalidInputs = inputs.filter(function(input) {
-	    //   return input.isValid === false;
-	    // });
-
-	    // return (invalidInputs.length === 0);
-	  },
-	  onInputValidation: function onInputValidation(name, inputState) {
-	    // this.state.inputs[name] = inputState;
-	    // TODO: Handle updating progress bar component
-	  },
 	  render: function render() {
 	    return React.createElement(
-	      'form',
-	      { className: 'ob-signup-form', noValidate: true },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Welcome! Create a profile & find lady engineers near you.'
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'profile-information' },
-	        React.createElement(
-	          'fieldset',
-	          null,
-	          React.createElement(Name, { ref: 'name', onValidation: this.onInputValidation }),
-	          React.createElement(Email, { ref: 'email', onValidation: this.onInputValidation })
-	        ),
-	        React.createElement(
-	          'fieldset',
-	          null,
-	          React.createElement(Username, { ref: 'username', onValidation: this.onInputValidation }),
-	          React.createElement(Password, { ref: 'password', onValidation: this.onInputValidation })
-	        ),
-	        React.createElement(
-	          'fieldset',
-	          null,
-	          React.createElement(
-	            'h2',
-	            null,
-	            'What opportunities are you looking for?'
-	          ),
-	          React.createElement(CheckboxList, { ref: 'checklist',
-	            className: 'opportunities-list',
-	            onValidation: this.onInputValidation,
-	            limit: this.props.checklist.limit,
-	            checkboxes: this.props.checklist.settings })
-	        ),
-	        React.createElement(
-	          'fieldset',
-	          null,
-	          React.createElement(
-	            'h2',
-	            null,
-	            'Where are you located?'
-	          ),
-	          React.createElement(Location, { ref: 'location', onValidation: this.onInputValidation })
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'code-of-conduct' },
-	        React.createElement(
-	          'h3',
-	          null,
-	          'Code of Awesome'
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'text' },
-	          React.createElement(
-	            'p',
-	            null,
-	            'Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.'
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            'Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop f Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken'
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            'Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.'
-	          )
-	        ),
-	        React.createElement(Checkbox, { ref: 'conduct', className: 'conduct-agreement', value: 'conduct', text: 'I agree to the Code of Awesome', onSelection: this.onInputValidation }),
-	        React.createElement(
-	          Submit,
-	          { onClick: this.isValid },
-	          'Start making connections'
-	        )
-	      )
+	      'div',
+	      null,
+	      'SIGN UP FORM'
 	    );
 	  }
 	});
 
-	module.exports = SignUpForm;
+	module.exports = SignUpContainer;
 
 /***/ },
 /* 231 */
@@ -25549,77 +25364,20 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Input = __webpack_require__(222);
-	var Feedback = __webpack_require__(223);
 
-	var Username = React.createClass({
-	  displayName: 'Username',
+	var LocationContainer = React.createClass({
+	  displayName: 'LocationContainer',
 
-	  getInitialState: function getInitialState() {
-	    return {
-	      isVisible: true,
-	      isValid: true,
-	      isUniqueEmail: true,
-	      message: 'Create a username'
-	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      label: 'Username',
-	      message: 'Create a username'
-	    };
-	  },
-	  propTypes: {
-	    label: React.PropTypes.string,
-	    placeholder: React.PropTypes.string,
-	    message: React.PropTypes.string,
-	    defaultValue: React.PropTypes.string
-	  },
-	  isValid: function isValid() {
-	    // var username = this.refs.username.getDOMNode().value;
-	    // // Check that username contains ONLY letters/numbers & >= 3 characters
-	    // var regex = /^[a-zA-Z0-9_]{3,18}$/;
-	    // var isValidUsername = regex.test(username);
-
-	    // if (!isValidUsername) {
-	    //   this.setState({
-	    //     message: '# & letters only',
-	    //     isValid: false,
-	    //     isError: true
-	    //   });
-	    // } else {
-	    //   this.isUnique(username);
-	    // }
-	  },
-	  isUnique: function isUnique(username) {
-	    // Actions.checkUsername(username);
-	  },
-	  onValidation: function onValidation(username) {
-	    // this.props.onValidation('username', {
-	    //   isValid: this.state.isValid,
-	    //   value: username
-	    // });
-	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      { className: 'ob-input username' },
-	      React.createElement(Feedback, { isVisible: this.state.isVisible, isError: this.state.isError, message: this.state.message }),
-	      React.createElement(
-	        'div',
-	        { className: 'input' },
-	        React.createElement(
-	          'label',
-	          null,
-	          this.props.label
-	        ),
-	        React.createElement(Input, { type: 'text', ref: 'username', onInputBlur: this.isValid, placeholder: this.props.placeholder, defaultValue: this.props.defaultValue })
-	      )
+	      null,
+	      'SET LOCATION'
 	    );
 	  }
 	});
 
-	module.exports = Username;
+	module.exports = LocationContainer;
 
 /***/ },
 /* 232 */
@@ -25628,81 +25386,20 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Input = __webpack_require__(222);
-	var Feedback = __webpack_require__(223);
 
-	var Name = React.createClass({
-	  displayName: 'Name',
+	var MapContainer = React.createClass({
+	  displayName: 'MapContainer',
 
-	  getInitialState: function getInitialState() {
-	    return {
-	      isVisible: true,
-	      isValid: true,
-	      isError: false
-	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      label: 'Name',
-	      message: 'Your name will be public',
-	      errorMessage: 'Must be 1-30 characters; no special characters'
-	    };
-	  },
-	  propTypes: {
-	    message: React.PropTypes.string,
-	    errorMessage: React.PropTypes.string,
-	    label: React.PropTypes.string,
-	    defaultValue: React.PropTypes.string
-	  },
-	  isValid: function isValid() {
-	    // Check that name contains ONLY letters & length is >=1 <= 60
-	    // var regex = /^[a-zA-Z]{1,60}$/;
-	    // var name = this.refs.name.getDOMNode().value.split(' ');
-
-	    // var isValidName = name.length > 1 ? regex.test(name[0]) && regex.test(name[1]) : regex.test(name[0]);
-	    // var state;
-
-	    // if (!isValidName) {
-	    //   state = {
-	    //     isValid: false,
-	    //     isError: true
-	    //   };
-	    // } else {
-	    //   state = {
-	    //     isValid: true,
-	    //     isError: false
-	    //   };
-	    // }
-
-	    // this.setState(state);
-
-	    // this.props.onValidation('name', {
-	    //   isValid: isValidName,
-	    //   value: name
-	    // });
-	  },
 	  render: function render() {
-	    var message = this.state.isValid ? this.props.message : this.props.errorMessage;
-
 	    return React.createElement(
 	      'div',
-	      { className: 'ob-input name' },
-	      React.createElement(Feedback, { isVisible: this.state.isVisible, isError: this.state.isError, message: message }),
-	      React.createElement(
-	        'div',
-	        { className: 'input' },
-	        React.createElement(
-	          'label',
-	          null,
-	          this.props.label
-	        ),
-	        React.createElement(Input, { type: 'text', ref: 'name', onInputBlur: this.isValid, placeholder: this.props.placeholder, defaultValue: this.props.defaultValue })
-	      )
+	      null,
+	      'FIND USERS ON THE MAP'
 	    );
 	  }
 	});
 
-	module.exports = Name;
+	module.exports = MapContainer;
 
 /***/ },
 /* 233 */
@@ -25710,472 +25407,21 @@
 
 	'use strict';
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 	var React = __webpack_require__(1);
-	var Feedback = __webpack_require__(223);
-	var Checkbox = __webpack_require__(234);
 
-	var CheckboxList = React.createClass({
-	  displayName: 'CheckboxList',
+	var ProfileContainer = React.createClass({
+	  displayName: 'ProfileContainer',
 
-	  getInitialState: function getInitialState() {
-	    return {
-	      checklist: {},
-	      isValid: false,
-	      isVisible: false,
-	      isError: false
-	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      limit: 0,
-	      message: 'Select at least one option'
-	    };
-	  },
-	  propTypes: {
-	    checkboxes: React.PropTypes.array,
-	    limit: React.PropTypes.number,
-	    message: React.PropTypes.string
-	  },
-	  isValid: function isValid() {
-	    // Find which checkboxes are valid (checked)
-	    // var checked = this.state.checklist.filter(function(checkbox) {
-	    //   return checkbox.isValid;
-	    // });
-
-	    // var isValidChecklist = (checked.length >= this.props.limit);
-	    // var state;
-
-	    // if (isValidChecklist) {
-	    //   state = {
-	    //     isValid: true,
-	    //     isVisible: false,
-	    //     isError: false
-	    //   };
-	    // } else {
-	    //   state = {
-	    //     isValid: false,
-	    //     isVisible: true,
-	    //     isError: true
-	    //   };
-	    // }
-
-	    // this.setState(state);
-
-	    // this.props.onValidation('checklist', {
-	    //   isValid: isValidChecklist,
-	    //   value: checked
-	    // });
-	  },
-	  onSelection: function onSelection(name, inputState) {
-	    // this.state.checklist[name] = inputState;
-
-	    // this.isValid();
-	  },
-	  render: function render() {
-	    var checklist = this.props.checkboxes.map(function (props, index) {
-	      var checkboxRef = 'checkbox_' + index;
-	      props.onSelection = this.onSelection;
-
-	      return React.createElement(Checkbox, _extends({
-	        key: checkboxRef,
-	        ref: checkboxRef
-	      }, props));
-	    }, this);
-
-	    var classes = 'ob-input ob-checklist ' + this.props.className;
-
-	    return React.createElement(
-	      'div',
-	      { className: classes },
-	      checklist,
-	      React.createElement(Feedback, { isVisible: this.state.isVisible, isError: this.state.isError, message: this.props.message })
-	    );
-	  }
-	});
-
-	module.exports = CheckboxList;
-
-/***/ },
-/* 234 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var classNames = __webpack_require__(224);
-
-	var Checkbox = React.createClass({
-	  displayName: 'Checkbox',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      checked: this.props.checked,
-	      isValid: false
-	    };
-	  },
-	  isValid: function isValid() {
-	    // // Checkboxes are valid when checked === true
-	    // var checkboxNode = this.refs.checkbox.getDOMNode();
-	    // var isChecked = checkboxNode.checked;
-	    // var value = checkboxNode.value;
-
-	    // this.setState({
-	    //   checked: isChecked,
-	    //   isValid: isChecked
-	    // });
-
-	    // // Call onSelection callback if provided
-	    // if (this.props.onSelection) {
-	    //   this.props.onSelection(value, {
-	    //     isValid: isChecked,
-	    //     value: value
-	    //   });
-	    // }
-
-	    // // Call handleChange callback if provided
-	    // if (this.props.handleChange) {
-	    //   this.props.handleChange();
-	    // }
-	  },
-	  propTypes: {
-	    checked: React.PropTypes.bool,
-	    name: React.PropTypes.string,
-	    value: React.PropTypes.string,
-	    onSelection: React.PropTypes.func,
-	    handleChange: React.PropTypes.func
-	  },
-	  render: function render() {
-	    var type = {};
-	    type['type-' + this.props.type] = this.props.type;
-
-	    var classes = classNames('ob-input ob-checkbox', this.props.className, {
-	      'selected': this.state.checked && !this.props.disabled,
-	      'disabled': this.props.disabled
-	    }, type);
-
-	    return React.createElement(
-	      'label',
-	      { className: classes },
-	      React.createElement('input', {
-	        type: 'checkbox',
-	        ref: 'checkbox',
-	        name: this.props.name,
-	        onChange: this.isValid,
-	        checked: this.state.checked,
-	        value: this.props.value }),
-	      this.props.text
-	    );
-	  }
-	});
-
-	module.exports = Checkbox;
-
-/***/ },
-/* 235 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var Input = __webpack_require__(222);
-	var Feedback = __webpack_require__(223);
-
-	var Password = React.createClass({
-	  displayName: 'Password',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      isVisible: true,
-	      isValid: false,
-	      isError: false
-	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      label: 'Password',
-	      message: '6-18 characters; Letters, numbers, !@?$ symbols only'
-	    };
-	  },
-	  propTypes: {
-	    label: React.PropTypes.string,
-	    message: React.PropTypes.string,
-	    placeholder: React.PropTypes.string,
-	    errorMessage: React.PropTypes.string,
-	    defaultValue: React.PropTypes.string
-	  },
-	  isValid: function isValid() {
-	    // check that password is only letters, numbers, !@? &; 6-18 characters
-	    // var regex = /^[a-zA-Z0-9$!?@]{6,18}$/;
-	    // var password = this.refs.password.getDOMNode().value;
-
-	    // var isValidPassword = regex.test(password);
-	    // var state;
-
-	    // if (!isValidPassword) {
-	    //   state = {
-	    //     isValid: false,
-	    //     isError: true
-	    //   };
-	    // } else {
-	    //   state = {
-	    //     isValid: true,
-	    //     isError: false
-	    //   };
-	    // }
-
-	    // this.setState(state);
-
-	    // this.props.onValidation('password', {
-	    //   isValid: isValidPassword,
-	    //   value: password
-	    // });
-	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      { className: 'ob-input password' },
-	      React.createElement(Feedback, { isVisible: this.state.isVisible, isError: this.state.isError, message: this.props.message }),
-	      React.createElement(
-	        'div',
-	        { className: 'input' },
-	        React.createElement(
-	          'label',
-	          null,
-	          this.props.label
-	        ),
-	        React.createElement(Input, { type: 'password', ref: 'password', onInputBlur: this.isValid, placeholder: this.props.placeholder, defaultValue: this.props.defaultValue })
-	      )
+	      null,
+	      'PROFILE & MESSAGES'
 	    );
 	  }
 	});
 
-	module.exports = Password;
-
-/***/ },
-/* 236 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var classNames = __webpack_require__(224);
-	var PostalCode = __webpack_require__(237);
-	var Geolocation = __webpack_require__(238);
-	var Feedback = __webpack_require__(223);
-
-	// UTILITIES
-	// var _ = require('lodash');
-
-	var LocationFinder = React.createClass({
-	  displayName: 'LocationFinder',
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      isVisible: true,
-	      isValid: false,
-	      isError: false,
-	      isPostalcodeDisabled: false,
-	      isGeolocationDisabled: false,
-	      userLocation: {},
-	      message: 'You can edit where your pin appears on the next page'
-	    };
-	  },
-	  propTypes: {
-	    defaultValue: React.PropTypes.string
-	  },
-	  disableGeolocation: function disableGeolocation() {
-	    // this.setState({
-	    //   isPostalcodeDisabled: false,
-	    //   isGeolocationDisabled: true
-	    // });
-	  },
-	  disablePostalcode: function disablePostalcode() {
-	    // this.setState({
-	    //   isPostalcodeDisabled: true,
-	    //   isGeolocationDisabled: false
-	    // });
-	  },
-	  isValid: function isValid() {
-	    var isValidLocation = !_.isEmpty(this.state.userLocation);
-	    // console.log('isValidLocation', isValidLocation, this.state.userLocation);
-	    // if (!isValidLocation) {
-	    //   this.setState({
-	    //     isValid: false,
-	    //     isError: true,
-	    //     userLocation: {},
-	    //     errorMessage: 'You must provide a location'
-	    //   });
-	    // } else {
-	    //   this.setState({
-	    //     isValid: true,
-	    //     isError: false
-	    //   });
-	    // }
-
-	    // this.props.onValidation('location', {
-	    //   isValid: isValidLocation,
-	    //   value: this.state.userLocation
-	    // });
-	  },
-	  render: function render() {
-	    var message = this.state.isError ? this.state.errorMessage : this.state.message;
-
-	    var classes = classNames('or', {
-	      disabled: this.state.isGeolocationDisabled || this.state.isPostalcodeDisabled
-	    });
-
-	    return React.createElement(
-	      'div',
-	      { className: 'ob-input location' },
-	      React.createElement(Feedback, {
-	        isVisible: this.state.isVisible,
-	        isError: this.state.isError,
-	        message: message }),
-	      React.createElement(PostalCode, {
-	        ref: 'postalcode',
-	        handleFocus: this.disableGeolocation,
-	        isDisabled: this.state.isPostalcodeDisabled,
-	        defaultValue: this.props.defaultValue }),
-	      React.createElement(
-	        'span',
-	        { className: classes },
-	        'or'
-	      ),
-	      React.createElement(Geolocation, {
-	        ref: 'geolocation',
-	        handleClick: this.disablePostalcode,
-	        isDisabled: this.state.isGeolocationDisabled })
-	    );
-	  }
-	});
-
-	module.exports = LocationFinder;
-
-/***/ },
-/* 237 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var Input = __webpack_require__(222);
-	var classNames = __webpack_require__(224);
-
-	var PostalCode = React.createClass({
-	  displayName: 'PostalCode',
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      label: 'Postal Code'
-	    };
-	  },
-	  propTypes: {
-	    label: React.PropTypes.string,
-	    placeholder: React.PropTypes.string,
-	    defaultValue: React.PropTypes.string
-	  },
-	  handleFocus: function handleFocus() {
-	    if (this.props.handleFocus) {
-	      this.props.handleFocus();
-	    }
-	  },
-	  handleChange: function handleChange() {
-	    if (this.props.handleChange) {
-	      this.props.handleChange();
-	    }
-	  },
-	  handleGeocodePostalCode: function handleGeocodePostalCode() {
-	    // var postalcode = this.refs.postalcode.getDOMNode().value;
-
-	    // if (postalcode) {
-	    //   Actions.geolocatePostalCode(postalcode);
-	    // }
-	  },
-	  render: function render() {
-	    var classes = classNames('input', {
-	      'disabled': this.props.isDisabled
-	    });
-
-	    return React.createElement(
-	      'div',
-	      { className: 'ob-input postalcode' },
-	      React.createElement(
-	        'div',
-	        { className: classes },
-	        React.createElement(
-	          'label',
-	          null,
-	          this.props.label
-	        ),
-	        React.createElement(Input, {
-	          type: 'text',
-	          ref: 'postalcode',
-	          onInputChange: this.handleChange,
-	          onInputFocus: this.handleFocus,
-	          onInputBlur: this.handleGeocodePostalCode,
-	          placeholder: this.props.placeholder,
-	          defaultValue: this.props.defaultValue })
-	      )
-	    );
-	  }
-	});
-
-	module.exports = PostalCode;
-
-/***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var classNames = __webpack_require__(224);
-	var Checkbox = __webpack_require__(234);
-
-	var Geolocation = React.createClass({
-	  displayName: 'Geolocation',
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      isBlocked: false,
-	      text: 'Use current location'
-	    };
-	  },
-	  propTypes: {
-	    text: React.PropTypes.string,
-	    className: React.PropTypes.string,
-	    checked: React.PropTypes.bool
-	  },
-	  handleGeolocation: function handleGeolocation() {
-	    // Actions.geolocateCurrentLocation();
-
-	    // if (this.props.handleClick) {
-	    //   this.props.handleClick();
-	    // }
-	  },
-	  render: function render() {
-	    var classes = classNames('ob-geolocation', this.props.className);
-
-	    return React.createElement(
-	      'div',
-	      { className: classes },
-	      React.createElement(Checkbox, {
-	        type: 'tag',
-	        name: 'geolocation',
-	        className: 'geolocation',
-	        value: 'geolocation',
-	        text: this.props.text,
-	        checked: this.props.checked,
-	        disabled: this.props.isDisabled,
-	        handleChange: this.handleGeolocation
-	      })
-	    );
-	  }
-	});
-
-	module.exports = Geolocation;
+	module.exports = ProfileContainer;
 
 /***/ }
 /******/ ]);

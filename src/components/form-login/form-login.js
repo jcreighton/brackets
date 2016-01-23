@@ -4,7 +4,7 @@ var React = require('react');
 var Label = require('../inputs/basics/label.js');
 var Input = require('../inputs/basics/basic-input.js');
 var Feedback = require('../inputs/basics/feedback.js');
-var Submit = require('../buttons/event-button.js');
+var Submit = require('../button/button.js');
 
 
 var LoginForm = React.createClass({

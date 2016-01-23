@@ -8,7 +8,7 @@ var CheckboxList = require('../inputs/checkbox-list.js');
 var Checkbox = require('../inputs/checkbox.js');
 var Password = require('../inputs/password.js');
 var Location = require('../inputs/location.js');
-var Submit = require('../buttons/event-button.js');
+var Submit = require('../button/button.js');
 var Feedback = require('../inputs/basics/feedback.js');
 
 var SignUpForm = React.createClass({

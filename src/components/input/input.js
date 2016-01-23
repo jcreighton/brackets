@@ -1,5 +1,7 @@
 var React = require('react');
 
+var styles = require('./input.css');
+
 var Input = React.createClass({
   getDefaultProps: function() {
     return {
@@ -15,6 +17,7 @@ var Input = React.createClass({
   render: function() {
     return (
       <input
+        className={styles.input}
         type={this.props.type}
         onFocus={this.props.onInputFocus}
         onBlur={this.props.onInputBlur}

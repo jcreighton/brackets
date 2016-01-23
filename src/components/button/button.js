@@ -15,7 +15,7 @@ var EventButton = React.createClass({
   },
   render: function() {
     var { className, ...other } = this.props;
-    var classes = 'ob-button ' + this.props.className;
+    var classes = 'ob-button ' + className;
     return (
       <div className={styles.button} onClick={this.props.onClick}>
         <a>{this.props.children}</a>

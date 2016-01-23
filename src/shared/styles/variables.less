@@ -1,14 +1,16 @@
 // Color Variables
-@pink: #DF345E;
-@teal: #50afad;
-@teal-light: #abc2c1;
-@green: #53BDBA;
-@green-light: #82DFDC;
-@gray: #292929;
-@gray-medium: #333333;
-@gray-light: #F5F5F5;
-@white: #fff;
-@white-light: rgba(255, 255, 255, 0.8);
+@value pink: #DF345E;
+@value teal: #50afad;
+@value teal-light: #abc2c1;
+@value green: #53BDBA;
+@value green-light: #82DFDC;
+@value gray: #292929;
+@value gray-medium: #333333;
+@value gray-light: #F5F5F5;
+@value white: #fff;
+@value white-light: rgba(255, 255, 255, 0.8);
+@value green-opacity: rgba(222, 255, 254, .7);
+@value green-light-opacity: rgba(83, 189, 186, .9);
 
 // Font Variables
 @font-face {
@@ -23,12 +25,12 @@
     font-style: normal;
 }
 
-@open-sans: 'Open Sans', sans-serif;
-@museo: 'museo_slab500', sans-serif;
+@value open-sans: 'Open Sans', sans-serif;
+@value museo: 'museo_slab500', sans-serif;
 
 
-.hover-state() {
-  color: @green;
-  background-color: @gray-light;
+.hover-state {
+  color: green;
+  background-color: gray-light;
 }
 

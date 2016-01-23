@@ -1,7 +1,7 @@
 var React = require('react');
 var Email = require('../inputs/email.js');
 var TextBox = require('../inputs/textbox.js');
-var Submit = require('../buttons/event-button.js');
+var Submit = require('../button/button.js');
 
 var EmailSignUpForm = React.createClass({
   getInitialState: function() {
