@@ -4,17 +4,17 @@ var TextBox = require('../inputs/textbox.js');
 var Submit = require('../button/button.js');
 
 var EmailSignUpForm = React.createClass({
-  getInitialState: function() {
-    return {
-      message: 'Create an account:',
-      emailError: {
-        message: 'Email already in use!',
-        isVisible: false
-      },
-      toggleMessage: false
-    };
-  },
-  isValid: function(e) {
+  // getInitialState: function() {
+  //   return {
+  //     message: 'Create an account:',
+  //     emailError: {
+  //       message: 'Email already in use!',
+  //       isVisible: false
+  //     },
+  //     toggleMessage: false
+  //   };
+  // },
+  // isValid: function(e) {
     // e.preventDefault();
 
     // // get validity information from invididual input
@@ -46,12 +46,12 @@ var EmailSignUpForm = React.createClass({
 
     //   this.postMessage();
     // }
-  },
-  postMessage: function(){
+  // },
+  // postMessage: function(){
     // this.setState({toggleMessage: true});
-  },
+  // },
   render: function() {
-    var classes = this.state.toggleMessage ? 'toggle-message' : '';
+    // var classes = this.state.toggleMessage ? 'toggle-message' : '';
 
     return (
       <div className={classes}>

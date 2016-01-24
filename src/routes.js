@@ -4,8 +4,8 @@ var Route = require('react-router').Route;
 var IndexRoute = require('react-router').IndexRoute;
 var browserHistory = require('react-router').browserHistory;
 
-var { Provider } = require('redux');
-var store = require('./store/store.js');
+var { Provider } = require('react-redux');
+var configureStore = require('./store/configureStore.js');
 
 // CONTAINERS
 var App = require('./containers/app.js');
@@ -16,6 +16,7 @@ var UserMap = require('./containers/map.js');
 var Profile = require('./containers/profile.js');
 
 module.exports = (
+  <Provider store={ configureStore }>
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute component={ Home } />
@@ -25,6 +26,5 @@ module.exports = (
         <Route path=":username" component={ Profile } />
       </Route>
     </Router>
+  </Provider>
 );
-
-  // <Provider store={ store }></Provider>

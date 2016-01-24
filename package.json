@@ -38,6 +38,7 @@
     "history": "1.17.0",
     "lodash": "^4.0.0",
     "mapbox": "^0.12.0",
+    "normalize.css": "^3.0.3",
     "postcss": "^5.0.14",
     "postcss-modules-extract-imports": "^1.0.0",
     "postcss-modules-local-by-default": "^1.0.1",

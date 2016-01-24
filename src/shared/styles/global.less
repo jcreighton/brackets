@@ -1,70 +1,31 @@
-// Global Styles
+:global// Global Styles
 body{
   font-family: @open-sans;
   color: @white;
   background-color: @gray;
 
-  header{
-    background-color: @white;
-    position: relative;
+  nav{
+    display: inline-block;
+    // display: none;
 
-    h1{
-      display: inline-block;
-      color: @pink;
-      padding: 0 30px;
+    ul{
+      li{
+        display: inline-block;
+        padding-right: 30px;
 
-      a{
-        text-decoration: none;
+        a{
+          display: block;
+          color: @gray;
+          text-decoration: none;
+          text-transform: uppercase;
 
-        &:visited{
-          color: @pink;
-        }
-
-        .bracket{
-          font-size: 42px;
-        }
-
-        .name{
-          font-size: 32px;
-          position: relative;
-          top: -2px;
-          left: 0px;
-        }
-      }
-    }
-
-    .donate{
-      display: none;
-      // display: inline-block;
-      position: absolute;
-      right: 60px;
-      top: 20px;
-      width: 80px;
-    }
-
-    nav{
-      display: inline-block;
-      // display: none;
-
-      ul{
-        li{
-          display: inline-block;
-          padding-right: 30px;
-
-          a{
-            display: block;
-            color: @gray;
-            text-decoration: none;
-            text-transform: uppercase;
-
-            &:hover{
-              color: @green;
-            }
+          &:hover{
+            color: @green;
           }
+        }
 
-          &:last-child{
-            padding-right: 0px;
-          }
+        &:last-child{
+          padding-right: 0px;
         }
       }
     }
@@ -181,4 +142,9 @@ body{
   .ob-state-visible{
     display: block;
   }
+}
+
+.hover-state {
+  color: green;
+  background-color: gray-light;
 }

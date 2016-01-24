@@ -1,23 +1,21 @@
+@value grayMedium, tealLight from '../../shared/colors.css';
+
 input {
-  position: relative;
-  vertical-align: top;
-  left: 121px;
-  width: 313px;
-  height: @input-width;
+  flex-basis: 90%;
   font-size: 24px;
-  color: @teal-light;
-  background-color: @gray-medium;
+  color: tealLight;
+  background-color: grayMedium;
   border: none;
 }
 
 input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 50px @gray-medium inset; /* Change the color to your own background color */
-  -webkit-text-fill-color: @teal-light;
+  -webkit-box-shadow: 0 0 0 50px grayMedium inset; /* Change the color to your own background color */
+  -webkit-text-fill-color: tealLight;
 }
 
 input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 50px @gray-medium inset;
-  -webkit-text-fill-color: @teal-light;
+  -webkit-box-shadow: 0 0 0 50px grayMedium inset;
+  -webkit-text-fill-color: tealLight;
 }
 
 input[type="checkbox"] {
@@ -29,7 +27,7 @@ input.disabled {
 }
 
 input.disabled:hover {
-  color: @teal-light;
-  background-color: @gray-medium;
+  color: tealLight;
+  background-color: grayMedium;
   opacity: .4;
 }

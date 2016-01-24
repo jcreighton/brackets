@@ -1,0 +1,13 @@
+@value pink: #DF345E;
+@value teal: #50afad;
+@value tealLight: #abc2c1;
+@value green: #53BDBA;
+@value greenLight: #82DFDC;
+@value gray: #292929;
+@value grayMedium: #333333;
+@value grayLight: #F5F5F5;
+@value white: #fff;
+@value whiteLight: rgba(255, 255, 255, 0.8);
+@value greenOpacity: rgba(222, 255, 254, .7);
+@value greenLightOpacity: rgba(83, 189, 186, .9);
+@value errorRed: #A01739;

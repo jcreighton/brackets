@@ -1,34 +1,19 @@
 var React = require('react');
 
-// COMPONENTS
-var Label = require('../inputs/basics/label.js');
-var Input = require('../inputs/basics/basic-input.js');
-var Feedback = require('../inputs/basics/feedback.js');
-var Submit = require('../button/button.js');
+var InputEmail = require('../input-email/input-email.js');
+var InputPassword = require('../input-password/input-password.js');
 
+var styles = require('./form-login.css');
 
-var LoginForm = React.createClass({
-  getInitialState: function() {
-    return {
-      message: 'Email or password is incorrect.'
-    };
-  },
-  handleLogin: function() {
-    console.log('authenticating...');
-  },
+var FormLogin = React.createClass({
   render: function() {
     return (
-      <div className="ob-login-form">
-        <h2>LOGIN</h2>
-        <Label>Email</Label>
-        <Input type="text" ref="email" />
-        <Label>Password</Label>
-        <Input type="password" ref="password" />
-        <Feedback message={this.state.message} />
-        <Submit className="small" onClick={this.handleLogin}>LOGIN</Submit>
-      </div>
+      <form className={styles.login}>
+        <InputEmail />
+        <InputPassword />
+      </form>
     );
   }
 });
 
-module.exports = LoginForm;
+module.exports = FormLogin;

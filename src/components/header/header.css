@@ -1,0 +1,36 @@
+@value white, pink from '../../shared/colors.css';
+@value museo from '../../shared/typography.css';
+
+.header {
+  background-color: white;
+  font-family: museo;
+}
+
+.logged-in {
+  background-color: white;
+}
+
+.h1 {
+  display: inline-block;
+  color: pink;
+  padding: 0 30px;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.link:visited {
+  color: pink;
+}
+
+.bracket {
+  font-size: 42px;
+}
+
+.name {
+  font-size: 32px;
+  position: relative;
+  top: -2px;
+  left: 0px;
+}
