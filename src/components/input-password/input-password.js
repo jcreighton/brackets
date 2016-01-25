@@ -15,8 +15,7 @@ var Password = React.createClass({
   getDefaultProps: function() {
     return {
       label: 'Password',
-      type: 'password',
-      ref: 'password'
+      type: 'password'
     }
   },
   // propTypes: {
@@ -75,16 +74,15 @@ var Password = React.createClass({
 
 var mapDispatchToProps = function(dispatch) {
   return {
-    onBlur: function() {
+    onBlur: function(value) {
       dispatch({
-        type: 'AN_INPUT_ACTION',
+        type: 'PASSWORD_VALIDATED',
         value: {
-          email: true,
-          value: 'jcreighton08@gmail.com'
+          password: value
         }
       });
     }
   }
 };
-// module.exports = Password;
+
 module.exports = connect(null, mapDispatchToProps)(Password);

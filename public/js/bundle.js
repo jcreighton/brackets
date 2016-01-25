@@ -26494,14 +26494,21 @@
 	    placeholder: React.PropTypes.string,
 	    defaultValue: React.PropTypes.string
 	  },
+	  handleOnBlur: function handleOnBlur() {
+	    this.props.onBlur(this.node.value);
+	  },
 	  render: function render() {
+	    var _this = this;
+	
 	    return React.createElement('input', {
 	      className: styles.input,
 	      type: this.props.type,
 	      name: this.props.name,
-	      ref: this.props.ref,
+	      ref: function ref(c) {
+	        return _this.node = c;
+	      },
 	      onFocus: this.props.onFocus,
-	      onBlur: this.props.onBlur,
+	      onBlur: this.handleOnBlur,
 	      onChange: this.props.onChange,
 	      placeholder: this.props.placeholder,
 	      defaultValue: this.props.defaultValue
@@ -26720,12 +26727,11 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
-	    onBlur: function onBlur() {
+	    onBlur: function onBlur(value) {
 	      dispatch({
-	        type: 'AN_INPUT_ACTION',
+	        type: 'PASSWORD_VALIDATED',
 	        value: {
-	          email: true,
-	          value: 'jcreighton08@gmail.com'
+	          password: value
 	        }
 	      });
 	    }

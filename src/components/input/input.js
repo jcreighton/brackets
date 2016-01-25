@@ -14,16 +14,22 @@ var Input = React.createClass({
     placeholder: React.PropTypes.string,
     defaultValue: React.PropTypes.string
   },
+  handleOnBlur: function() {
+    this.props.onBlur(this.input.value);
+  },
+  handleOnChange: function() {
+    this.props.onChange(this.input.value);
+  },
   render: function() {
     return (
       <input
         className={styles.input}
         type={this.props.type}
         name={this.props.name}
-        ref={this.props.ref}
+        ref={(node) => this.input = node}
         onFocus={this.props.onFocus}
-        onBlur={this.props.onBlur}
-        onChange={this.props.onChange}
+        onBlur={this.handleOnBlur}
+        onChange={this.handleOnChange}
         placeholder={this.props.placeholder}
         defaultValue={this.props.defaultValue}
       />

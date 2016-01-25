@@ -1,4 +1,5 @@
 var React = require('react');
+var { connect } = require('react-redux');
 
 var InputCustom = require('../input-custom/input-custom.js');
 var Feedback = require('../feedback/feedback.js');
@@ -17,13 +18,10 @@ var InputEmail = React.createClass({
       type: 'email'
     }
   },
-  // propTypes: {
-  //   callback: React.PropTypes.func,
-  //   isUnique: React.PropTypes.bool,
-  //   label: React.PropTypes.string,
-  //   placeholder: React.PropTypes.string,
-  //   defaultValue: React.PropTypes.string
-  // },
+  propTypes: {
+    label: React.PropTypes.string,
+    type: React.PropTypes.string
+  },
   // isValid: function() {
     // Check that email address is valid
     // var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
@@ -64,4 +62,17 @@ var InputEmail = React.createClass({
   }
 });
 
-module.exports = InputEmail;
+var mapDispatchToProps = function(dispatch) {
+  return {
+    onBlur: function(value) {
+      dispatch({
+        type: 'EMAIL_VALIDATED',
+        value: {
+          email: value
+        }
+      });
+    }
+  }
+};
+
+module.exports = connect(null, mapDispatchToProps)(InputEmail);
