@@ -2,6 +2,11 @@
 @value museo from '../../shared/typography.css';
 
 .header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
   background-color: white;
   font-family: museo;
 }
@@ -11,9 +16,7 @@
 }
 
 .h1 {
-  display: inline-block;
   color: pink;
-  padding: 0 30px;
 }
 
 .link {
@@ -22,15 +25,4 @@
 
 .link:visited {
   color: pink;
-}
-
-.bracket {
-  font-size: 42px;
-}
-
-.name {
-  font-size: 32px;
-  position: relative;
-  top: -2px;
-  left: 0px;
 }

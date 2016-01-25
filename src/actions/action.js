@@ -1,6 +1,6 @@
 module.exports = function(value) {
   return {
-    type: OPEN_BRACKET,
+    type: A_VALUE,
     payload: value
   }
 };

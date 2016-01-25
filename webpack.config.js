@@ -53,5 +53,7 @@ module.exports = {
     fs: "empty"
   },
 
-  cache: false
+  cache: false,
+
+  devtool: 'source-map'
 };

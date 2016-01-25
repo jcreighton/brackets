@@ -2,7 +2,7 @@ var React = require('react');
 
 var styles = require('./button.css');
 
-var EventButton = React.createClass({
+var Button = React.createClass({
   getDefaultProps: function() {
     return {
       label: 'Go',
@@ -17,11 +17,11 @@ var EventButton = React.createClass({
     var { className, ...other } = this.props;
     var classes = 'ob-button ' + className;
     return (
-      <div className={styles.button} onClick={this.props.onClick}>
+      <button className={styles.button} onClick={this.props.onClick}>
         <a>{this.props.children}</a>
-      </div>
+      </button>
     )
   }
 });
 
-module.exports = EventButton;
+module.exports = Button;

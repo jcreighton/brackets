@@ -1,8 +1,9 @@
 var React = require('react');
 var Link = require('react-router').Link;
 
+var { connect } = require('react-redux');
+
 var Header = require('../components/header/header.js');
-var FormLogin = require('../components/form-login/form-login.js');
 
 var HomeContainer = React.createClass({
   getDefaultProps: function() {
@@ -17,7 +18,6 @@ var HomeContainer = React.createClass({
     return (
       <div>
         <Header />
-        <FormLogin />
         <Link to="sign-up">SIGN UP</Link>
       </div>
     );

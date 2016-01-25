@@ -55,39 +55,7 @@ button:focus {
     font-style: normal;
 }
 
-.header__header___2m9dq {
-  background-color: #fff;
-  font-family: 'museo_slab500';
-}
-
-.header__logged-in___1lUh- {
-  background-color: #fff;
-}
-
-.header__h1___sw9yB {
-  display: inline-block;
-  color: #DF345E;
-  padding: 0 30px;
-}
-
-.header__link___jgkK5 {
-  text-decoration: none;
-}
-
-.header__link___jgkK5:visited {
-  color: #DF345E;
-}
-
-.header__bracket___1z83b {
-  font-size: 42px;
-}
-
-.header__name___1JlF5 {
-  font-size: 32px;
-  position: relative;
-  top: -2px;
-  left: 0px;
-}label {
+label {
   align-self: flex-start;
   padding-right: 16px;
   font-weight: 600;
@@ -162,4 +130,38 @@ input.input__disabled___3CqTr:hover {
   flex-flow: row nowrap;
   justify-content: space-between;
   width: 540px;
+}.logo-bracket__bracket___BoE48 {
+  font-size: 42px;
 }
+
+.logo-bracket__name___3A5m3 {
+  font-size: 32px;
+  position: relative;
+  top: -2px;
+  left: 0px;
+}.header__header___2m9dq {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  background-color: #fff;
+  font-family: 'museo_slab500';
+}
+
+.header__logged-in___1lUh- {
+  background-color: #fff;
+}
+
+.header__h1___sw9yB {
+  color: #DF345E;
+}
+
+.header__link___jgkK5 {
+  text-decoration: none;
+}
+
+.header__link___jgkK5:visited {
+  color: #DF345E;
+}
+/*# sourceMappingURL=styles.css.map*/

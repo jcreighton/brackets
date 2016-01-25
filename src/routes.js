@@ -15,16 +15,16 @@ var Location = require('./containers/location.js');
 var UserMap = require('./containers/map.js');
 var Profile = require('./containers/profile.js');
 
+console.log('configureStore: ', configureStore);
+
 module.exports = (
-  <Provider store={ configureStore }>
-    <Router history={ browserHistory }>
-      <Route path="/" component={ App }>
-        <IndexRoute component={ Home } />
-        <Route path="sign-up" component={ SignUp } />
-        <Route path="sign-up/location" component={ Location } />
-        <Route path="map" component={ UserMap } />
-        <Route path=":username" component={ Profile } />
-      </Route>
-    </Router>
-  </Provider>
+  <Router history={ browserHistory }>
+    <Route path="/" component={ App }>
+      <IndexRoute component={ Home } />
+      <Route path="sign-up" component={ SignUp } />
+      <Route path="sign-up/location" component={ Location } />
+      <Route path="map" component={ UserMap } />
+      <Route path=":username" component={ Profile } />
+    </Route>
+  </Router>
 );

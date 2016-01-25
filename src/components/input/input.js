@@ -19,9 +19,11 @@ var Input = React.createClass({
       <input
         className={styles.input}
         type={this.props.type}
-        onFocus={this.props.onInputFocus}
-        onBlur={this.props.onInputBlur}
-        onChange={this.props.onInputChange}
+        name={this.props.name}
+        ref={this.props.ref}
+        onFocus={this.props.onFocus}
+        onBlur={this.props.onBlur}
+        onChange={this.props.onChange}
         placeholder={this.props.placeholder}
         defaultValue={this.props.defaultValue}
       />

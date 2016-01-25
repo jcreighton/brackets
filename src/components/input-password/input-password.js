@@ -1,4 +1,5 @@
 var React = require('react');
+var { connect } = require('react-redux');
 
 var InputCustom = require('../input-custom/input-custom.js');
 var Feedback = require('../feedback/feedback.js');
@@ -14,7 +15,8 @@ var Password = React.createClass({
   getDefaultProps: function() {
     return {
       label: 'Password',
-      type: 'isValidPassword'
+      type: 'password',
+      ref: 'password'
     }
   },
   // propTypes: {
@@ -24,7 +26,7 @@ var Password = React.createClass({
   //   errorMessage: React.PropTypes.string,
   //   defaultValue: React.PropTypes.string
   // },
-  // isValid: function() {
+  isValid: function() {
     // check that password is only letters, numbers, !@? &; 6-18 characters
     // var regex = /^[a-zA-Z0-9$!?@]{6,18}$/;
     // var password = this.refs.password.getDOMNode().value;
@@ -50,8 +52,18 @@ var Password = React.createClass({
     //   isValid: isValidPassword,
     //   value: password
     // });
-  // },
+    // var _this = this;
+    // console.log(store, this.context, _this.context);
+    // store.dispatch({
+    //   type: 'AN_INPUT_ACTION',
+    //   value: {
+    //     email: true,
+    //     value: 'jcreighton08@gmail.com'
+    //   }
+    // });
+  },
   render: function() {
+    console.log(this.props, this.context);
     return (
       <div>
         <Feedback {...this.props} />
@@ -61,4 +73,18 @@ var Password = React.createClass({
   }
 });
 
-module.exports = Password;
+var mapDispatchToProps = function(dispatch) {
+  return {
+    onBlur: function() {
+      dispatch({
+        type: 'AN_INPUT_ACTION',
+        value: {
+          email: true,
+          value: 'jcreighton08@gmail.com'
+        }
+      });
+    }
+  }
+};
+// module.exports = Password;
+module.exports = connect(null, mapDispatchToProps)(Password);

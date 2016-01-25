@@ -10,7 +10,7 @@ var InputCustom = React.createClass({
     return (
       <div className={styles.input}>
         <Label>{this.props.label}</Label>
-        <Input type={this.props.type} ref={this.props.refName} />
+        <Input {...this.props} />
       </div>
     );
   }
