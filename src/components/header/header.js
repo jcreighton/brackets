@@ -1,7 +1,7 @@
 var React = require('react');
 var Link = require('react-router').Link;
 
-var FormLogin = require('../form-login/form-login.js');
+var Navigation = require('../navigation/navigation.js');
 var LogoBracket = require('../logo-bracket/logo-bracket.js');
 
 var styles = require('./header.css');
@@ -15,7 +15,7 @@ var Header = React.createClass({
             <LogoBracket />
           </Link>
         </h1>
-        <FormLogin />
+        <Navigation />
       </header>
     );
   }

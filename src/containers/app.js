@@ -10,16 +10,6 @@ require('../shared/fonts.css');
 var configureStore = require('../store/configureStore.js');
 
 var AppContainer = React.createClass({
-  // childContextTypes: {
-  //   store: React.PropTypes.shape({
-  //     subscribe: React.PropTypes.func.isRequired,
-  //     dispatch: React.PropTypes.func.isRequired,
-  //     getState: React.PropTypes.func.isRequired
-  //   })
-  // },
-  // getChildContext: function() {
-  //   return { store: configureStore }
-  // },
   render: function() {
     return (
       <Provider store={ configureStore }>

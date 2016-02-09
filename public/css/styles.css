@@ -125,11 +125,82 @@ input.input__disabled___3CqTr:hover {
 
 .feedback__hidden___2AWQr {
   visibility: hidden;
+}.button__button___lmpwR {
+  background-color: #53BDBA;
+  font-size: 16px;
+  line-height: 24px;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #53BDBA;
+  text-transform: uppercase;
+  text-align: center;
+  height: 44px;
+  align-self: center;
+}
+
+.button__button___lmpwR:hover {
+  color: #53BDBA;
+  background-color: #F5F5F5;
+}
+
+.button__medium___BLI7l {
+  width: 80px;
+}
+
+.button__small___35LKs {
+  width: 60px;
 }.form-login__login___JGlTK {
   display: flex;
-  flex-flow: row nowrap;
   justify-content: space-between;
-  width: 540px;
+  width: 640px;
+  margin: 0;
+}.navigation__navigation___3HY9m {
+  font-family: 'Open Sans', sans-serif;
+  display: flex;
+}
+
+.navigation__navigation___3HY9m ul {
+  display: flex;
+}
+
+.navigation__navigation___3HY9m li {
+  display: block;
+  color: #292929;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  flex: 1 0 auto;
+  align-self: center;
+  padding: 0 30px 0 0;
+}
+
+.navigation__navigation___3HY9m li:hover {
+  color: #53BDBA;
+}
+
+.navigation__hidden___16Br8 {
+  color: red;
+}.transitions__enter___fDjhL {
+  opacity: 0;
+  transform: translateX(800px);
+}
+
+.transitions__enter___fDjhL.transitions__enterActive___2b5NO {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all .5s;
+}
+
+.transitions__leave___3Hz9Z {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.transitions__leave___3Hz9Z.transitions__leaveActive___17LGo {
+  opacity: 0;
+  transform: translateX(800px);
+  transition: all .5s;
 }.logo-bracket__bracket___BoE48 {
   font-size: 42px;
 }
@@ -141,9 +212,9 @@ input.input__disabled___3CqTr:hover {
   left: 0px;
 }.header__header___2m9dq {
   display: flex;
-  flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
+  align-content: center;
   padding: 0 30px;
   background-color: #fff;
   font-family: 'museo_slab500';
