@@ -61,36 +61,6 @@ label {
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
-}input {
-  flex-basis: 90%;
-  font-size: 24px;
-  color: #abc2c1;
-  background-color: #333333;
-  border: none;
-}
-
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 50px #333333 inset; /* Change the color to your own background color */
-  -webkit-text-fill-color: #abc2c1;
-}
-
-input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 50px #333333 inset;
-  -webkit-text-fill-color: #abc2c1;
-}
-
-input[type="checkbox"] {
-  font-size: 14px;
-}
-
-input.input__disabled___3CqTr {
-  opacity: .2;
-}
-
-input.input__disabled___3CqTr:hover {
-  color: #abc2c1;
-  background-color: #333333;
-  opacity: .4;
 }.input-custom__input___1SMcg {
   display: flex;
   flex-flow: row nowrap;
@@ -105,25 +75,63 @@ input.input__disabled___3CqTr:hover {
   color: #50afad;
   background-color: #333333;
   border: 1px solid #53BDBA;
+}
+
+.input-custom__input___1SMcg input {
+  flex-basis: 90%;
+  font-size: 24px;
+  color: #abc2c1;
+  background-color: #333333;
+  border: none;
+}
+
+.input-custom__input___1SMcg input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 50px #333333 inset; /* Change the color to your own background color */
+  -webkit-text-fill-color: #abc2c1;
+}
+
+.input-custom__input___1SMcg input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 50px #333333 inset;
+  -webkit-text-fill-color: #abc2c1;
+}
+
+.input-custom__input___1SMcg input[type="checkbox"] {
+  font-size: 14px;
+}
+
+.input-custom__input___1SMcg input.input-custom__disabled___8ynMC {
+  opacity: .2;
+}
+
+.input-custom__input___1SMcg input.input-custom__disabled___8ynMC:hover {
+  color: #abc2c1;
+  background-color: #333333;
+  opacity: .4;
 }.feedback__feedback___24-in {
-/*  position: relative;
-  top: 14px;
-  left: 0;
-  display: inline-block;*/
-  display: none;
   font-size: 12px;
   color: #abc2c1;
+}
+
+.feedback__bottom___qusGH {
+
+}
+
+.feedback__left___1Kk9_ {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: inline-block;
 }
 
 .feedback__error___3jzmr {
   color: #A01739;
 }
 
-.feedback__visible___fieGd {
+.feedback__left___1Kk9_.feedback__visible___fieGd {
   visibility: visible;
 }
 
-.feedback__hidden___2AWQr {
+.feedback__left___1Kk9_.feedback__hidden___2AWQr {
   visibility: hidden;
 }.button__button___lmpwR {
   background-color: #53BDBA;
@@ -135,7 +143,6 @@ input.input__disabled___3CqTr:hover {
   border: 1px solid #53BDBA;
   text-transform: uppercase;
   text-align: center;
-  height: 44px;
   align-self: center;
 }
 

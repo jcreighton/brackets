@@ -1,13 +1,12 @@
 var React = require('react');
 
 var { Provider } = require('react-redux');
+var configureStore = require('../store/configureStore.js');
 
 require('normalize.css/normalize.css');
 require('../shared/flexboxgrid.css');
 require('../shared/global.css');
 require('../shared/fonts.css');
-
-var configureStore = require('../store/configureStore.js');
 
 var AppContainer = React.createClass({
   render: function() {

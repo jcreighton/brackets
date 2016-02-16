@@ -1,23 +1,29 @@
 @value tealLight, errorRed from '../../shared/colors.css';
 
 .feedback {
-/*  position: relative;
-  top: 14px;
-  left: 0;
-  display: inline-block;*/
-  display: none;
   font-size: 12px;
   color: tealLight;
+}
+
+.bottom {
+
+}
+
+.left {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: inline-block;
 }
 
 .error {
   color: errorRed;
 }
 
-.visible {
+.left.visible {
   visibility: visible;
 }
 
-.hidden {
+.left.hidden {
   visibility: hidden;
 }

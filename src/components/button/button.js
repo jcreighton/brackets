@@ -7,11 +7,14 @@ var Button = React.createClass({
     className: React.PropTypes.string,
     onClick: React.PropTypes.func
   },
+  handleOnClick: function() {
+    this.props.onClick();
+  },
   render: function() {
     return (
-      <button className={styles.button} onClick={this.props.onClick}>
-        <a>{this.props.children}</a>
-      </button>
+      <div className={styles.button} onClick={this.handleOnClick}>
+        {this.props.children}
+      </div>
     )
   }
 });

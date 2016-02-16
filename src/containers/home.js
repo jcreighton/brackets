@@ -1,8 +1,6 @@
 var React = require('react');
 var Link = require('react-router').Link;
 
-var { connect } = require('react-redux');
-
 var Header = require('../components/header/header.js');
 
 var HomeContainer = React.createClass({

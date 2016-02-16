@@ -1,11 +1,15 @@
-var { createStore, combineReducers } = require('redux');
+var { createStore, combineReducers, applyMiddleware } = require('redux');
+var thunk = require('redux-thunk');
+var logger = require('redux-logger');
 
 var one = require('../reducers/reducer.js');
-var two = require('../reducers/reducer_2.js');
+var user = require('../reducers/user-reducer.js');
 
 var reducers = combineReducers({
   one,
-  two
+  user
 });
 
-module.exports = createStore(reducers);
+var createStoreWithMiddleWare = applyMiddleware(thunk, logger())(createStore);
+
+module.exports = createStoreWithMiddleWare(reducers);

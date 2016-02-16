@@ -4,9 +4,6 @@ var Route = require('react-router').Route;
 var IndexRoute = require('react-router').IndexRoute;
 var browserHistory = require('react-router').browserHistory;
 
-var { Provider } = require('react-redux');
-var configureStore = require('./store/configureStore.js');
-
 // CONTAINERS
 var App = require('./containers/app.js');
 var Home = require('./containers/home.js');
@@ -14,8 +11,6 @@ var SignUp = require('./containers/signup.js');
 var Location = require('./containers/location.js');
 var UserMap = require('./containers/map.js');
 var Profile = require('./containers/profile.js');
-
-console.log('configureStore: ', configureStore);
 
 module.exports = (
   <Router history={ browserHistory }>
