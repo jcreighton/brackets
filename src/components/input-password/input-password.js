@@ -2,6 +2,7 @@ var React = require('react');
 
 var InputCustom = require('../input-custom/input-custom.js');
 var Feedback = require('../feedback/feedback.js');
+var { validatePassword } = require('../../utils/validation.js');
 
 var Password = React.createClass({
   getInitialState: function() {
@@ -21,10 +22,8 @@ var Password = React.createClass({
     message: React.PropTypes.string,
   },
   isValid: function() {
-    // check that password is only letters, numbers, !@? &; 6-18 characters
     var value = this.input.value;
-    var regex = /^[a-zA-Z0-9$!?@]{6,18}$/;
-    var isValid = regex.test(value);
+    var isValid = validatePassword(value);
 
     if (isValid) {
       this.setState({

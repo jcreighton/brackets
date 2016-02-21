@@ -3,6 +3,7 @@ var { connect } = require('react-redux');
 
 var InputCustom = require('../input-custom/input-custom.js');
 var Feedback = require('../feedback/feedback.js');
+var { validateEmail } = require('../../utils/validation.js');
 
 var InputEmail = React.createClass({
   getInitialState: function() {
@@ -26,10 +27,8 @@ var InputEmail = React.createClass({
     error: React.PropTypes.string
   },
   isValid: function(value) {
-    // Check that email address is valid
-    var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
     var value = this.input.value;
-    var isValid = regex.test(value);
+    var isValid = validateEmail(value);
 
     if (!isValid) {
       this.setState({

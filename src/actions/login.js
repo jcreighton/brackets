@@ -43,9 +43,9 @@ export function logoutUserFailure(errorData) {
   }
 }
 
-export function getUserProfile(profile) {
+export function setUserProfile(profile) {
   return {
-    type: 'GET_USER_PROFILE',
+    type: 'SET_USER_PROFILE',
     payload: profile
   }
 }
@@ -75,7 +75,7 @@ export function getUserProfile(uid) {
       .once('value')
       .then((data) => {
         var profile = data.val();
-        dispatch(getUserProfile(profile));
+        dispatch(setUserProfile(profile));
       })
       .catch((error) => {
         dispatch(loginUserFailure(error.code));

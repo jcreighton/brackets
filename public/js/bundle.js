@@ -19670,10 +19670,10 @@
 	// CONTAINERS
 	var App = __webpack_require__(218);
 	var Home = __webpack_require__(249);
-	var SignUp = __webpack_require__(281);
-	var Location = __webpack_require__(282);
-	var UserMap = __webpack_require__(283);
-	var Profile = __webpack_require__(284);
+	var SignUp = __webpack_require__(282);
+	var Location = __webpack_require__(283);
+	var UserMap = __webpack_require__(284);
+	var Profile = __webpack_require__(285);
 	
 	module.exports = React.createElement(
 	  Router,
@@ -26056,7 +26056,7 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	module.exports = function () {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? { logged_in: false } : arguments[0];
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	  var action = arguments[1];
 	
 	  switch (action.type) {
@@ -26084,7 +26084,7 @@
 	      });
 	      break;
 	
-	    case 'SET_USER_PROFILE':
+	    case 'GET_USER_PROFILE':
 	      return _extends({}, state, action.payload);
 	
 	    default:
@@ -26514,9 +26514,9 @@
 	var Link = __webpack_require__(160).Link;
 	
 	var Navigation = __webpack_require__(251);
-	var LogoBracket = __webpack_require__(278);
+	var LogoBracket = __webpack_require__(279);
 	
-	var styles = __webpack_require__(280);
+	var styles = __webpack_require__(281);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26553,8 +26553,8 @@
 	
 	var Login = __webpack_require__(259);
 	
-	var styles = __webpack_require__(276);
-	var transitions = __webpack_require__(277);
+	var styles = __webpack_require__(277);
+	var transitions = __webpack_require__(278);
 	
 	var Navigation = React.createClass({
 	  displayName: 'Navigation',
@@ -27423,10 +27423,10 @@
 	var connect = _require.connect;
 	
 	var InputEmail = __webpack_require__(262);
-	var InputPassword = __webpack_require__(272);
-	var Button = __webpack_require__(273);
+	var InputPassword = __webpack_require__(273);
+	var Button = __webpack_require__(274);
 	
-	var styles = __webpack_require__(275);
+	var styles = __webpack_require__(276);
 	
 	var FormLogin = React.createClass({
 	  displayName: 'FormLogin',
@@ -27499,7 +27499,7 @@
 	exports.logoutUserRequest = logoutUserRequest;
 	exports.logoutUserSuccess = logoutUserSuccess;
 	exports.logoutUserFailure = logoutUserFailure;
-	exports.setUserProfile = setUserProfile;
+	exports.getUserProfile = getUserProfile;
 	exports.requestUserLogin = requestUserLogin;
 	exports.getUserProfile = getUserProfile;
 	var Firebase = __webpack_require__(261);
@@ -27547,9 +27547,9 @@
 	  };
 	}
 	
-	function setUserProfile(profile) {
+	function getUserProfile(profile) {
 	  return {
-	    type: 'SET_USER_PROFILE',
+	    type: 'GET_USER_PROFILE',
 	    payload: profile
 	  };
 	}
@@ -27576,7 +27576,7 @@
 	  return function (dispatch) {
 	    return ref.child('users').child(uid).once('value').then(function (data) {
 	      var profile = data.val();
-	      dispatch(setUserProfile(profile));
+	      dispatch(getUserProfile(profile));
 	    }).catch(function (error) {
 	      dispatch(loginUserFailure(error.code));
 	    });
@@ -27884,6 +27884,10 @@
 	var InputCustom = __webpack_require__(263);
 	var Feedback = __webpack_require__(269);
 	
+	var _require2 = __webpack_require__(272);
+	
+	var validateEmail = _require2.validateEmail;
+	
 	var InputEmail = React.createClass({
 	  displayName: 'InputEmail',
 	
@@ -27908,10 +27912,8 @@
 	    error: React.PropTypes.string
 	  },
 	  isValid: function isValid(value) {
-	    // Check that email address is valid
-	    var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
 	    var value = this.input.value;
-	    var isValid = regex.test(value);
+	    var isValid = validateEmail(value);
 	
 	    if (!isValid) {
 	      this.setState({
@@ -28194,6 +28196,27 @@
 
 /***/ },
 /* 272 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	function validate(regex) {
+	  return function (value) {
+	    return regex.test(value);
+	  };
+	}
+	
+	var validateEmail = validate(/^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/);
+	
+	var validatePassword = validate(/^[a-zA-Z0-9$!?@]{6,18}$/);
+	
+	module.exports = {
+	  validateEmail: validateEmail,
+	  validatePassword: validatePassword
+	};
+
+/***/ },
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28204,6 +28227,10 @@
 	
 	var InputCustom = __webpack_require__(263);
 	var Feedback = __webpack_require__(269);
+	
+	var _require = __webpack_require__(272);
+	
+	var validatePassword = _require.validatePassword;
 	
 	var Password = React.createClass({
 	  displayName: 'Password',
@@ -28225,10 +28252,8 @@
 	    message: React.PropTypes.string
 	  },
 	  isValid: function isValid() {
-	    // check that password is only letters, numbers, !@? &; 6-18 characters
 	    var value = this.input.value;
-	    var regex = /^[a-zA-Z0-9$!?@]{6,18}$/;
-	    var isValid = regex.test(value);
+	    var isValid = validatePassword(value);
 	
 	    if (isValid) {
 	      this.setState({
@@ -28269,14 +28294,14 @@
 	module.exports = Password;
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(274);
+	var styles = __webpack_require__(275);
 	
 	var Button = React.createClass({
 	  displayName: 'Button',
@@ -28300,42 +28325,42 @@
 	module.exports = Button;
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"button":"button__button___lmpwR","medium":"button__medium___BLI7l","small":"button__small___35LKs"};
 
 /***/ },
-/* 275 */
+/* 276 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"login":"form-login__login___JGlTK"};
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"gray":"#292929","green":"#53BDBA","openSans":"'Open Sans'","navigation":"navigation__navigation___3HY9m","hidden":"navigation__hidden___16Br8"};
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"enter":"transitions__enter___fDjhL","enterActive":"transitions__enterActive___2b5NO","leave":"transitions__leave___3Hz9Z","leaveActive":"transitions__leaveActive___17LGo"};
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(279);
+	var styles = __webpack_require__(280);
 	
 	var LogoBracket = React.createClass({
 	  displayName: 'LogoBracket',
@@ -28361,21 +28386,21 @@
 	module.exports = LogoBracket;
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"bracket":"logo-bracket__bracket___BoE48","name":"logo-bracket__name___3A5m3"};
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"white":"#fff","pink":"#DF345E","museo":"'museo_slab500'","header":"header__header___2m9dq","logged-in":"header__logged-in___1lUh-","h1":"header__h1___sw9yB","link":"header__link___jgkK5"};
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28418,7 +28443,7 @@
 	module.exports = connect(null, mapDispatchToProps)(SignUpContainer);
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28440,7 +28465,7 @@
 	module.exports = LocationContainer;
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28462,7 +28487,7 @@
 	module.exports = MapContainer;
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

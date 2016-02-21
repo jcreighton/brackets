@@ -27,7 +27,7 @@ module.exports = function(state = {}, action) {
       };
       break;
 
-    case 'GET_USER_PROFILE':
+    case 'SET_USER_PROFILE':
       return {
         ...state,
         ...action.payload
