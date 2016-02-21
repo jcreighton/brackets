@@ -1,4 +1,4 @@
-module.exports = function(state = { logged_in: false }, action) {
+module.exports = function(state = {}, action) {
   switch (action.type) {
     case 'LOGIN_USER_REQUEST':
       return {
@@ -27,7 +27,7 @@ module.exports = function(state = { logged_in: false }, action) {
       };
       break;
 
-    case 'SET_USER_PROFILE':
+    case 'GET_USER_PROFILE':
       return {
         ...state,
         ...action.payload
