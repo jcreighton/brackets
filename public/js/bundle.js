@@ -19670,10 +19670,10 @@
 	// CONTAINERS
 	var App = __webpack_require__(218);
 	var Home = __webpack_require__(249);
-	var SignUp = __webpack_require__(279);
-	var Location = __webpack_require__(280);
-	var UserMap = __webpack_require__(281);
-	var Profile = __webpack_require__(282);
+	var SignUp = __webpack_require__(281);
+	var Location = __webpack_require__(282);
+	var UserMap = __webpack_require__(283);
+	var Profile = __webpack_require__(284);
 	
 	module.exports = React.createElement(
 	  Router,
@@ -26056,7 +26056,7 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	module.exports = function () {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? { username: null, password: null, logged_in: false } : arguments[0];
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? { logged_in: false } : arguments[0];
 	  var action = arguments[1];
 	
 	  switch (action.type) {
@@ -26070,7 +26070,8 @@
 	      return _extends({}, state, {
 	        isRequesting: false,
 	        isError: false,
-	        logged_in: true
+	        logged_in: true,
+	        authData: action.payload
 	      });
 	      break;
 	
@@ -26082,6 +26083,9 @@
 	        logged_in: false
 	      });
 	      break;
+	
+	    case 'SET_USER_PROFILE':
+	      return _extends({}, state, action.payload);
 	
 	    default:
 	      return state;
@@ -26510,9 +26514,9 @@
 	var Link = __webpack_require__(160).Link;
 	
 	var Navigation = __webpack_require__(251);
-	var LogoBracket = __webpack_require__(276);
+	var LogoBracket = __webpack_require__(278);
 	
-	var styles = __webpack_require__(278);
+	var styles = __webpack_require__(280);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26549,8 +26553,8 @@
 	
 	var Login = __webpack_require__(259);
 	
-	var styles = __webpack_require__(274);
-	var transitions = __webpack_require__(275);
+	var styles = __webpack_require__(276);
+	var transitions = __webpack_require__(277);
 	
 	var Navigation = React.createClass({
 	  displayName: 'Navigation',
@@ -27419,10 +27423,10 @@
 	var connect = _require.connect;
 	
 	var InputEmail = __webpack_require__(262);
-	var InputPassword = __webpack_require__(270);
-	var Button = __webpack_require__(271);
+	var InputPassword = __webpack_require__(272);
+	var Button = __webpack_require__(273);
 	
-	var styles = __webpack_require__(273);
+	var styles = __webpack_require__(275);
 	
 	var FormLogin = React.createClass({
 	  displayName: 'FormLogin',
@@ -27443,8 +27447,8 @@
 	    });
 	
 	    // Check if any inputs are invalid
-	    var invalid = inputs.filter(function (input) {
-	      return input;
+	    var invalid = inputs.filter(function (input, i) {
+	      return !input[keys[i]];
 	    });
 	
 	    if (invalid.length === 0) {
@@ -27453,7 +27457,7 @@
 	      var fields = (_Object = Object).assign.apply(_Object, _toConsumableArray(inputs));
 	      this.props.requestUserLogin(fields);
 	    } else {
-	      this.props.loginUserFailure('Invalid form');
+	      this.props.loginUserFailure('Form invalid');
 	    };
 	  },
 	  onInputValidation: function onInputValidation() {
@@ -27464,7 +27468,7 @@
 	    return React.createElement(
 	      'form',
 	      { className: styles.login, noValidate: true },
-	      React.createElement(InputEmail, { ref: 'email', onValidation: this.onInputValidation }),
+	      React.createElement(InputEmail, { ref: 'email' }),
 	      React.createElement(InputPassword, { ref: 'password' }),
 	      React.createElement(
 	        Button,
@@ -27489,23 +27493,17 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.setUserCredentials = setUserCredentials;
 	exports.loginUserRequest = loginUserRequest;
 	exports.loginUserSuccess = loginUserSuccess;
 	exports.loginUserFailure = loginUserFailure;
 	exports.logoutUserRequest = logoutUserRequest;
 	exports.logoutUserSuccess = logoutUserSuccess;
 	exports.logoutUserFailure = logoutUserFailure;
+	exports.setUserProfile = setUserProfile;
 	exports.requestUserLogin = requestUserLogin;
+	exports.getUserProfile = getUserProfile;
 	var Firebase = __webpack_require__(261);
 	var ref = new Firebase('https://test-openbracket.firebaseio.com');
-	
-	function setUserCredentials(cred) {
-	  return {
-	    type: 'SET_USER_CREDENTIALS',
-	    payload: cred
-	  };
-	}
 	
 	function loginUserRequest() {
 	  return {
@@ -27514,17 +27512,17 @@
 	  };
 	};
 	
-	function loginUserSuccess() {
+	function loginUserSuccess(authData) {
 	  return {
 	    type: 'LOGIN_USER_SUCCESS',
-	    payload: {}
+	    payload: authData
 	  };
 	};
 	
-	function loginUserFailure(error) {
+	function loginUserFailure(errorData) {
 	  return {
 	    type: 'LOGIN_USER_FAILURE',
-	    payload: error
+	    payload: errorData
 	  };
 	};
 	
@@ -27542,10 +27540,17 @@
 	  };
 	}
 	
-	function logoutUserFailure(error) {
+	function logoutUserFailure(errorData) {
 	  return {
 	    type: 'LOGOUT_USER_FAILURE',
-	    payload: error
+	    payload: errorData
+	  };
+	}
+	
+	function setUserProfile(profile) {
+	  return {
+	    type: 'SET_USER_PROFILE',
+	    payload: profile
 	  };
 	}
 	
@@ -27557,12 +27562,26 @@
 	      email: user.email,
 	      password: user.password
 	    }).then(function (authData) {
-	      dispatch(loginUserSuccess());
+	      dispatch(loginUserSuccess(authData));
+	      return authData.uid;
+	    }).then(function (uid) {
+	      return dispatch(getUserProfile(uid));
 	    }).catch(function (error) {
-	      dispatch(loginUserFailure(error));
+	      dispatch(loginUserFailure(error.code));
 	    });
 	  };
-	};
+	}
+	
+	function getUserProfile(uid) {
+	  return function (dispatch) {
+	    return ref.child('users').child(uid).once('value').then(function (data) {
+	      var profile = data.val();
+	      dispatch(setUserProfile(profile));
+	    }).catch(function (error) {
+	      dispatch(loginUserFailure(error.code));
+	    });
+	  };
+	}
 
 /***/ },
 /* 261 */
@@ -27863,7 +27882,7 @@
 	var connect = _require.connect;
 	
 	var InputCustom = __webpack_require__(263);
-	var Feedback = __webpack_require__(267);
+	var Feedback = __webpack_require__(269);
 	
 	var InputEmail = React.createClass({
 	  displayName: 'InputEmail',
@@ -27889,9 +27908,9 @@
 	    error: React.PropTypes.string
 	  },
 	  isValid: function isValid(value) {
-	    console.log('EMAIL VALUE', value);
 	    // Check that email address is valid
 	    var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
+	    var value = this.input.value;
 	    var isValid = regex.test(value);
 	
 	    if (!isValid) {
@@ -27913,6 +27932,8 @@
 	    };
 	  },
 	  render: function render() {
+	    var _this = this;
+	
 	    var _props = this.props;
 	    var message = _props.message;
 	    var error = _props.error;
@@ -27924,7 +27945,15 @@
 	      'div',
 	      null,
 	      React.createElement(Feedback, _extends({}, this.props, this.state, { isVisible: isError, message: isValid ? message : error })),
-	      React.createElement(InputCustom, _extends({}, this.props, { onBlur: this.isValid }))
+	      React.createElement(InputCustom, _extends({
+	        returnValue: function returnValue(node) {
+	          if (node != null) {
+	            _this.input = node;
+	          }
+	        }
+	      }, this.props, {
+	        onBlur: this.isValid
+	      }))
 	    );
 	  }
 	});
@@ -27940,34 +27969,14 @@
 	var React = __webpack_require__(1);
 	
 	var Label = __webpack_require__(264);
+	var Input = __webpack_require__(266);
 	
-	var styles = __webpack_require__(266);
+	var styles = __webpack_require__(268);
 	
 	var InputCustom = React.createClass({
 	  displayName: 'InputCustom',
 	
-	  handleOnFocus: function handleOnFocus() {
-	    if (this.props.onFocus) {
-	      this.props.onFocus(this.input.value);
-	    }
-	  },
-	  handleOnBlur: function handleOnBlur() {
-	    console.log('handleOnBlur');
-	    if (this.props.onBlur) {
-	      console.log('this.input', this.input.value);
-	      this.props.onBlur(this.input.value);
-	    }
-	  },
-	  handleOnChange: function handleOnChange() {
-	    console.log('handleOnChange');
-	    if (this.props.onBlur) {
-	      console.log('this.input', this.input.value);
-	      this.props.onBlur(this.input.value);
-	    }
-	  },
 	  render: function render() {
-	    var _this = this;
-	
 	    return React.createElement(
 	      'div',
 	      { className: styles.input },
@@ -27976,18 +27985,7 @@
 	        null,
 	        this.props.label
 	      ),
-	      React.createElement('input', {
-	        className: styles.input,
-	        type: this.props.type,
-	        name: this.props.name,
-	        ref: function ref(node) {
-	          return _this.input = node;
-	        },
-	        onFocus: this.handleOnFocus,
-	        onBlur: this.handleOnBlur,
-	        onChange: this.handleOnChange,
-	        placeholder: this.props.placeholder
-	      })
+	      React.createElement(Input, this.props)
 	    );
 	  }
 	});
@@ -28026,13 +28024,64 @@
 
 /***/ },
 /* 266 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	// removed by extract-text-webpack-plugin
-	module.exports = {"green":"#53BDBA","grayMedium":"#333333","teal":"#50afad","tealLight":"#abc2c1","openSans":"'Open Sans'","input":"input-custom__input___1SMcg","disabled":"input-custom__disabled___8ynMC"};
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	
+	var styles = __webpack_require__(267);
+	
+	var Input = React.createClass({
+	  displayName: 'Input',
+	
+	  handleOnFocus: function handleOnFocus() {
+	    if (this.props.onFocus) {
+	      this.props.onFocus();
+	    }
+	  },
+	  handleOnBlur: function handleOnBlur() {
+	    if (this.props.onBlur) {
+	      this.props.onBlur();
+	    }
+	  },
+	  handleOnChange: function handleOnChange() {
+	    if (this.props.onChange) {
+	      this.props.onChange();
+	    }
+	  },
+	  render: function render() {
+	    return React.createElement('input', {
+	      className: styles.input,
+	      type: this.props.type,
+	      name: this.props.name,
+	      ref: this.props.returnValue,
+	      onFocus: this.handleOnFocus,
+	      onBlur: this.handleOnBlur,
+	      onChange: this.handleOnChange,
+	      placeholder: this.props.placeholder
+	    });
+	  }
+	});
+	
+	module.exports = Input;
 
 /***/ },
 /* 267 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"grayMedium":"#333333","tealLight":"#abc2c1","disabled":"input__disabled___3CqTr"};
+
+/***/ },
+/* 268 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"green":"#53BDBA","grayMedium":"#333333","teal":"#50afad","tealLight":"#abc2c1","openSans":"'Open Sans'","input":"input-custom__input___1SMcg"};
+
+/***/ },
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28040,9 +28089,9 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(1);
-	var classNames = __webpack_require__(268);
+	var classNames = __webpack_require__(270);
 	
-	var styles = __webpack_require__(269);
+	var styles = __webpack_require__(271);
 	
 	/**
 	 * Component that provides feedback to the user.
@@ -28083,7 +28132,7 @@
 	module.exports = Feedback;
 
 /***/ },
-/* 268 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -28137,14 +28186,14 @@
 
 
 /***/ },
-/* 269 */
+/* 271 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"tealLight":"#abc2c1","errorRed":"#A01739","feedback":"feedback__feedback___24-in","bottom":"feedback__bottom___qusGH","left":"feedback__left___1Kk9_","error":"feedback__error___3jzmr","visible":"feedback__visible___fieGd","hidden":"feedback__hidden___2AWQr"};
 
 /***/ },
-/* 270 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28154,7 +28203,7 @@
 	var React = __webpack_require__(1);
 	
 	var InputCustom = __webpack_require__(263);
-	var Feedback = __webpack_require__(267);
+	var Feedback = __webpack_require__(269);
 	
 	var Password = React.createClass({
 	  displayName: 'Password',
@@ -28175,12 +28224,11 @@
 	    label: React.PropTypes.string,
 	    message: React.PropTypes.string
 	  },
-	  isValid: function isValid(value) {
-	    console.log('PASSWORLD VALUE', value);
+	  isValid: function isValid() {
 	    // check that password is only letters, numbers, !@? &; 6-18 characters
+	    var value = this.input.value;
 	    var regex = /^[a-zA-Z0-9$!?@]{6,18}$/;
-	    // var isValid = regex.test(value);
-	    var isValid = true;
+	    var isValid = regex.test(value);
 	
 	    if (isValid) {
 	      this.setState({
@@ -28201,11 +28249,19 @@
 	    };
 	  },
 	  render: function render() {
+	    var _this = this;
+	
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(Feedback, this.props),
-	      React.createElement(InputCustom, _extends({}, this.props, { onChange: this.isValid, onBlur: this.isValid }))
+	      React.createElement(InputCustom, _extends({}, this.props, {
+	        returnValue: function returnValue(node) {
+	          if (node != null) {
+	            _this.input = node;
+	          }
+	        },
+	        onBlur: this.isValid }))
 	    );
 	  }
 	});
@@ -28213,14 +28269,14 @@
 	module.exports = Password;
 
 /***/ },
-/* 271 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(272);
+	var styles = __webpack_require__(274);
 	
 	var Button = React.createClass({
 	  displayName: 'Button',
@@ -28244,42 +28300,42 @@
 	module.exports = Button;
 
 /***/ },
-/* 272 */
+/* 274 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"button":"button__button___lmpwR","medium":"button__medium___BLI7l","small":"button__small___35LKs"};
 
 /***/ },
-/* 273 */
+/* 275 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"login":"form-login__login___JGlTK"};
 
 /***/ },
-/* 274 */
+/* 276 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"gray":"#292929","green":"#53BDBA","openSans":"'Open Sans'","navigation":"navigation__navigation___3HY9m","hidden":"navigation__hidden___16Br8"};
 
 /***/ },
-/* 275 */
+/* 277 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"enter":"transitions__enter___fDjhL","enterActive":"transitions__enterActive___2b5NO","leave":"transitions__leave___3Hz9Z","leaveActive":"transitions__leaveActive___17LGo"};
 
 /***/ },
-/* 276 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(277);
+	var styles = __webpack_require__(279);
 	
 	var LogoBracket = React.createClass({
 	  displayName: 'LogoBracket',
@@ -28305,21 +28361,21 @@
 	module.exports = LogoBracket;
 
 /***/ },
-/* 277 */
+/* 279 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"bracket":"logo-bracket__bracket___BoE48","name":"logo-bracket__name___3A5m3"};
 
 /***/ },
-/* 278 */
+/* 280 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"white":"#fff","pink":"#DF345E","museo":"'museo_slab500'","header":"header__header___2m9dq","logged-in":"header__logged-in___1lUh-","h1":"header__h1___sw9yB","link":"header__link___jgkK5"};
 
 /***/ },
-/* 279 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28362,7 +28418,7 @@
 	module.exports = connect(null, mapDispatchToProps)(SignUpContainer);
 
 /***/ },
-/* 280 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28384,7 +28440,7 @@
 	module.exports = LocationContainer;
 
 /***/ },
-/* 281 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28406,7 +28462,7 @@
 	module.exports = MapContainer;
 
 /***/ },
-/* 282 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

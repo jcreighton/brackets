@@ -16,35 +16,3 @@
   background-color: grayMedium;
   border: 1px solid green;
 }
-
-.input input {
-  flex-basis: 90%;
-  font-size: 24px;
-  color: tealLight;
-  background-color: grayMedium;
-  border: none;
-}
-
-.input input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 50px grayMedium inset; /* Change the color to your own background color */
-  -webkit-text-fill-color: tealLight;
-}
-
-.input input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 50px grayMedium inset;
-  -webkit-text-fill-color: tealLight;
-}
-
-.input input[type="checkbox"] {
-  font-size: 14px;
-}
-
-.input input.disabled {
-  opacity: .2;
-}
-
-.input input.disabled:hover {
-  color: tealLight;
-  background-color: grayMedium;
-  opacity: .4;
-}

@@ -1,4 +1,4 @@
-module.exports = function(state = { username: null, password: null, logged_in: false }, action) {
+module.exports = function(state = { logged_in: false }, action) {
   switch (action.type) {
     case 'LOGIN_USER_REQUEST':
       return {
@@ -12,7 +12,8 @@ module.exports = function(state = { username: null, password: null, logged_in: f
         ...state,
         isRequesting: false,
         isError: false,
-        logged_in: true
+        logged_in: true,
+        authData: action.payload
       };
       break;
 
@@ -25,6 +26,12 @@ module.exports = function(state = { username: null, password: null, logged_in: f
         logged_in: false
       };
       break;
+
+    case 'SET_USER_PROFILE':
+      return {
+        ...state,
+        ...action.payload
+      }
 
     default:
       return state;

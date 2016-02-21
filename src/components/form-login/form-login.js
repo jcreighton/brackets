@@ -25,13 +25,13 @@ var FormLogin = React.createClass({
     });
 
     // Check if any inputs are invalid
-    var invalid = inputs.filter((input) => input);
+    var invalid = inputs.filter((input, i) => !(input[keys[i]]));
 
     if (invalid.length === 0) {
       var fields = Object.assign(...inputs);
       this.props.requestUserLogin(fields);
     } else {
-      this.props.loginUserFailure('Invalid form');
+      this.props.loginUserFailure('Form invalid');
     };
   },
   onInputValidation: function() {
@@ -41,8 +41,8 @@ var FormLogin = React.createClass({
   render: function() {
     return (
       <form className={styles.login} noValidate>
-        <InputEmail ref="email" onValidation={this.onInputValidation} />
-        <InputPassword ref="password" />
+        <InputEmail ref='email' />
+        <InputPassword ref='password' />
         <Button onClick={this.validateForm}>Login</Button>
       </form>
     );

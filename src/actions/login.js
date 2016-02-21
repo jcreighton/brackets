@@ -1,13 +1,6 @@
 var Firebase = require('firebase');
 var ref = new Firebase('https://test-openbracket.firebaseio.com');
 
-export function setUserCredentials(cred) {
-  return {
-    type: 'SET_USER_CREDENTIALS',
-    payload: cred
-  }
-}
-
 export function loginUserRequest() {
   return {
     type: 'LOGIN_USER_REQUEST',
@@ -15,17 +8,17 @@ export function loginUserRequest() {
   }
 };
 
-export function loginUserSuccess() {
+export function loginUserSuccess(authData) {
   return {
     type: 'LOGIN_USER_SUCCESS',
-    payload: {}
+    payload: authData
   }
 };
 
-export function loginUserFailure(error) {
+export function loginUserFailure(errorData) {
   return {
     type: 'LOGIN_USER_FAILURE',
-    payload: error
+    payload: errorData
   }
 };
 
@@ -43,28 +36,50 @@ export function logoutUserSuccess() {
   }
 }
 
-export function logoutUserFailure(error) {
+export function logoutUserFailure(errorData) {
   return {
     type: 'LOGOUT_USER_FAILURE',
-    payload: error
+    payload: errorData
+  }
+}
+
+export function setUserProfile(profile) {
+  return {
+    type: 'SET_USER_PROFILE',
+    payload: profile
   }
 }
 
 export function requestUserLogin(user) {
-  return function(dispatch) {
+  return (dispatch) => {
     dispatch(loginUserRequest());
 
     return ref.authWithPassword({
       email: user.email,
       password: user.password
     })
-      .then(function(authData) {
-        dispatch(loginUserSuccess());
+      .then((authData) => {
+        dispatch(loginUserSuccess(authData));
+        return authData.uid;
       })
-      .catch(function(error) {
-        dispatch(loginUserFailure(error));
+      .then((uid) => dispatch(getUserProfile(uid)))
+      .catch((error) => {
+        dispatch(loginUserFailure(error.code));
       });
   }
-};
+}
 
+export function getUserProfile(uid) {
+  return (dispatch) => {
+    return ref.child('users').child(uid)
+      .once('value')
+      .then((data) => {
+        var profile = data.val();
+        dispatch(setUserProfile(profile));
+      })
+      .catch((error) => {
+        dispatch(loginUserFailure(error.code));
+      });
+  };
+}
 

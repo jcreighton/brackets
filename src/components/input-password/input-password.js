@@ -20,12 +20,11 @@ var Password = React.createClass({
     label: React.PropTypes.string,
     message: React.PropTypes.string,
   },
-  isValid: function(value) {
-    console.log('PASSWORLD VALUE', value);
+  isValid: function() {
     // check that password is only letters, numbers, !@? &; 6-18 characters
+    var value = this.input.value;
     var regex = /^[a-zA-Z0-9$!?@]{6,18}$/;
-    // var isValid = regex.test(value);
-    var isValid = true;
+    var isValid = regex.test(value);
 
     if (isValid) {
       this.setState({
@@ -49,7 +48,14 @@ var Password = React.createClass({
     return (
       <div>
         <Feedback {...this.props} />
-        <InputCustom {...this.props} onChange={this.isValid} onBlur={this.isValid} />
+        <InputCustom
+          {...this.props}
+          returnValue={(node) => {
+            if (node != null) {
+              this.input = node }
+            }
+          }
+          onBlur={this.isValid} />
       </div>
     );
   }

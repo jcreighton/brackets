@@ -26,9 +26,9 @@ var InputEmail = React.createClass({
     error: React.PropTypes.string
   },
   isValid: function(value) {
-    console.log('EMAIL VALUE', value);
     // Check that email address is valid
     var regex = /^([\w\-\.]+)@((\[([0-9]{1,3}\.){3}[0-9]{1,3}\])|(([\w\-]+\.)+)([a-zA-Z]{2,4}))$/;
+    var value = this.input.value;
     var isValid = regex.test(value);
 
     if (!isValid) {
@@ -56,7 +56,15 @@ var InputEmail = React.createClass({
     return (
       <div>
         <Feedback {...this.props} {...this.state} isVisible={isError} message={isValid ? message : error} />
-        <InputCustom {...this.props} onBlur={this.isValid} />
+        <InputCustom
+          returnValue={(node) => {
+            if (node != null) {
+              this.input = node }
+            }
+          }
+          {...this.props}
+          onBlur={this.isValid}
+        />
       </div>
     );
   }
