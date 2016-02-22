@@ -1,35 +1,35 @@
+var React = require('react');
+
+var InputCustom = require('../input-custom/input-custom.js');
+var Feedback = require('../feedback/feedback.js');
+
 /**
  * Creates an input component with validation.
  * @prop initialState
- * @prop defaultProps Controls text visibility; set to true if showing both
- * a general message and an error
+ * @prop defaultProps type & label & messae & error
  * @prop validation Sets the text to display
  */
 
-export function(initialState, defaultProps, validation) {
-
-  // Merge state & props?
-
+module.exports = function createInputWithValidation(initialState, defaultProps, validation) {
   return React.createClass({
     getInitialState: function() {
       return {
         isValid: false,
-        isError: false
+        isError: false,
+        ...initialState
       }
     },
     getDefaultProps: function() {
-      return {
-        label: 'Password',
-        type: 'password'
-      }
+      return defaultProps;
     },
     propTypes: {
       label: React.PropTypes.string,
       message: React.PropTypes.string,
     },
     isValid: function() {
+      console.log('isValid', this.state, this.props);
       var value = this.input.value;
-      var isValid = validation.test(value);
+      var isValid = validation(value);
 
       if (isValid) {
         this.setState({
@@ -42,17 +42,20 @@ export function(initialState, defaultProps, validation) {
           isError: true
         });
       }
-
+      console.log('isValid', value, this.state, this.props);
       return {
-        name: 'password',
+        name: this.props.type,
         isValid,
         value
       };
     },
     render: function() {
+      const { message, error } = this.props;
+      const { isError, isValid } = this.state;
+
       return (
         <div>
-          <Feedback {...this.props} />
+          <Feedback {...this.props} {...this.state} isVisible={isError} message={isValid ? message : error} />
           <InputCustom
             {...this.props}
             returnValue={(node) => {

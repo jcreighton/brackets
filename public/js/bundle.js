@@ -19670,10 +19670,10 @@
 	// CONTAINERS
 	var App = __webpack_require__(218);
 	var Home = __webpack_require__(249);
-	var SignUp = __webpack_require__(282);
-	var Location = __webpack_require__(283);
-	var UserMap = __webpack_require__(284);
-	var Profile = __webpack_require__(285);
+	var SignUp = __webpack_require__(283);
+	var Location = __webpack_require__(284);
+	var UserMap = __webpack_require__(285);
+	var Profile = __webpack_require__(286);
 	
 	module.exports = React.createElement(
 	  Router,
@@ -26084,7 +26084,7 @@
 	      });
 	      break;
 	
-	    case 'GET_USER_PROFILE':
+	    case 'SET_USER_PROFILE':
 	      return _extends({}, state, action.payload);
 	
 	    default:
@@ -26514,9 +26514,9 @@
 	var Link = __webpack_require__(160).Link;
 	
 	var Navigation = __webpack_require__(251);
-	var LogoBracket = __webpack_require__(279);
+	var LogoBracket = __webpack_require__(280);
 	
-	var styles = __webpack_require__(281);
+	var styles = __webpack_require__(282);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26553,8 +26553,8 @@
 	
 	var Login = __webpack_require__(259);
 	
-	var styles = __webpack_require__(277);
-	var transitions = __webpack_require__(278);
+	var styles = __webpack_require__(278);
+	var transitions = __webpack_require__(279);
 	
 	var Navigation = React.createClass({
 	  displayName: 'Navigation',
@@ -27423,10 +27423,10 @@
 	var connect = _require.connect;
 	
 	var InputEmail = __webpack_require__(262);
-	var InputPassword = __webpack_require__(273);
-	var Button = __webpack_require__(274);
+	var InputPassword = __webpack_require__(274);
+	var Button = __webpack_require__(275);
 	
-	var styles = __webpack_require__(276);
+	var styles = __webpack_require__(277);
 	
 	var FormLogin = React.createClass({
 	  displayName: 'FormLogin',
@@ -27499,7 +27499,7 @@
 	exports.logoutUserRequest = logoutUserRequest;
 	exports.logoutUserSuccess = logoutUserSuccess;
 	exports.logoutUserFailure = logoutUserFailure;
-	exports.getUserProfile = getUserProfile;
+	exports.setUserProfile = setUserProfile;
 	exports.requestUserLogin = requestUserLogin;
 	exports.getUserProfile = getUserProfile;
 	var Firebase = __webpack_require__(261);
@@ -27547,9 +27547,9 @@
 	  };
 	}
 	
-	function getUserProfile(profile) {
+	function setUserProfile(profile) {
 	  return {
-	    type: 'GET_USER_PROFILE',
+	    type: 'SET_USER_PROFILE',
 	    payload: profile
 	  };
 	}
@@ -27576,7 +27576,7 @@
 	  return function (dispatch) {
 	    return ref.child('users').child(uid).once('value').then(function (data) {
 	      var profile = data.val();
-	      dispatch(getUserProfile(profile));
+	      dispatch(setUserProfile(profile));
 	    }).catch(function (error) {
 	      dispatch(loginUserFailure(error.code));
 	    });
@@ -27873,94 +27873,88 @@
 
 	'use strict';
 	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	// var React = require('react');
 	
-	var React = __webpack_require__(1);
+	// var InputCustom = require('../input-custom/input-custom.js');
+	// var Feedback = require('../feedback/feedback.js');
+	var createInputWithValidation = __webpack_require__(263);
 	
-	var _require = __webpack_require__(219);
+	var _require = __webpack_require__(273);
 	
-	var connect = _require.connect;
+	var validateEmail = _require.validateEmail;
 	
-	var InputCustom = __webpack_require__(263);
-	var Feedback = __webpack_require__(269);
+	module.exports = createInputWithValidation({}, {
+	  type: 'email',
+	  label: 'Email',
+	  message: 'What\'s your email address?',
+	  error: 'Must be a valid email address'
+	}, validateEmail);
 	
-	var _require2 = __webpack_require__(272);
+	// var InputEmail = React.createClass({
+	//   getInitialState: function() {
+	//     return {
+	//       isValid: true,
+	//       isError: false
+	//     }
+	//   },
+	//   getDefaultProps: function() {
+	//     return {
+	//       label: 'Email',
+	//       type: 'email',
+	//       message: 'What\'s your email address?' ,
+	//       error: 'Must be a valid email address',
+	//     }
+	//   },
+	//   propTypes: {
+	//     label: React.PropTypes.string,
+	//     type: React.PropTypes.string,
+	//     message: React.PropTypes.string,
+	//     error: React.PropTypes.string
+	//   },
+	//   isValid: function(value) {
+	//     var value = this.input.value;
+	//     var isValid = validateEmail(value);
 	
-	var validateEmail = _require2.validateEmail;
+	//     if (!isValid) {
+	//       this.setState({
+	//         isValid: false,
+	//         isError: true,
+	//       });
+	//     } else {
+	//       this.setState({
+	//         isValid: true,
+	//         isError: false,
+	//       });
+	//     }
 	
-	var InputEmail = React.createClass({
-	  displayName: 'InputEmail',
+	//     return {
+	//       name: 'email',
+	//       isValid,
+	//       value
+	//     };
+	//   },
+	//   render: function() {
+	//     const { message, error } = this.props;
+	//     const { isError, isValid } = this.state;
 	
-	  getInitialState: function getInitialState() {
-	    return {
-	      isValid: true,
-	      isError: false
-	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      label: 'Email',
-	      type: 'email',
-	      message: 'What\'s your email address?',
-	      error: 'Must be a valid email address'
-	    };
-	  },
-	  propTypes: {
-	    label: React.PropTypes.string,
-	    type: React.PropTypes.string,
-	    message: React.PropTypes.string,
-	    error: React.PropTypes.string
-	  },
-	  isValid: function isValid(value) {
-	    var value = this.input.value;
-	    var isValid = validateEmail(value);
+	//     return (
+	//       <div>
+	//         <Feedback {...this.props} {...this.state} isVisible={isError} message={isValid ? message : error} />
+	//         <InputCustom
+	//           returnValue={(node) => {
+	//             if (node != null) {
+	//               this.input = node }
+	//             }
+	//           }
+	//           {...this.props}
+	//           onBlur={this.isValid}
+	//         />
+	//       </div>
+	//     );
+	//   }
+	// });
 	
-	    if (!isValid) {
-	      this.setState({
-	        isValid: false,
-	        isError: true
-	      });
-	    } else {
-	      this.setState({
-	        isValid: true,
-	        isError: false
-	      });
-	    }
-	
-	    return {
-	      name: 'email',
-	      isValid: isValid,
-	      value: value
-	    };
-	  },
-	  render: function render() {
-	    var _this = this;
-	
-	    var _props = this.props;
-	    var message = _props.message;
-	    var error = _props.error;
-	    var _state = this.state;
-	    var isError = _state.isError;
-	    var isValid = _state.isValid;
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(Feedback, _extends({}, this.props, this.state, { isVisible: isError, message: isValid ? message : error })),
-	      React.createElement(InputCustom, _extends({
-	        returnValue: function returnValue(node) {
-	          if (node != null) {
-	            _this.input = node;
-	          }
-	        }
-	      }, this.props, {
-	        onBlur: this.isValid
-	      }))
-	    );
-	  }
-	});
-	
-	module.exports = InputEmail;
+	// module.exports = InputEmail;
 
 /***/ },
 /* 263 */
@@ -27968,12 +27962,96 @@
 
 	'use strict';
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var React = __webpack_require__(1);
 	
-	var Label = __webpack_require__(264);
-	var Input = __webpack_require__(266);
+	var InputCustom = __webpack_require__(264);
+	var Feedback = __webpack_require__(270);
 	
-	var styles = __webpack_require__(268);
+	/**
+	 * Creates an input component with validation.
+	 * @prop initialState
+	 * @prop defaultProps type & label & messae & error
+	 * @prop validation Sets the text to display
+	 */
+	
+	module.exports = function createInputWithValidation(initialState, defaultProps, validation) {
+	  return React.createClass({
+	    getInitialState: function getInitialState() {
+	      return _extends({
+	        isValid: false,
+	        isError: false
+	      }, initialState);
+	    },
+	    getDefaultProps: function getDefaultProps() {
+	      return defaultProps;
+	    },
+	    propTypes: {
+	      label: React.PropTypes.string,
+	      message: React.PropTypes.string
+	    },
+	    isValid: function isValid() {
+	      console.log('isValid', this.state, this.props);
+	      var value = this.input.value;
+	      var isValid = validation(value);
+	
+	      if (isValid) {
+	        this.setState({
+	          isValid: true,
+	          isError: false
+	        });
+	      } else {
+	        this.setState({
+	          isValid: false,
+	          isError: true
+	        });
+	      }
+	      console.log('isValid', value, this.state, this.props);
+	      return {
+	        name: this.props.type,
+	        isValid: isValid,
+	        value: value
+	      };
+	    },
+	    render: function render() {
+	      var _this = this;
+	
+	      var _props = this.props;
+	      var message = _props.message;
+	      var error = _props.error;
+	      var _state = this.state;
+	      var isError = _state.isError;
+	      var isValid = _state.isValid;
+	
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(Feedback, _extends({}, this.props, this.state, { isVisible: isError, message: isValid ? message : error })),
+	        React.createElement(InputCustom, _extends({}, this.props, {
+	          returnValue: function returnValue(node) {
+	            if (node != null) {
+	              _this.input = node;
+	            }
+	          },
+	          onBlur: this.isValid }))
+	      );
+	    }
+	  });
+	};
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	
+	var Label = __webpack_require__(265);
+	var Input = __webpack_require__(267);
+	
+	var styles = __webpack_require__(269);
 	
 	var InputCustom = React.createClass({
 	  displayName: 'InputCustom',
@@ -27995,14 +28073,14 @@
 	module.exports = InputCustom;
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(265);
+	var styles = __webpack_require__(266);
 	
 	var Label = React.createClass({
 	  displayName: 'Label',
@@ -28019,20 +28097,20 @@
 	module.exports = Label;
 
 /***/ },
-/* 265 */
+/* 266 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(267);
+	var styles = __webpack_require__(268);
 	
 	var Input = React.createClass({
 	  displayName: 'Input',
@@ -28069,21 +28147,21 @@
 	module.exports = Input;
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"grayMedium":"#333333","tealLight":"#abc2c1","disabled":"input__disabled___3CqTr"};
 
 /***/ },
-/* 268 */
+/* 269 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"green":"#53BDBA","grayMedium":"#333333","teal":"#50afad","tealLight":"#abc2c1","openSans":"'Open Sans'","input":"input-custom__input___1SMcg"};
 
 /***/ },
-/* 269 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28091,9 +28169,9 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(1);
-	var classNames = __webpack_require__(270);
+	var classNames = __webpack_require__(271);
 	
-	var styles = __webpack_require__(271);
+	var styles = __webpack_require__(272);
 	
 	/**
 	 * Component that provides feedback to the user.
@@ -28134,7 +28212,7 @@
 	module.exports = Feedback;
 
 /***/ },
-/* 270 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -28188,14 +28266,14 @@
 
 
 /***/ },
-/* 271 */
+/* 272 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"tealLight":"#abc2c1","errorRed":"#A01739","feedback":"feedback__feedback___24-in","bottom":"feedback__bottom___qusGH","left":"feedback__left___1Kk9_","error":"feedback__error___3jzmr","visible":"feedback__visible___fieGd","hidden":"feedback__hidden___2AWQr"};
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -28216,7 +28294,7 @@
 	};
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28225,10 +28303,10 @@
 	
 	var React = __webpack_require__(1);
 	
-	var InputCustom = __webpack_require__(263);
-	var Feedback = __webpack_require__(269);
+	var InputCustom = __webpack_require__(264);
+	var Feedback = __webpack_require__(270);
 	
-	var _require = __webpack_require__(272);
+	var _require = __webpack_require__(273);
 	
 	var validatePassword = _require.validatePassword;
 	
@@ -28294,14 +28372,14 @@
 	module.exports = Password;
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(275);
+	var styles = __webpack_require__(276);
 	
 	var Button = React.createClass({
 	  displayName: 'Button',
@@ -28325,42 +28403,42 @@
 	module.exports = Button;
 
 /***/ },
-/* 275 */
+/* 276 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"button":"button__button___lmpwR","medium":"button__medium___BLI7l","small":"button__small___35LKs"};
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"login":"form-login__login___JGlTK"};
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"gray":"#292929","green":"#53BDBA","openSans":"'Open Sans'","navigation":"navigation__navigation___3HY9m","hidden":"navigation__hidden___16Br8"};
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"enter":"transitions__enter___fDjhL","enterActive":"transitions__enterActive___2b5NO","leave":"transitions__leave___3Hz9Z","leaveActive":"transitions__leaveActive___17LGo"};
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(280);
+	var styles = __webpack_require__(281);
 	
 	var LogoBracket = React.createClass({
 	  displayName: 'LogoBracket',
@@ -28386,21 +28464,21 @@
 	module.exports = LogoBracket;
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"bracket":"logo-bracket__bracket___BoE48","name":"logo-bracket__name___3A5m3"};
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"white":"#fff","pink":"#DF345E","museo":"'museo_slab500'","header":"header__header___2m9dq","logged-in":"header__logged-in___1lUh-","h1":"header__h1___sw9yB","link":"header__link___jgkK5"};
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28443,7 +28521,7 @@
 	module.exports = connect(null, mapDispatchToProps)(SignUpContainer);
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28465,7 +28543,7 @@
 	module.exports = LocationContainer;
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28487,7 +28565,7 @@
 	module.exports = MapContainer;
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
