@@ -27873,10 +27873,6 @@
 
 	'use strict';
 	
-	// var React = require('react');
-	
-	// var InputCustom = require('../input-custom/input-custom.js');
-	// var Feedback = require('../feedback/feedback.js');
 	var createInputWithValidation = __webpack_require__(263);
 	
 	var _require = __webpack_require__(273);
@@ -27889,72 +27885,6 @@
 	  message: 'What\'s your email address?',
 	  error: 'Must be a valid email address'
 	}, validateEmail);
-	
-	// var InputEmail = React.createClass({
-	//   getInitialState: function() {
-	//     return {
-	//       isValid: true,
-	//       isError: false
-	//     }
-	//   },
-	//   getDefaultProps: function() {
-	//     return {
-	//       label: 'Email',
-	//       type: 'email',
-	//       message: 'What\'s your email address?' ,
-	//       error: 'Must be a valid email address',
-	//     }
-	//   },
-	//   propTypes: {
-	//     label: React.PropTypes.string,
-	//     type: React.PropTypes.string,
-	//     message: React.PropTypes.string,
-	//     error: React.PropTypes.string
-	//   },
-	//   isValid: function(value) {
-	//     var value = this.input.value;
-	//     var isValid = validateEmail(value);
-	
-	//     if (!isValid) {
-	//       this.setState({
-	//         isValid: false,
-	//         isError: true,
-	//       });
-	//     } else {
-	//       this.setState({
-	//         isValid: true,
-	//         isError: false,
-	//       });
-	//     }
-	
-	//     return {
-	//       name: 'email',
-	//       isValid,
-	//       value
-	//     };
-	//   },
-	//   render: function() {
-	//     const { message, error } = this.props;
-	//     const { isError, isValid } = this.state;
-	
-	//     return (
-	//       <div>
-	//         <Feedback {...this.props} {...this.state} isVisible={isError} message={isValid ? message : error} />
-	//         <InputCustom
-	//           returnValue={(node) => {
-	//             if (node != null) {
-	//               this.input = node }
-	//             }
-	//           }
-	//           {...this.props}
-	//           onBlur={this.isValid}
-	//         />
-	//       </div>
-	//     );
-	//   }
-	// });
-	
-	// module.exports = InputEmail;
 
 /***/ },
 /* 263 */
@@ -27972,7 +27902,7 @@
 	/**
 	 * Creates an input component with validation.
 	 * @prop initialState
-	 * @prop defaultProps type & label & messae & error
+	 * @prop defaultProps type & label & message & error & withFeedback
 	 * @prop validation Sets the text to display
 	 */
 	
@@ -28299,77 +28229,16 @@
 
 	'use strict';
 	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var React = __webpack_require__(1);
-	
-	var InputCustom = __webpack_require__(264);
-	var Feedback = __webpack_require__(270);
+	var createInputWithValidation = __webpack_require__(263);
 	
 	var _require = __webpack_require__(273);
 	
 	var validatePassword = _require.validatePassword;
 	
-	var Password = React.createClass({
-	  displayName: 'Password',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      isValid: false,
-	      isError: false
-	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      label: 'Password',
-	      type: 'password'
-	    };
-	  },
-	  propTypes: {
-	    label: React.PropTypes.string,
-	    message: React.PropTypes.string
-	  },
-	  isValid: function isValid() {
-	    var value = this.input.value;
-	    var isValid = validatePassword(value);
-	
-	    if (isValid) {
-	      this.setState({
-	        isValid: true,
-	        isError: false
-	      });
-	    } else {
-	      this.setState({
-	        isValid: false,
-	        isError: true
-	      });
-	    }
-	
-	    return {
-	      name: 'password',
-	      isValid: isValid,
-	      value: value
-	    };
-	  },
-	  render: function render() {
-	    var _this = this;
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(Feedback, this.props),
-	      React.createElement(InputCustom, _extends({}, this.props, {
-	        returnValue: function returnValue(node) {
-	          if (node != null) {
-	            _this.input = node;
-	          }
-	        },
-	        onBlur: this.isValid }))
-	    );
-	  }
-	});
-	
-	module.exports = Password;
+	module.exports = module.exports = createInputWithValidation({}, {
+	  type: 'password',
+	  label: 'Password'
+	}, validatePassword);
 
 /***/ },
 /* 275 */

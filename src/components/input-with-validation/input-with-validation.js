@@ -6,7 +6,7 @@ var Feedback = require('../feedback/feedback.js');
 /**
  * Creates an input component with validation.
  * @prop initialState
- * @prop defaultProps type & label & messae & error
+ * @prop defaultProps type & label & message & error & withFeedback
  * @prop validation Sets the text to display
  */
 
