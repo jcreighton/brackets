@@ -19671,9 +19671,9 @@
 	var App = __webpack_require__(218);
 	var Home = __webpack_require__(249);
 	var SignUp = __webpack_require__(283);
-	var Location = __webpack_require__(284);
-	var UserMap = __webpack_require__(285);
-	var Profile = __webpack_require__(286);
+	var Location = __webpack_require__(290);
+	var UserMap = __webpack_require__(291);
+	var Profile = __webpack_require__(292);
 	
 	module.exports = React.createElement(
 	  Router,
@@ -27903,7 +27903,7 @@
 	 * Creates an input component with validation.
 	 * @prop initialState
 	 * @prop defaultProps type & label & message & error & withFeedback
-	 * @prop validation Sets the text to display
+	 * @prop validation Validates value
 	 */
 	
 	module.exports = function createInputWithValidation(initialState, defaultProps, validation) {
@@ -27918,11 +27918,11 @@
 	      return defaultProps;
 	    },
 	    propTypes: {
+	      type: React.PropTypes.string.isRequired,
 	      label: React.PropTypes.string,
 	      message: React.PropTypes.string
 	    },
 	    isValid: function isValid() {
-	      console.log('isValid', this.state, this.props);
 	      var value = this.input.value;
 	      var isValid = validation(value);
 	
@@ -27937,7 +27937,7 @@
 	          isError: true
 	        });
 	      }
-	      console.log('isValid', value, this.state, this.props);
+	
 	      return {
 	        name: this.props.type,
 	        isValid: isValid,
@@ -27987,13 +27987,15 @@
 	  displayName: 'InputCustom',
 	
 	  render: function render() {
+	    var label = this.props.label;
+	
 	    return React.createElement(
 	      'div',
-	      { className: styles.input },
+	      { className: styles.checkbox },
 	      React.createElement(
 	        Label,
 	        null,
-	        this.props.label
+	        label
 	      ),
 	      React.createElement(Input, this.props)
 	    );
@@ -28045,6 +28047,21 @@
 	var Input = React.createClass({
 	  displayName: 'Input',
 	
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      type: 'text'
+	    };
+	  },
+	  propTypes: {
+	    type: React.PropTypes.string.isRequired,
+	    id: React.PropTypes.string,
+	    name: React.PropTypes.string,
+	    ref: React.PropTypes.func,
+	    placeholder: React.PropTypes.string,
+	    onBlur: React.PropTypes.func,
+	    onChange: React.PropTypes.func,
+	    onFocus: React.PropTypes.func
+	  },
 	  handleOnFocus: function handleOnFocus() {
 	    if (this.props.onFocus) {
 	      this.props.onFocus();
@@ -28061,15 +28078,21 @@
 	    }
 	  },
 	  render: function render() {
+	    var _props = this.props;
+	    var type = _props.type;
+	    var name = _props.name;
+	    var returnValue = _props.returnValue;
+	    var placeholder = _props.placeholder;
+	
 	    return React.createElement('input', {
 	      className: styles.input,
-	      type: this.props.type,
-	      name: this.props.name,
-	      ref: this.props.returnValue,
+	      type: type,
+	      name: name,
+	      ref: returnValue,
 	      onFocus: this.handleOnFocus,
 	      onBlur: this.handleOnBlur,
 	      onChange: this.handleOnChange,
-	      placeholder: this.props.placeholder
+	      placeholder: placeholder
 	    });
 	  }
 	});
@@ -28088,7 +28111,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"green":"#53BDBA","grayMedium":"#333333","teal":"#50afad","tealLight":"#abc2c1","openSans":"'Open Sans'","input":"input-custom__input___1SMcg"};
+	module.exports = {"white":"#fff","green":"#53BDBA","grayMedium":"#333333","teal":"#50afad","tealLight":"#abc2c1","openSans":"'Open Sans'","input":"input-custom__input___1SMcg"};
 
 /***/ },
 /* 270 */
@@ -28218,9 +28241,15 @@
 	
 	var validatePassword = validate(/^[a-zA-Z0-9$!?@]{6,18}$/);
 	
+	var validateName = validate(/^[a-zA-Z]{1,30}[/s]?[a-zA-Z]{1,30}$/);
+	
+	var validateUsername = validate(/^[a-zA-Z0-9_]{3,18}$/);
+	
 	module.exports = {
 	  validateEmail: validateEmail,
-	  validatePassword: validatePassword
+	  validatePassword: validatePassword,
+	  validateName: validateName,
+	  validateUsername: validateUsername
 	};
 
 /***/ },
@@ -28239,6 +28268,12 @@
 	  type: 'password',
 	  label: 'Password'
 	}, validatePassword);
+	
+	// function compose(fn1, fn2) {
+	//   return function(x) {
+	//     return fn1(fn2(x));
+	//   }
+	// }
 
 /***/ },
 /* 275 */
@@ -28358,6 +28393,8 @@
 	
 	var connect = _require.connect;
 	
+	var SignUpForm = __webpack_require__(284);
+	
 	var SignUpContainer = React.createClass({
 	  displayName: 'SignUpContainer',
 	
@@ -28368,7 +28405,7 @@
 	    return React.createElement(
 	      'div',
 	      { onClick: this.handleOnClick },
-	      'SIGN UP FORM'
+	      React.createElement(SignUpForm, null)
 	    );
 	  }
 	});
@@ -28395,6 +28432,342 @@
 
 	'use strict';
 	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	var React = __webpack_require__(1);
+	
+	var _require = __webpack_require__(219);
+	
+	var connect = _require.connect;
+	
+	var styles = __webpack_require__(285);
+	
+	// COMPONENTS
+	var InputEmail = __webpack_require__(262);
+	var InputUsername = __webpack_require__(286);
+	var InputName = __webpack_require__(287);
+	// var InputCheckboxList = require('../input-checkbox-list/input-checkbox-list.js');
+	var createCheckboxWithValidation = __webpack_require__(288);
+	var InputCheckbox = createCheckboxWithValidation({}, { isChecked: true });
+	var InputPassword = __webpack_require__(274);
+	// var InputLocation = require('../input-location/input-location.js');
+	var Button = __webpack_require__(275);
+	
+	var FormSignUp = React.createClass({
+	  displayName: 'FormSignUp',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      isValid: false
+	    };
+	  },
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      checklist: {
+	        limit: 1,
+	        settings: [{
+	          value: 'social',
+	          text: 'Social',
+	          type: 'tag'
+	        }, {
+	          value: 'mentorship',
+	          text: 'Mentorship',
+	          type: 'tag'
+	        }, {
+	          value: 'networking',
+	          text: 'Networking',
+	          type: 'tag'
+	        }]
+	      }
+	    };
+	  },
+	  propTypes: {
+	    checklist: React.PropTypes.object
+	  },
+	  validateForm: function validateForm() {
+	    var _this = this;
+	
+	    // Call isValid for each referenced input
+	    var keys = Object.keys(this.refs);
+	    var inputs = keys.map(function (key) {
+	      var input = _this.refs[key].isValid();
+	      return _defineProperty({}, input.name, input.isValid ? input.value : null);
+	    });
+	
+	    // Check if any inputs are invalid
+	    var invalid = inputs.filter(function (input, i) {
+	      return !input[keys[i]];
+	    });
+	
+	    if (invalid.length === 0) {
+	      var _Object;
+	
+	      var fields = (_Object = Object).assign.apply(_Object, _toConsumableArray(inputs));
+	      this.props.requestUserLogin(fields);
+	    } else {
+	      this.props.loginUserFailure('Form invalid');
+	    };
+	  },
+	  onInputValidation: function onInputValidation(name, inputState) {
+	    // this.state.inputs[name] = inputState;
+	    // TODO: Handle updating progress bar component
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'form',
+	      { className: 'ob-signup-form', noValidate: true },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Welcome! Let\'s get your account set up!'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'profile-information' },
+	        React.createElement(
+	          'fieldset',
+	          null,
+	          React.createElement(InputName, { ref: 'name' }),
+	          React.createElement(InputEmail, { ref: 'email' })
+	        ),
+	        React.createElement(
+	          'fieldset',
+	          null,
+	          React.createElement(InputUsername, { ref: 'username' }),
+	          React.createElement(InputPassword, { ref: 'password' })
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          React.createElement(
+	            'h3',
+	            null,
+	            'Code of Awesome'
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	              'p',
+	              null,
+	              'Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.'
+	            ),
+	            React.createElement(
+	              'p',
+	              null,
+	              'Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop f Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken'
+	            ),
+	            React.createElement(
+	              'p',
+	              null,
+	              'Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.'
+	            )
+	          ),
+	          React.createElement(InputCheckbox, { ref: 'conduct', value: 'conduct', label: 'I agree to the Code of Awesome' }),
+	          React.createElement(
+	            Button,
+	            { onClick: this.validateForm },
+	            'Start making connections'
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = FormSignUp;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var createInputWithValidation = __webpack_require__(263);
+	
+	var _require = __webpack_require__(273);
+	
+	var validateUsername = _require.validateUsername;
+	
+	module.exports = createInputWithValidation({}, {
+	  type: 'text',
+	  label: 'Username',
+	  message: ' ',
+	  error: '3-18 characters. Letters and numbers only.'
+	}, validateUsername);
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var createInputWithValidation = __webpack_require__(263);
+	
+	var _require = __webpack_require__(273);
+	
+	var validateName = _require.validateName;
+	
+	module.exports = createInputWithValidation({}, {
+	  type: 'text',
+	  label: 'Name',
+	  message: 'Your name will be public',
+	  error: 'Must be 1-60 characters'
+	}, validateName);
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var React = __webpack_require__(1);
+	
+	var InputCheckbox = __webpack_require__(289);
+	var Feedback = __webpack_require__(270);
+	
+	module.exports = function createCheckboxWithValidation(initialState, defaultProps, validation) {
+	  return React.createClass({
+	    getInitialState: function getInitialState() {
+	      return _extends({
+	        isValid: false,
+	        isError: false
+	      }, initialState);
+	    },
+	    getDefaultProps: function getDefaultProps() {
+	      return defaultProps;
+	    },
+	    propTypes: {
+	      type: React.PropTypes.string,
+	      label: React.PropTypes.string,
+	      message: React.PropTypes.string
+	    },
+	    isValid: function isValid() {
+	      var value = this.input.value;
+	      var isValid = this.input.checked;
+	
+	      if (isValid) {
+	        this.setState({
+	          isValid: true,
+	          isError: false
+	        });
+	      } else {
+	        this.setState({
+	          isValid: false,
+	          isError: true
+	        });
+	      }
+	
+	      return {
+	        name: this.props.name || this.props.type,
+	        isValid: isValid,
+	        value: value
+	      };
+	    },
+	    render: function render() {
+	      var _this = this;
+	
+	      var _props = this.props;
+	      var message = _props.message;
+	      var error = _props.error;
+	      var _state = this.state;
+	      var isError = _state.isError;
+	      var isValid = _state.isValid;
+	
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(Feedback, _extends({}, this.props, this.state, { isVisible: isError, message: isValid ? message : error })),
+	        React.createElement(InputCheckbox, _extends({}, this.props, {
+	          returnValue: function returnValue(node) {
+	            if (node != null) {
+	              _this.input = node;
+	            }
+	          },
+	          onChange: this.isValid }))
+	      );
+	    }
+	  });
+	};
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var classNames = __webpack_require__(271);
+	
+	var InputCheckbox = React.createClass({
+	  displayName: 'InputCheckbox',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      isChecked: true
+	    };
+	  },
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      id: 'checkbox',
+	      isChecked: true
+	    };
+	  },
+	  propTypes: {
+	    id: React.PropTypes.string.isRequired,
+	    checked: React.PropTypes.bool,
+	    label: React.PropTypes.string,
+	    value: React.PropTypes.string
+	  },
+	  handleOnChange: function handleOnChange() {
+	    var isChecked = !this.state.isChecked;
+	    this.setState({
+	      isChecked: isChecked
+	    });
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var name = _props.name;
+	    var id = _props.id;
+	    var value = _props.value;
+	    var label = _props.label;
+	    var checked = _props.checked;
+	    var returnValue = _props.returnValue;
+	
+	    return React.createElement(
+	      'label',
+	      { htmlFor: id },
+	      React.createElement('input', {
+	        type: 'checkbox',
+	        name: name,
+	        classID: id,
+	        ref: returnValue,
+	        value: value,
+	        defaultChecked: this.props.isChecked,
+	        onChange: this.handleOnChange }),
+	      label
+	    );
+	  }
+	});
+	
+	module.exports = InputCheckbox;
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var React = __webpack_require__(1);
 	
 	var LocationContainer = React.createClass({
@@ -28412,7 +28785,7 @@
 	module.exports = LocationContainer;
 
 /***/ },
-/* 285 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28434,7 +28807,7 @@
 	module.exports = MapContainer;
 
 /***/ },
-/* 286 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

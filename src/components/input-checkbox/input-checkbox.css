@@ -1,0 +1,33 @@
+.checkbox {
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: top;
+  height: 52px;
+  font-size: 12px;
+  color: tealLight;
+  text-transform: uppercase;
+  background-color: grayMedium;
+  border: 1px solid green;
+  padding: 0 10px;
+}
+
+.checkbox:hover {
+  color: #53BDBA;
+  background-color: #F5F5F5;
+}
+
+.selected {
+  color: white;
+  background-color: green;
+}
+
+.disabled {
+  opacity: .2;
+}
+
+.disable:hover {
+  color: tealLight;
+  background-color: grayMedium;
+  opacity: .4;
+}
+

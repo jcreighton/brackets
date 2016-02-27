@@ -1,6 +1,8 @@
 var React = require('react');
 var { connect } = require('react-redux');
 
+var SignUpForm = require('../components/form-sign-up/form-sign-up');
+
 var SignUpContainer = React.createClass({
   handleOnClick: function() {
     this.props.onClick();
@@ -8,7 +10,7 @@ var SignUpContainer = React.createClass({
   render: function() {
     return (
       <div onClick={this.handleOnClick}>
-        SIGN UP FORM
+        <SignUpForm />
       </div>
     );
   }

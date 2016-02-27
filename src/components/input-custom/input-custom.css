@@ -1,4 +1,4 @@
-@value green, grayMedium, teal, tealLight from '../../shared/colors.css';
+@value white, green, grayMedium, teal, tealLight from '../../shared/colors.css';
 @value openSans from '../../shared/typography.css';
 
 .input {

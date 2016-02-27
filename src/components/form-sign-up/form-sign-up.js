@@ -1,21 +1,23 @@
 var React = require('react');
+var { connect } = require('react-redux');
+
+var styles = require('./form-sign-up.css');
 
 // COMPONENTS
-var Email = require('../inputs/email.js');
-var Username = require('../inputs/username.js');
-var Name = require('../inputs/name.js');
-var CheckboxList = require('../inputs/checkbox-list.js');
-var Checkbox = require('../inputs/checkbox.js');
-var Password = require('../inputs/password.js');
-var Location = require('../inputs/location.js');
-var Submit = require('../button/button.js');
-var Feedback = require('../inputs/basics/feedback.js');
+var InputEmail = require('../input-email/input-email.js');
+var InputUsername = require('../input-username/input-username.js');
+var InputName = require('../input-name/input-name.js');
+// var InputCheckboxList = require('../input-checkbox-list/input-checkbox-list.js');
+var createCheckboxWithValidation = require('../input-with-validation/input-checkbox-with-validation.js');
+var InputCheckbox = createCheckboxWithValidation({}, {isChecked: true});
+var InputPassword = require('../input-password/input-password.js');
+// var InputLocation = require('../input-location/input-location.js');
+var Button = require('../button/button.js');
 
-var SignUpForm = React.createClass({
+var FormSignUp = React.createClass({
   getInitialState: function() {
     return {
-      inputs: {},
-      isValidForm: false
+      isValid: false
     }
   },
   getDefaultProps: function() {
@@ -45,49 +47,25 @@ var SignUpForm = React.createClass({
   propTypes: {
     checklist: React.PropTypes.object
   },
-  isValid: function(e) {
-    // e.preventDefault();
+  validateForm: function() {
+    // Call isValid for each referenced input
+    var keys = Object.keys(this.refs);
+    var inputs = keys.map((key) => {
+      var input = this.refs[key].isValid();
+      return {
+        [input.name]: input.isValid ? input.value : null
+      };
+    });
 
-    // // Check if form is valid
-    // var isValidForm = this.onFormValidation();
-    // var state;
+    // Check if any inputs are invalid
+    var invalid = inputs.filter((input, i) => !(input[keys[i]]));
 
-    // if (isValidForm) {
-    //   state = {
-    //     isValidForm: false
-    //   };
-    //   // Create clean data object
-    //   var inputs = this.state.inputs;
-    //   var data = {};
-    //   inputs.forEach(function(input, key) {
-    //     data[key] = input.value;
-    //   });
-
-    //   // Create user
-    //   Actions.createUser(data);
-    // } else {
-    //   state = {
-    //     isValidForm: false
-    //   };
-
-    // }
-
-    // this.setState(state);
-  },
-  onFormValidation: function() {
-    // Call isValid callback for each referenced input
-    // var keys = Object.keys(this.refs);
-    // keys.map(function(key) {
-    //   return this.refs[key].isValid();
-    // }, this);
-
-    // // Check if any inputs are invalid
-    // var inputs = this.state.inputs;
-    // var invalidInputs = inputs.filter(function(input) {
-    //   return input.isValid === false;
-    // });
-
-    // return (invalidInputs.length === 0);
+    if (invalid.length === 0) {
+      var fields = Object.assign(...inputs);
+      this.props.requestUserLogin(fields);
+    } else {
+      this.props.loginUserFailure('Form invalid');
+    };
   },
   onInputValidation: function(name, inputState) {
     // this.state.inputs[name] = inputState;
@@ -96,32 +74,19 @@ var SignUpForm = React.createClass({
   render: function() {
     return (
       <form className="ob-signup-form" noValidate>
-        <h2>Welcome! Create a profile & find lady engineers near you.</h2>
+        <h2>Welcome! Let's get your account set up!</h2>
         <div className="profile-information">
           <fieldset>
-            <Name ref="name" onValidation={this.onInputValidation} />
-            <Email ref="email" onValidation={this.onInputValidation} />
+            <InputName ref="name" />
+            <InputEmail ref="email" />
           </fieldset>
           <fieldset>
-            <Username ref="username" onValidation={this.onInputValidation} />
-            <Password ref="password" onValidation={this.onInputValidation} />
+            <InputUsername ref="username" />
+            <InputPassword ref="password" />
           </fieldset>
-          <fieldset>
-            <h2>What opportunities are you looking for?</h2>
-            <CheckboxList ref="checklist"
-              className="opportunities-list"
-              onValidation={this.onInputValidation}
-              limit={this.props.checklist.limit}
-              checkboxes={this.props.checklist.settings} />
-          </fieldset>
-          <fieldset>
-            <h2>Where are you located?</h2>
-            <Location ref="location" onValidation={this.onInputValidation} />
-          </fieldset>
-        </div>
-        <div className="code-of-conduct">
+        <div>
           <h3>Code of Awesome</h3>
-          <div className="text">
+          <div>
             <p>
               Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball
               Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.
@@ -135,12 +100,13 @@ var SignUpForm = React.createClass({
               Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.
             </p>
           </div>
-          <Checkbox ref="conduct" className="conduct-agreement" value="conduct" text="I agree to the Code of Awesome" onSelection={this.onInputValidation} />
-          <Submit onClick={this.isValid}>Start making connections</Submit>
-        </div>
+          <InputCheckbox ref="conduct" value="conduct" label="I agree to the Code of Awesome" />
+          <Button onClick={this.validateForm}>Start making connections</Button>
+          </div>
+          </div>
       </form>
     );
   }
 });
 
-module.exports = SignUpForm;
+module.exports = FormSignUp;

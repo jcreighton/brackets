@@ -7,9 +7,11 @@ var styles = require('./input-custom.css');
 
 var InputCustom = React.createClass({
   render: function() {
+    const { label } = this.props;
+
     return (
-      <div className={styles.input}>
-        <Label>{this.props.label}</Label>
+      <div className={styles.checkbox}>
+        <Label>{label}</Label>
         <Input {...this.props} />
       </div>
     );

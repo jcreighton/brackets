@@ -1,18 +1,9 @@
 var React = require('react');
 
-var InputCustom = require('../input-custom/input-custom.js');
+var InputCheckbox = require('../input-checkbox/input-checkbox');
 var Feedback = require('../feedback/feedback.js');
 
-
-
-/**
- * Creates an input component with validation.
- * @prop initialState
- * @prop defaultProps type & label & message & error & withFeedback
- * @prop validation Validates value
- */
-
-module.exports = function createInputWithValidation(initialState, defaultProps, validation) {
+module.exports = function createCheckboxWithValidation(initialState, defaultProps, validation) {
   return React.createClass({
     getInitialState: function() {
       return {
@@ -25,13 +16,13 @@ module.exports = function createInputWithValidation(initialState, defaultProps, 
       return defaultProps;
     },
     propTypes: {
-      type: React.PropTypes.string.isRequired,
+      type: React.PropTypes.string,
       label: React.PropTypes.string,
       message: React.PropTypes.string,
     },
     isValid: function() {
       var value = this.input.value;
-      var isValid = validation(value);
+      var isValid = this.input.checked;
 
       if (isValid) {
         this.setState({
@@ -46,7 +37,7 @@ module.exports = function createInputWithValidation(initialState, defaultProps, 
       }
 
       return {
-        name: this.props.type,
+        name: this.props.name || this.props.type,
         isValid,
         value
       };
@@ -58,14 +49,14 @@ module.exports = function createInputWithValidation(initialState, defaultProps, 
       return (
         <div>
           <Feedback {...this.props} {...this.state} isVisible={isError} message={isValid ? message : error} />
-          <InputCustom
+          <InputCheckbox
             {...this.props}
             returnValue={(node) => {
               if (node != null) {
                 this.input = node }
               }
             }
-            onBlur={this.isValid} />
+            onChange={this.isValid} />
         </div>
       );
     }

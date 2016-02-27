@@ -1,8 +1,23 @@
-var React = require('react');
+      var React = require('react');
 
 var styles = require('./input.css');
 
 var Input = React.createClass({
+  getDefaultProps: function() {
+    return {
+      type: 'text'
+    };
+  },
+  propTypes: {
+    type: React.PropTypes.string.isRequired,
+    id: React.PropTypes.string,
+    name: React.PropTypes.string,
+    ref: React.PropTypes.func,
+    placeholder: React.PropTypes.string,
+    onBlur: React.PropTypes.func,
+    onChange: React.PropTypes.func,
+    onFocus: React.PropTypes.func
+  },
   handleOnFocus: function() {
     if (this.props.onFocus) {
       this.props.onFocus();
@@ -19,16 +34,17 @@ var Input = React.createClass({
     }
   },
   render: function() {
+    const { type, name, returnValue, placeholder } = this.props;
     return (
       <input
         className={styles.input}
-        type={this.props.type}
-        name={this.props.name}
-        ref={this.props.returnValue}
+        type={type}
+        name={name}
+        ref={returnValue}
         onFocus={this.handleOnFocus}
         onBlur={this.handleOnBlur}
         onChange={this.handleOnChange}
-        placeholder={this.props.placeholder}
+        placeholder={placeholder}
       />
     );
   }

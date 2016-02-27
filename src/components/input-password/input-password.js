@@ -9,3 +9,11 @@ module.exports = module.exports = createInputWithValidation(
   },
   validatePassword
 );
+
+
+
+// function compose(fn1, fn2) {
+//   return function(x) {
+//     return fn1(fn2(x));
+//   }
+// }
