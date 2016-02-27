@@ -12,6 +12,7 @@ var Input = React.createClass({
     type: React.PropTypes.string.isRequired,
     id: React.PropTypes.string,
     name: React.PropTypes.string,
+    defaultValue: React.PropTypes.string,
     ref: React.PropTypes.func,
     placeholder: React.PropTypes.string,
     onBlur: React.PropTypes.func,
@@ -34,12 +35,13 @@ var Input = React.createClass({
     }
   },
   render: function() {
-    const { type, name, returnValue, placeholder } = this.props;
+    const { type, name, defaultValue, returnValue, placeholder } = this.props;
     return (
       <input
         className={styles.input}
         type={type}
         name={name}
+        defaultValue={defaultValue}
         ref={returnValue}
         onFocus={this.handleOnFocus}
         onBlur={this.handleOnBlur}

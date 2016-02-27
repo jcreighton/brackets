@@ -17,8 +17,10 @@ module.exports = function createCheckboxWithValidation(initialState, defaultProp
     },
     propTypes: {
       type: React.PropTypes.string,
+      name: React.PropTypes.string,
       label: React.PropTypes.string,
       message: React.PropTypes.string,
+      isChecked: React.PropTypes.bool
     },
     isValid: function() {
       var value = this.input.value;

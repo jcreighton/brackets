@@ -15,15 +15,21 @@ var InputCheckbox = React.createClass({
   },
   propTypes: {
     id: React.PropTypes.string.isRequired,
-    isChecked: React.PropTypes.bool,
+    name: React.PropTypes.string.isRequired,
     label: React.PropTypes.string,
-    value: React.PropTypes.string
+    value: React.PropTypes.string,
+    isChecked: React.PropTypes.bool,
+    onChange: React.PropTypes.func
   },
   handleOnChange: function() {
     const isChecked = !this.state.isChecked;
     this.setState({
       isChecked
     });
+
+    if (this.props.onChange) {
+      this.props.onChange();
+    }
   },
   render: function() {
     const { name, id, value, label, checked, returnValue } = this.props;

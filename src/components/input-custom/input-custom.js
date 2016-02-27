@@ -10,7 +10,7 @@ var InputCustom = React.createClass({
     const { label } = this.props;
 
     return (
-      <div className={styles.checkbox}>
+      <div className={styles.input}>
         <Label>{label}</Label>
         <Input {...this.props} />
       </div>

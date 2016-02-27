@@ -25,7 +25,8 @@ module.exports = function createInputWithValidation(initialState, defaultProps, 
       return defaultProps;
     },
     propTypes: {
-      type: React.PropTypes.string.isRequired,
+      type: React.PropTypes.string,
+      name: React.PropTypes.string,
       label: React.PropTypes.string,
       message: React.PropTypes.string,
     },
@@ -46,7 +47,7 @@ module.exports = function createInputWithValidation(initialState, defaultProps, 
       }
 
       return {
-        name: this.props.type,
+        name: this.props.name || this.props.type,
         isValid,
         value
       };

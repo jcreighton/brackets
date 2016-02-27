@@ -27918,7 +27918,8 @@
 	      return defaultProps;
 	    },
 	    propTypes: {
-	      type: React.PropTypes.string.isRequired,
+	      type: React.PropTypes.string,
+	      name: React.PropTypes.string,
 	      label: React.PropTypes.string,
 	      message: React.PropTypes.string
 	    },
@@ -27939,7 +27940,7 @@
 	      }
 	
 	      return {
-	        name: this.props.type,
+	        name: this.props.name || this.props.type,
 	        isValid: isValid,
 	        value: value
 	      };
@@ -27991,7 +27992,7 @@
 	
 	    return React.createElement(
 	      'div',
-	      { className: styles.checkbox },
+	      { className: styles.input },
 	      React.createElement(
 	        Label,
 	        null,
@@ -28056,6 +28057,7 @@
 	    type: React.PropTypes.string.isRequired,
 	    id: React.PropTypes.string,
 	    name: React.PropTypes.string,
+	    defaultValue: React.PropTypes.string,
 	    ref: React.PropTypes.func,
 	    placeholder: React.PropTypes.string,
 	    onBlur: React.PropTypes.func,
@@ -28081,6 +28083,7 @@
 	    var _props = this.props;
 	    var type = _props.type;
 	    var name = _props.name;
+	    var defaultValue = _props.defaultValue;
 	    var returnValue = _props.returnValue;
 	    var placeholder = _props.placeholder;
 	
@@ -28088,6 +28091,7 @@
 	      className: styles.input,
 	      type: type,
 	      name: name,
+	      defaultValue: defaultValue,
 	      ref: returnValue,
 	      onFocus: this.handleOnFocus,
 	      onBlur: this.handleOnBlur,
@@ -28264,16 +28268,10 @@
 	
 	var validatePassword = _require.validatePassword;
 	
-	module.exports = module.exports = createInputWithValidation({}, {
+	module.exports = createInputWithValidation({}, {
 	  type: 'password',
 	  label: 'Password'
 	}, validatePassword);
-	
-	// function compose(fn1, fn2) {
-	//   return function(x) {
-	//     return fn1(fn2(x));
-	//   }
-	// }
 
 /***/ },
 /* 275 */
@@ -28432,8 +28430,6 @@
 
 	'use strict';
 	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(1);
@@ -28450,7 +28446,7 @@
 	var InputName = __webpack_require__(287);
 	// var InputCheckboxList = require('../input-checkbox-list/input-checkbox-list.js');
 	var createCheckboxWithValidation = __webpack_require__(288);
-	var InputCheckbox = createCheckboxWithValidation({}, { isChecked: true });
+	var InputCheckbox = createCheckboxWithValidation({}, { name: 'conduct', isChecked: true });
 	var InputPassword = __webpack_require__(274);
 	// var InputLocation = require('../input-location/input-location.js');
 	var Button = __webpack_require__(275);
@@ -28495,20 +28491,18 @@
 	      var input = _this.refs[key].isValid();
 	      return _defineProperty({}, input.name, input.isValid ? input.value : null);
 	    });
-	
+	    console.log(inputs);
 	    // Check if any inputs are invalid
 	    var invalid = inputs.filter(function (input, i) {
 	      return !input[keys[i]];
 	    });
 	
-	    if (invalid.length === 0) {
-	      var _Object;
-	
-	      var fields = (_Object = Object).assign.apply(_Object, _toConsumableArray(inputs));
-	      this.props.requestUserLogin(fields);
-	    } else {
-	      this.props.loginUserFailure('Form invalid');
-	    };
+	    // if (invalid.length === 0) {
+	    //   var fields = Object.assign(...inputs);
+	    //   this.props.requestUserLogin(fields);
+	    // } else {
+	    //   this.props.loginUserFailure('Form invalid');
+	    // };
 	  },
 	  onInputValidation: function onInputValidation(name, inputState) {
 	    // this.state.inputs[name] = inputState;
@@ -28539,38 +28533,19 @@
 	          React.createElement(InputPassword, { ref: 'password' })
 	        ),
 	        React.createElement(
-	          'div',
+	          'fieldset',
 	          null,
 	          React.createElement(
 	            'h3',
 	            null,
 	            'Code of Awesome'
 	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            React.createElement(
-	              'p',
-	              null,
-	              'Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.'
-	            ),
-	            React.createElement(
-	              'p',
-	              null,
-	              'Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop f Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken'
-	            ),
-	            React.createElement(
-	              'p',
-	              null,
-	              'Bacon ipsum dolor amet leberkas capicola doner ground round, sausage boudin prosciutto beef pork chop flank tenderloin shoulder bresaola bacon kielbasa. Pig bacon bresaola, shank beef ribs ground round venison. Drumstick brisket sausage, doner tail corned beef salami meatloaf pork chop pork. Prosciutto sausage porchetta tongue t-bone, meatball chicken venison. Boudin pork chop filet mignon porchetta cupim ground round. Tenderloin hamburger ham hock ball tip meatloaf, pancetta ground round andouille pork. Short ribs ham hock shank tongue jowl drumstick cow pork belly.'
-	            )
-	          ),
-	          React.createElement(InputCheckbox, { ref: 'conduct', value: 'conduct', label: 'I agree to the Code of Awesome' }),
-	          React.createElement(
-	            Button,
-	            { onClick: this.validateForm },
-	            'Start making connections'
-	          )
+	          React.createElement(InputCheckbox, { ref: 'conduct', value: 'conduct', label: 'I agree to the Code of Awesome' })
+	        ),
+	        React.createElement(
+	          Button,
+	          { onClick: this.validateForm },
+	          'Start making connections'
 	        )
 	      )
 	    );
@@ -28649,8 +28624,10 @@
 	    },
 	    propTypes: {
 	      type: React.PropTypes.string,
+	      name: React.PropTypes.string,
 	      label: React.PropTypes.string,
-	      message: React.PropTypes.string
+	      message: React.PropTypes.string,
+	      isChecked: React.PropTypes.bool
 	    },
 	    isValid: function isValid() {
 	      var value = this.input.value;
@@ -28720,20 +28697,26 @@
 	  getDefaultProps: function getDefaultProps() {
 	    return {
 	      id: 'checkbox',
-	      isChecked: true
+	      isChecked: false
 	    };
 	  },
 	  propTypes: {
 	    id: React.PropTypes.string.isRequired,
-	    checked: React.PropTypes.bool,
+	    name: React.PropTypes.string.isRequired,
 	    label: React.PropTypes.string,
-	    value: React.PropTypes.string
+	    value: React.PropTypes.string,
+	    isChecked: React.PropTypes.bool,
+	    onChange: React.PropTypes.func
 	  },
 	  handleOnChange: function handleOnChange() {
 	    var isChecked = !this.state.isChecked;
 	    this.setState({
 	      isChecked: isChecked
 	    });
+	
+	    if (this.props.onChange) {
+	      this.props.onChange();
+	    }
 	  },
 	  render: function render() {
 	    var _props = this.props;
