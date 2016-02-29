@@ -1,9 +1,9 @@
 var React = require('react');
 
-var InputCheckbox = require('../input-checkbox/input-checkbox');
+var InputCheckboxList= require('../input-checkbox-list/input-checkbox-list');
 var Feedback = require('../feedback/feedback.js');
 
-module.exports = function createCheckboxWithValidation(initialState, defaultProps, validation) {
+module.exports = function createCheckboxWithValidation(initialState, defaultProps) {
   return React.createClass({
     getInitialState: function() {
       return {
@@ -16,14 +16,14 @@ module.exports = function createCheckboxWithValidation(initialState, defaultProp
       return defaultProps;
     },
     propTypes: {
-      name: React.PropTypes.string,
-      label: React.PropTypes.string,
-      message: React.PropTypes.string,
-      isChecked: React.PropTypes.bool
+      checklist: React.PropTypes.array,
     },
     isValid: function() {
-      var value = this.input.value;
-      var isValid = this.input.checked;
+      var checked = this.inputs
+                      .filter((checkbox) => checkbox.checked)
+                      .map((checkbox) => checkbox.name);
+
+      var isValid = checked.length;
 
       if (isValid) {
         this.setState({
@@ -40,21 +40,23 @@ module.exports = function createCheckboxWithValidation(initialState, defaultProp
       return {
         name: this.props.name || this.props.type,
         isValid,
-        value
+        checked
       };
     },
     render: function() {
       const { message, error } = this.props;
       const { isError, isValid } = this.state;
 
+      this.inputs = [];
+
       return (
         <div>
           <Feedback {...this.props} {...this.state} isVisible={isError} message={isValid ? message : error} />
-          <InputCheckbox
+          <InputCheckboxList
             {...this.props}
             returnValue={(node) => {
                 if (node != null) {
-                  this.input = node
+                  this.inputs.push(node);
                 }
               }
             }

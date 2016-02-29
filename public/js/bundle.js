@@ -19671,9 +19671,9 @@
 	var App = __webpack_require__(218);
 	var Home = __webpack_require__(249);
 	var SignUp = __webpack_require__(283);
-	var Location = __webpack_require__(290);
-	var UserMap = __webpack_require__(291);
-	var Profile = __webpack_require__(292);
+	var Location = __webpack_require__(292);
+	var UserMap = __webpack_require__(293);
+	var Profile = __webpack_require__(294);
 	
 	module.exports = React.createElement(
 	  Router,
@@ -28430,6 +28430,8 @@
 
 	'use strict';
 	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(1);
@@ -28444,9 +28446,29 @@
 	var InputEmail = __webpack_require__(262);
 	var InputUsername = __webpack_require__(286);
 	var InputName = __webpack_require__(287);
-	// var InputCheckboxList = require('../input-checkbox-list/input-checkbox-list.js');
-	var createCheckboxWithValidation = __webpack_require__(288);
-	var InputCheckbox = createCheckboxWithValidation({}, { name: 'conduct', isChecked: true });
+	var createCheckboxListWithValidation = __webpack_require__(288);
+	var InputCheckboxList = createCheckboxListWithValidation({}, {
+	  checkboxes: [{
+	    id: 'social',
+	    name: 'social',
+	    label: 'Social'
+	  }, {
+	    id: 'mentor',
+	    name: 'mentor',
+	    label: 'Mentor'
+	  }, {
+	    id: 'networking',
+	    name: 'networking',
+	    label: 'Networking'
+	  }]
+	});
+	var createCheckboxWithValidation = __webpack_require__(291);
+	var InputCheckbox = createCheckboxWithValidation({}, {
+	  name: 'conduct',
+	  isChecked: true,
+	  value: 'conduct',
+	  label: 'I agree to the Code of Awesome'
+	});
 	var InputPassword = __webpack_require__(274);
 	// var InputLocation = require('../input-location/input-location.js');
 	var Button = __webpack_require__(275);
@@ -28458,29 +28480,6 @@
 	    return {
 	      isValid: false
 	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      checklist: {
-	        limit: 1,
-	        settings: [{
-	          value: 'social',
-	          text: 'Social',
-	          type: 'tag'
-	        }, {
-	          value: 'mentorship',
-	          text: 'Mentorship',
-	          type: 'tag'
-	        }, {
-	          value: 'networking',
-	          text: 'Networking',
-	          type: 'tag'
-	        }]
-	      }
-	    };
-	  },
-	  propTypes: {
-	    checklist: React.PropTypes.object
 	  },
 	  validateForm: function validateForm() {
 	    var _this = this;
@@ -28497,16 +28496,14 @@
 	      return !input[keys[i]];
 	    });
 	
-	    // if (invalid.length === 0) {
-	    //   var fields = Object.assign(...inputs);
-	    //   this.props.requestUserLogin(fields);
-	    // } else {
-	    //   this.props.loginUserFailure('Form invalid');
-	    // };
-	  },
-	  onInputValidation: function onInputValidation(name, inputState) {
-	    // this.state.inputs[name] = inputState;
-	    // TODO: Handle updating progress bar component
+	    if (invalid.length === 0) {
+	      var _Object;
+	
+	      var fields = (_Object = Object).assign.apply(_Object, _toConsumableArray(inputs));
+	      // this.props.requestUserLogin(fields);
+	    } else {
+	        // this.props.loginUserFailure('Form invalid');
+	      };
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -28536,11 +28533,23 @@
 	          'fieldset',
 	          null,
 	          React.createElement(
+	            'h2',
+	            null,
+	            'What opportunities are you looking for?'
+	          ),
+	          React.createElement(InputCheckboxList, {
+	            limit: 1
+	          })
+	        ),
+	        React.createElement(
+	          'fieldset',
+	          null,
+	          React.createElement(
 	            'h3',
 	            null,
 	            'Code of Awesome'
 	          ),
-	          React.createElement(InputCheckbox, { ref: 'conduct', value: 'conduct', label: 'I agree to the Code of Awesome' })
+	          React.createElement(InputCheckbox, { ref: 'conduct' })
 	        ),
 	        React.createElement(
 	          Button,
@@ -28608,7 +28617,207 @@
 	
 	var React = __webpack_require__(1);
 	
-	var InputCheckbox = __webpack_require__(289);
+	var InputCheckboxList = __webpack_require__(289);
+	var Feedback = __webpack_require__(270);
+	
+	module.exports = function createCheckboxWithValidation(initialState, defaultProps) {
+	  return React.createClass({
+	    getInitialState: function getInitialState() {
+	      return _extends({
+	        isValid: false,
+	        isError: false
+	      }, initialState);
+	    },
+	    getDefaultProps: function getDefaultProps() {
+	      return defaultProps;
+	    },
+	    propTypes: {
+	      checklist: React.PropTypes.array
+	    },
+	    isValid: function isValid() {
+	      var checked = this.inputs.filter(function (checkbox) {
+	        return checkbox.checked;
+	      }).map(function (checkbox) {
+	        return checkbox.name;
+	      });
+	
+	      var isValid = checked.length;
+	
+	      console.log('CHECKLIST: ', this.inputs, checked, isValid);
+	
+	      if (isValid) {
+	        this.setState({
+	          isValid: true,
+	          isError: false
+	        });
+	      } else {
+	        this.setState({
+	          isValid: false,
+	          isError: true
+	        });
+	      }
+	
+	      return {
+	        name: this.props.name || this.props.type,
+	        isValid: isValid,
+	        checked: checked
+	      };
+	    },
+	    render: function render() {
+	      var _this = this;
+	
+	      var _props = this.props;
+	      var message = _props.message;
+	      var error = _props.error;
+	      var _state = this.state;
+	      var isError = _state.isError;
+	      var isValid = _state.isValid;
+	
+	      this.inputs = [];
+	
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(Feedback, _extends({}, this.props, this.state, { isVisible: isError, message: isValid ? message : error })),
+	        React.createElement(InputCheckboxList, _extends({}, this.props, {
+	          returnValue: function returnValue(node) {
+	            if (node != null) {
+	              _this.inputs.push(node);
+	            }
+	          },
+	          onChange: this.isValid
+	        }))
+	      );
+	    }
+	  });
+	};
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var React = __webpack_require__(1);
+	var InputCheckbox = __webpack_require__(290);
+	
+	var CheckboxList = React.createClass({
+	  displayName: 'CheckboxList',
+	
+	  propTypes: {
+	    checkboxes: React.PropTypes.array.isRequired,
+	    onChange: React.PropTypes.func,
+	    returnValue: React.PropTypes.func
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var checkboxes = _props.checkboxes;
+	    var onChange = _props.onChange;
+	    var returnValue = _props.returnValue;
+	
+	    return React.createElement(
+	      'ul',
+	      null,
+	      checkboxes.map(function (checkbox, index) {
+	        var key = 'checkbox_' + index;
+	
+	        return React.createElement(
+	          'li',
+	          { key: key },
+	          React.createElement(InputCheckbox, _extends({
+	            onChange: onChange,
+	            returnValue: returnValue
+	          }, checkbox))
+	        );
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = CheckboxList;
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var classNames = __webpack_require__(271);
+	
+	var InputCheckbox = React.createClass({
+	  displayName: 'InputCheckbox',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      isChecked: true
+	    };
+	  },
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      id: 'checkbox',
+	      isChecked: false
+	    };
+	  },
+	  propTypes: {
+	    id: React.PropTypes.string.isRequired,
+	    name: React.PropTypes.string.isRequired,
+	    label: React.PropTypes.string,
+	    value: React.PropTypes.string,
+	    returnValue: React.PropTypes.func,
+	    isChecked: React.PropTypes.bool,
+	    onChange: React.PropTypes.func
+	  },
+	  handleOnChange: function handleOnChange() {
+	    var isChecked = !this.state.isChecked;
+	    this.setState({
+	      isChecked: isChecked
+	    });
+	
+	    if (this.props.onChange) {
+	      this.props.onChange();
+	    }
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var name = _props.name;
+	    var id = _props.id;
+	    var value = _props.value;
+	    var label = _props.label;
+	    var checked = _props.checked;
+	    var returnValue = _props.returnValue;
+	
+	    return React.createElement(
+	      'label',
+	      { htmlFor: id },
+	      React.createElement('input', {
+	        type: 'checkbox',
+	        name: name,
+	        classID: id,
+	        ref: returnValue,
+	        value: value,
+	        defaultChecked: this.props.isChecked,
+	        onChange: this.handleOnChange }),
+	      label
+	    );
+	  }
+	});
+	
+	module.exports = InputCheckbox;
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var React = __webpack_require__(1);
+	
+	var InputCheckbox = __webpack_require__(290);
 	var Feedback = __webpack_require__(270);
 	
 	module.exports = function createCheckboxWithValidation(initialState, defaultProps, validation) {
@@ -28623,7 +28832,6 @@
 	      return defaultProps;
 	    },
 	    propTypes: {
-	      type: React.PropTypes.string,
 	      name: React.PropTypes.string,
 	      label: React.PropTypes.string,
 	      message: React.PropTypes.string,
@@ -28671,82 +28879,15 @@
 	              _this.input = node;
 	            }
 	          },
-	          onChange: this.isValid }))
+	          onChange: this.isValid
+	        }))
 	      );
 	    }
 	  });
 	};
 
 /***/ },
-/* 289 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var classNames = __webpack_require__(271);
-	
-	var InputCheckbox = React.createClass({
-	  displayName: 'InputCheckbox',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      isChecked: true
-	    };
-	  },
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      id: 'checkbox',
-	      isChecked: false
-	    };
-	  },
-	  propTypes: {
-	    id: React.PropTypes.string.isRequired,
-	    name: React.PropTypes.string.isRequired,
-	    label: React.PropTypes.string,
-	    value: React.PropTypes.string,
-	    isChecked: React.PropTypes.bool,
-	    onChange: React.PropTypes.func
-	  },
-	  handleOnChange: function handleOnChange() {
-	    var isChecked = !this.state.isChecked;
-	    this.setState({
-	      isChecked: isChecked
-	    });
-	
-	    if (this.props.onChange) {
-	      this.props.onChange();
-	    }
-	  },
-	  render: function render() {
-	    var _props = this.props;
-	    var name = _props.name;
-	    var id = _props.id;
-	    var value = _props.value;
-	    var label = _props.label;
-	    var checked = _props.checked;
-	    var returnValue = _props.returnValue;
-	
-	    return React.createElement(
-	      'label',
-	      { htmlFor: id },
-	      React.createElement('input', {
-	        type: 'checkbox',
-	        name: name,
-	        classID: id,
-	        ref: returnValue,
-	        value: value,
-	        defaultChecked: this.props.isChecked,
-	        onChange: this.handleOnChange }),
-	      label
-	    );
-	  }
-	});
-	
-	module.exports = InputCheckbox;
-
-/***/ },
-/* 290 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28768,7 +28909,7 @@
 	module.exports = LocationContainer;
 
 /***/ },
-/* 291 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28790,7 +28931,7 @@
 	module.exports = MapContainer;
 
 /***/ },
-/* 292 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

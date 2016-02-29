@@ -7,7 +7,28 @@ var styles = require('./form-sign-up.css');
 var InputEmail = require('../input-email/input-email.js');
 var InputUsername = require('../input-username/input-username.js');
 var InputName = require('../input-name/input-name.js');
-// var InputCheckboxList = require('../input-checkbox-list/input-checkbox-list.js');
+var createCheckboxListWithValidation = require('../input-with-validation/input-checkbox-list-with-validation.js');
+var InputCheckboxList = createCheckboxListWithValidation(
+  {},
+  {
+    checkboxes: [
+      {
+        id: 'social',
+        name: 'social',
+        label: 'Social'
+      },
+      {
+        id: 'mentor',
+        name: 'mentor',
+        label: 'Mentor'
+      },
+      {
+        id: 'networking',
+        name: 'networking',
+        label: 'Networking'
+      }
+    ]
+  });
 var createCheckboxWithValidation = require('../input-with-validation/input-checkbox-with-validation.js');
 var InputCheckbox = createCheckboxWithValidation(
   {},
@@ -27,33 +48,6 @@ var FormSignUp = React.createClass({
     return {
       isValid: false
     }
-  },
-  getDefaultProps: function() {
-    return {
-      checklist: {
-        limit: 1,
-        settings: [
-          {
-            value: 'social',
-            text: 'Social',
-            type: 'tag'
-          },
-          {
-            value: 'mentorship',
-            text: 'Mentorship',
-            type: 'tag'
-          },
-          {
-            value: 'networking',
-            text: 'Networking',
-            type: 'tag'
-          }
-        ]
-      }
-    }
-  },
-  propTypes: {
-    checklist: React.PropTypes.object
   },
   validateForm: function() {
     // Call isValid for each referenced input
@@ -75,9 +69,6 @@ var FormSignUp = React.createClass({
       // this.props.loginUserFailure('Form invalid');
     };
   },
-  onInputValidation: function() {
-    // TODO: Handle updating progress bar component
-  },
   render: function() {
     return (
       <form className="ob-signup-form" noValidate>
@@ -90,6 +81,12 @@ var FormSignUp = React.createClass({
           <fieldset>
             <InputUsername ref="username" />
             <InputPassword ref="password" />
+          </fieldset>
+          <fieldset>
+            <h2>What opportunities are you looking for?</h2>
+            <InputCheckboxList
+              limit={1}
+            />
           </fieldset>
           <fieldset>
             <h3>Code of Awesome</h3>
