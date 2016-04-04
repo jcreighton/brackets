@@ -1,5 +1,6 @@
 var Firebase = require('firebase');
 var ref = new Firebase('https://test-openbracket.firebaseio.com');
+var { browserHistory } = require('react-router');
 
 export function loginUserRequest() {
   return {
@@ -60,6 +61,7 @@ export function requestUserLogin(user) {
     })
       .then((authData) => {
         dispatch(loginUserSuccess(authData));
+        browserHistory.push('/map');
         return authData.uid;
       })
       .then((uid) => dispatch(getUserProfile(uid)))

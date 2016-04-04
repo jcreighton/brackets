@@ -11,6 +11,8 @@ var match = require('react-router/lib/match');
 var RouterContext = require('react-router/lib/RouterContext');
 var ReactDOM = require('react-dom/server');
 var routes = require('./routes.js');
+var { Provider } = require('react-redux');
+var configureStore = require('./store/configureStore.js');
 
 // Create an express instance and set a port variable
 var app = express();
@@ -36,7 +38,7 @@ app.get('*', function(req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
-      var application = ReactDOM.renderToString(<RouterContext {...renderProps} />);
+      var application = ReactDOM.renderToString(<Provider store={configureStore}><RouterContext {...renderProps} /></Provider>);
       res.status(200).send(application);
     } else {
       res.status(404).send('Not found')

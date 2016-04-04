@@ -16,28 +16,35 @@ var Feedback = React.createClass({
     return {
       isError: false,
       isVisible: false,
+      placement: 'below',
       message: 'Hi! I\'m a message!'
     }
   },
   propTypes: {
     isError: React.PropTypes.bool,
     isVisible: React.PropTypes.bool,
+    placement: React.PropTypes.string,
     message: React.PropTypes.string.isRequired
   },
   render: function() {
-    var classes = classNames(
+    const { message, isError, isVisible, placement } = this.props;
+
+    let feedbackStyles = classNames(
       styles.feedback,
-      styles.left,
       {
-        [styles.error]: this.props.isError,
-        [styles.hidden]: !this.props.isVisible,
-        [styles.visible]: this.props.isVisible
+        [styles.left]: (placement === 'left'),
+        [styles.right]: (placement === 'right'),
+        [styles.above]: (placement === 'above'),
+        [styles.below]: (placement === 'below'),
+        [styles.error]: isError,
+        [styles.hidden]: !isVisible,
+        [styles.visible]: isVisible
       }
     );
 
     return (
-      <span className={classes}>
-        {this.props.message}
+      <span className={feedbackStyles}>
+        {message}
       </span>
     );
   }

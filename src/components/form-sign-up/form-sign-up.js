@@ -40,7 +40,7 @@ var InputCheckbox = createCheckboxWithValidation(
   }
 );
 var InputPassword = require('../input-password/input-password.js');
-// var InputLocation = require('../input-location/input-location.js');
+var InputLocation = require('../input-location/input-location.js');
 var Button = require('../button/button.js');
 
 var FormSignUp = React.createClass({
@@ -71,7 +71,7 @@ var FormSignUp = React.createClass({
   },
   render: function() {
     return (
-      <form className="ob-signup-form" noValidate>
+      <form className={styles.form} noValidate>
         <h2>Welcome! Let's get your account set up!</h2>
         <div className="profile-information">
           <fieldset>
@@ -83,9 +83,13 @@ var FormSignUp = React.createClass({
             <InputPassword ref="password" />
           </fieldset>
           <fieldset>
+            <h2>Where are you located?</h2>
+            <InputLocation ref="location" />
+          </fieldset>
+          <fieldset>
             <h2>What opportunities are you looking for?</h2>
             <InputCheckboxList
-              limit={1}
+              ref="opportunities"
             />
           </fieldset>
           <fieldset>

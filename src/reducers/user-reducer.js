@@ -12,7 +12,7 @@ module.exports = function(state = {}, action) {
         ...state,
         isRequesting: false,
         isError: false,
-        logged_in: true,
+        loggedIn: true,
         authData: action.payload
       };
       break;
@@ -20,10 +20,11 @@ module.exports = function(state = {}, action) {
     case 'LOGIN_USER_FAILURE':
       return {
         ...state,
+        authData: {},
         isRequesting: false,
         isError: true,
         error: action.payload,
-        logged_in: false
+        loggedIn: false
       };
       break;
 

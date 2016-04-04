@@ -1,6 +1,8 @@
 var React = require('react');
 var InputCheckbox = require('../input-checkbox/input-checkbox');
 
+import styles from './input-checkbox-list.css';
+
 var CheckboxList = React.createClass({
   propTypes: {
     checkboxes: React.PropTypes.array.isRequired,
@@ -11,7 +13,7 @@ var CheckboxList = React.createClass({
     const { checkboxes, onChange, returnValue } = this.props;
 
     return (
-      <ul>
+      <ul className={styles.list}>
         {checkboxes.map((checkbox, index) => {
           var key = 'checkbox_' + index;
 

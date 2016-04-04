@@ -1,8 +1,5 @@
 var React = require('react');
-var Router = require('react-router').Router;
-var Route = require('react-router').Route;
-var IndexRoute = require('react-router').IndexRoute;
-var browserHistory = require('react-router').browserHistory;
+var { Router, Route, IndexRoute, browserHistory } = require('react-router');
 
 // CONTAINERS
 var App = require('./containers/app.js');

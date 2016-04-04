@@ -48,11 +48,21 @@
 	
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-	var Routes = __webpack_require__(159);
+	var routes = __webpack_require__(159);
+	
+	var _require = __webpack_require__(219);
+	
+	var Provider = _require.Provider;
+	
+	var configureStore = __webpack_require__(294);
 	
 	var renderTarget = document;
 	
-	ReactDOM.render(Routes, renderTarget);
+	ReactDOM.render(React.createElement(
+	  Provider,
+	  { store: configureStore },
+	  routes
+	), renderTarget);
 
 /***/ },
 /* 1 */
@@ -19662,18 +19672,22 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var Router = __webpack_require__(160).Router;
-	var Route = __webpack_require__(160).Route;
-	var IndexRoute = __webpack_require__(160).IndexRoute;
-	var browserHistory = __webpack_require__(160).browserHistory;
+	
+	var _require = __webpack_require__(160);
+	
+	var Router = _require.Router;
+	var Route = _require.Route;
+	var IndexRoute = _require.IndexRoute;
+	var browserHistory = _require.browserHistory;
 	
 	// CONTAINERS
+	
 	var App = __webpack_require__(218);
-	var Home = __webpack_require__(249);
-	var SignUp = __webpack_require__(283);
-	var Location = __webpack_require__(292);
-	var UserMap = __webpack_require__(293);
-	var Profile = __webpack_require__(294);
+	var Home = __webpack_require__(242);
+	var SignUp = __webpack_require__(276);
+	var Location = __webpack_require__(291);
+	var UserMap = __webpack_require__(292);
+	var Profile = __webpack_require__(293);
 	
 	module.exports = React.createElement(
 	  Router,
@@ -24657,55 +24671,55 @@
 	
 	var _require = __webpack_require__(219);
 	
-	var Provider = _require.Provider;
+	var connect = _require.connect;
 	
-	var configureStore = __webpack_require__(236);
+	var _require2 = __webpack_require__(160);
 	
+	var browserHistory = _require2.browserHistory;
+	
+	__webpack_require__(236);
+	__webpack_require__(240);
 	__webpack_require__(241);
-	__webpack_require__(245);
-	__webpack_require__(247);
-	__webpack_require__(248);
 	
 	var AppContainer = React.createClass({
 	  displayName: 'AppContainer',
 	
+	  componentDidMount: function componentDidMount() {
+	    // Check if user is logged in
+	  },
 	  render: function render() {
 	    return React.createElement(
-	      Provider,
-	      { store: configureStore },
+	      'html',
+	      null,
 	      React.createElement(
-	        'html',
+	        'head',
 	        null,
 	        React.createElement(
-	          'head',
+	          'title',
 	          null,
-	          React.createElement(
-	            'title',
-	            null,
-	            'Open Bracket | an open community for women coders'
-	          ),
-	          React.createElement('link', { rel: 'shortcut icon', href: '/img/favicon.ico', type: 'image/x-icon' }),
-	          React.createElement('link', { rel: 'icon', href: '/img/favicon.ico', type: 'image/x-icon' }),
-	          React.createElement('link', { href: 'https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300', rel: 'stylesheet', type: 'text/css' }),
-	          React.createElement('link', { rel: 'stylesheet', type: 'text/css', href: '/css/styles.css' })
+	          'Open Bracket | an open community for women coders'
 	        ),
+	        React.createElement('link', { rel: 'shortcut icon', href: '/img/favicon.ico', type: 'image/x-icon' }),
+	        React.createElement('link', { rel: 'icon', href: '/img/favicon.ico', type: 'image/x-icon' }),
+	        React.createElement('link', { href: 'https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300', rel: 'stylesheet', type: 'text/css' }),
+	        React.createElement('link', { rel: 'stylesheet', type: 'text/css', href: '/css/styles.css' })
+	      ),
+	      React.createElement(
+	        'body',
+	        null,
 	        React.createElement(
-	          'body',
-	          null,
-	          React.createElement(
-	            'div',
-	            { id: 'open-bracket-app' },
-	            this.props.children
-	          ),
-	          React.createElement('script', { src: 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js' }),
-	          React.createElement('script', { type: 'text/javascript', src: '/js/bundle.js' })
-	        )
+	          'div',
+	          { id: 'open-bracket-app' },
+	          this.props.children
+	        ),
+	        React.createElement('script', { src: 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js' }),
+	        React.createElement('script', { type: 'text/javascript', src: '/js/bundle.js' })
 	      )
 	    );
 	  }
 	});
 	
-	module.exports = AppContainer;
+	module.exports = connect()(AppContainer);
 
 /***/ },
 /* 219 */
@@ -25794,315 +25808,13 @@
 /* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	var _require = __webpack_require__(226);
-	
-	var createStore = _require.createStore;
-	var combineReducers = _require.combineReducers;
-	var applyMiddleware = _require.applyMiddleware;
-	
-	var thunk = __webpack_require__(237);
-	var logger = __webpack_require__(238);
-	
-	var one = __webpack_require__(239);
-	var user = __webpack_require__(240);
-	
-	var reducers = combineReducers({
-	  one: one,
-	  user: user
-	});
-	
-	var createStoreWithMiddleWare = applyMiddleware(thunk, logger())(createStore);
-	
-	module.exports = createStoreWithMiddleWare(reducers);
-
-/***/ },
-/* 237 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	function thunkMiddleware(_ref) {
-	  var dispatch = _ref.dispatch;
-	  var getState = _ref.getState;
-	
-	  return function (next) {
-	    return function (action) {
-	      return typeof action === 'function' ? action(dispatch, getState) : next(action);
-	    };
-	  };
-	}
-	
-	module.exports = thunkMiddleware;
-
-/***/ },
-/* 238 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	var repeat = function repeat(str, times) {
-	  return new Array(times + 1).join(str);
-	};
-	var pad = function pad(num, maxLength) {
-	  return repeat("0", maxLength - num.toString().length) + num;
-	};
-	var formatTime = function formatTime(time) {
-	  return "@ " + pad(time.getHours(), 2) + ":" + pad(time.getMinutes(), 2) + ":" + pad(time.getSeconds(), 2) + "." + pad(time.getMilliseconds(), 3);
-	};
-	
-	// Use the new performance api to get better precision if available
-	var timer = typeof performance !== "undefined" && typeof performance.now === "function" ? performance : Date;
-	
-	/**
-	 * Creates logger with followed options
-	 *
-	 * @namespace
-	 * @property {object} options - options for logger
-	 * @property {string} options.level - console[level]
-	 * @property {boolean} options.duration - print duration of each action?
-	 * @property {boolean} options.timestamp - print timestamp with each action?
-	 * @property {object} options.colors - custom colors
-	 * @property {object} options.logger - implementation of the `console` API
-	 * @property {boolean} options.logErrors - should errors in action execution be caught, logged, and re-thrown?
-	 * @property {boolean} options.collapsed - is group collapsed?
-	 * @property {boolean} options.predicate - condition which resolves logger behavior
-	 * @property {function} options.stateTransformer - transform state before print
-	 * @property {function} options.actionTransformer - transform action before print
-	 * @property {function} options.errorTransformer - transform error before print
-	 */
-	
-	function createLogger() {
-	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	  var _options$level = options.level;
-	  var level = _options$level === undefined ? "log" : _options$level;
-	  var _options$logger = options.logger;
-	  var logger = _options$logger === undefined ? console : _options$logger;
-	  var _options$logErrors = options.logErrors;
-	  var logErrors = _options$logErrors === undefined ? true : _options$logErrors;
-	  var collapsed = options.collapsed;
-	  var predicate = options.predicate;
-	  var _options$duration = options.duration;
-	  var duration = _options$duration === undefined ? false : _options$duration;
-	  var _options$timestamp = options.timestamp;
-	  var timestamp = _options$timestamp === undefined ? true : _options$timestamp;
-	  var transformer = options.transformer;
-	  var _options$stateTransfo = options.stateTransformer;
-	  var // deprecated
-	  stateTransformer = _options$stateTransfo === undefined ? function (state) {
-	    return state;
-	  } : _options$stateTransfo;
-	  var _options$actionTransf = options.actionTransformer;
-	  var actionTransformer = _options$actionTransf === undefined ? function (actn) {
-	    return actn;
-	  } : _options$actionTransf;
-	  var _options$errorTransfo = options.errorTransformer;
-	  var errorTransformer = _options$errorTransfo === undefined ? function (error) {
-	    return error;
-	  } : _options$errorTransfo;
-	  var _options$colors = options.colors;
-	  var colors = _options$colors === undefined ? {
-	    title: function title() {
-	      return "#000000";
-	    },
-	    prevState: function prevState() {
-	      return "#9E9E9E";
-	    },
-	    action: function action() {
-	      return "#03A9F4";
-	    },
-	    nextState: function nextState() {
-	      return "#4CAF50";
-	    },
-	    error: function error() {
-	      return "#F20404";
-	    }
-	  } : _options$colors;
-	
-	  // exit if console undefined
-	
-	  if (typeof logger === "undefined") {
-	    return function () {
-	      return function (next) {
-	        return function (action) {
-	          return next(action);
-	        };
-	      };
-	    };
-	  }
-	
-	  if (transformer) {
-	    console.error("Option 'transformer' is deprecated, use stateTransformer instead");
-	  }
-	
-	  var logBuffer = [];
-	  function printBuffer() {
-	    logBuffer.forEach(function (logEntry, key) {
-	      var started = logEntry.started;
-	      var startedTime = logEntry.startedTime;
-	      var action = logEntry.action;
-	      var prevState = logEntry.prevState;
-	      var error = logEntry.error;
-	      var took = logEntry.took;
-	      var nextState = logEntry.nextState;
-	
-	      var nextEntry = logBuffer[key + 1];
-	      if (nextEntry) {
-	        nextState = nextEntry.prevState;
-	        took = nextEntry.started - started;
-	      }
-	      // message
-	      var formattedAction = actionTransformer(action);
-	      var isCollapsed = typeof collapsed === "function" ? collapsed(function () {
-	        return nextState;
-	      }, action) : collapsed;
-	
-	      var formattedTime = formatTime(startedTime);
-	      var titleCSS = colors.title ? "color: " + colors.title(formattedAction) + ";" : null;
-	      var title = "action " + (timestamp ? formattedTime : "") + " " + formattedAction.type + " " + (duration ? "(in " + took.toFixed(2) + " ms)" : "");
-	
-	      // render
-	      try {
-	        if (isCollapsed) {
-	          if (colors.title) logger.groupCollapsed("%c " + title, titleCSS);else logger.groupCollapsed(title);
-	        } else {
-	          if (colors.title) logger.group("%c " + title, titleCSS);else logger.group(title);
-	        }
-	      } catch (e) {
-	        logger.log(title);
-	      }
-	
-	      if (colors.prevState) logger[level]("%c prev state", "color: " + colors.prevState(prevState) + "; font-weight: bold", prevState);else logger[level]("prev state", prevState);
-	
-	      if (colors.action) logger[level]("%c action", "color: " + colors.action(formattedAction) + "; font-weight: bold", formattedAction);else logger[level]("action", formattedAction);
-	
-	      if (error) {
-	        if (colors.error) logger[level]("%c error", "color: " + colors.error(error, prevState) + "; font-weight: bold", error);else logger[level]("error", error);
-	      }
-	
-	      if (colors.nextState) logger[level]("%c next state", "color: " + colors.nextState(nextState) + "; font-weight: bold", nextState);else logger[level]("next state", nextState);
-	
-	      try {
-	        logger.groupEnd();
-	      } catch (e) {
-	        logger.log("—— log end ——");
-	      }
-	    });
-	    logBuffer.length = 0;
-	  }
-	
-	  return function (_ref) {
-	    var getState = _ref.getState;
-	    return function (next) {
-	      return function (action) {
-	        // exit early if predicate function returns false
-	        if (typeof predicate === "function" && !predicate(getState, action)) {
-	          return next(action);
-	        }
-	
-	        var logEntry = {};
-	        logBuffer.push(logEntry);
-	
-	        logEntry.started = timer.now();
-	        logEntry.startedTime = new Date();
-	        logEntry.prevState = stateTransformer(getState());
-	        logEntry.action = action;
-	
-	        var returnedValue = undefined;
-	        if (logErrors) {
-	          try {
-	            returnedValue = next(action);
-	          } catch (e) {
-	            logEntry.error = errorTransformer(e);
-	          }
-	        } else {
-	          returnedValue = next(action);
-	        }
-	
-	        logEntry.took = timer.now() - logEntry.started;
-	        logEntry.nextState = stateTransformer(getState());
-	
-	        printBuffer();
-	
-	        if (logEntry.error) throw logEntry.error;
-	        return returnedValue;
-	      };
-	    };
-	  };
-	}
-	
-	module.exports = createLogger;
-
-/***/ },
-/* 239 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = function () {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	  var action = arguments[1];
-	
-	  return state;
-	};
-
-/***/ },
-/* 240 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	module.exports = function () {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case 'LOGIN_USER_REQUEST':
-	      return _extends({}, state, {
-	        isRequesting: true
-	      });
-	      break;
-	
-	    case 'LOGIN_USER_SUCCESS':
-	      return _extends({}, state, {
-	        isRequesting: false,
-	        isError: false,
-	        logged_in: true,
-	        authData: action.payload
-	      });
-	      break;
-	
-	    case 'LOGIN_USER_FAILURE':
-	      return _extends({}, state, {
-	        isRequesting: false,
-	        isError: true,
-	        error: action.payload,
-	        logged_in: false
-	      });
-	      break;
-	
-	    case 'SET_USER_PROFILE':
-	      return _extends({}, state, action.payload);
-	
-	    default:
-	      return state;
-	  }
-	};
-
-/***/ },
-/* 241 */
-/***/ function(module, exports, __webpack_require__) {
-
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(242);
+	var content = __webpack_require__(237);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(244)(content, {});
+	var update = __webpack_require__(239)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -26119,10 +25831,10 @@
 	}
 
 /***/ },
-/* 242 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(243)();
+	exports = module.exports = __webpack_require__(238)();
 	// imports
 	
 	
@@ -26133,7 +25845,7 @@
 
 
 /***/ },
-/* 243 */
+/* 238 */
 /***/ function(module, exports) {
 
 	/*
@@ -26189,7 +25901,7 @@
 
 
 /***/ },
-/* 244 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -26414,60 +26126,20 @@
 
 
 /***/ },
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-	
-	// load the styles
-	var content = __webpack_require__(246);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(244)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./flexboxgrid.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./flexboxgrid.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 246 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(243)();
-	// imports
-	
-	
-	// module
-	exports.push([module.id, "/* Uncomment and set these variables to customize the grid. */\n\n.container-fluid {\n  margin-right: auto;\n  margin-left: auto;\n  padding-right: 2rem;\n  padding-left: 2rem;\n}\n\n.row {\n  box-sizing: border-box;\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: -webkit-box;\n  display: flex;\n  -webkit-flex: 0 1 auto;\n  -ms-flex: 0 1 auto;\n  -webkit-box-flex: 0;\n  flex: 0 1 auto;\n  -webkit-flex-direction: row;\n  -ms-flex-direction: row;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n  flex-direction: row;\n  -webkit-flex-wrap: wrap;\n  -ms-flex-wrap: wrap;\n  flex-wrap: wrap;\n  margin-right: -1rem;\n  margin-left: -1rem;\n}\n\n.row.reverse {\n  -webkit-flex-direction: row-reverse;\n  -ms-flex-direction: row-reverse;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: reverse;\n  flex-direction: row-reverse;\n}\n\n.col.reverse {\n  -webkit-flex-direction: column-reverse;\n  -ms-flex-direction: column-reverse;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: reverse;\n  flex-direction: column-reverse;\n}\n\n.col-xs,\n.col-xs-1,\n.col-xs-2,\n.col-xs-3,\n.col-xs-4,\n.col-xs-5,\n.col-xs-6,\n.col-xs-7,\n.col-xs-8,\n.col-xs-9,\n.col-xs-10,\n.col-xs-11,\n.col-xs-12 {\n  box-sizing: border-box;\n  -webkit-flex: 0 0 auto;\n  -ms-flex: 0 0 auto;\n  -webkit-box-flex: 0;\n  flex: 0 0 auto;\n  padding-right: 1rem;\n  padding-left: 1rem;\n}\n\n.col-xs {\n  -webkit-flex-grow: 1;\n  -ms-flex-positive: 1;\n  -webkit-box-flex: 1;\n  flex-grow: 1;\n  -ms-flex-preferred-size: 0;\n  -webkit-flex-basis: 0;\n  flex-basis: 0;\n  max-width: 100%;\n}\n\n.col-xs-1 {\n  -ms-flex-preferred-size: 8.333%;\n  -webkit-flex-basis: 8.333%;\n  flex-basis: 8.333%;\n  max-width: 8.333%;\n}\n\n.col-xs-2 {\n  -ms-flex-preferred-size: 16.667%;\n  -webkit-flex-basis: 16.667%;\n  flex-basis: 16.667%;\n  max-width: 16.667%;\n}\n\n.col-xs-3 {\n  -ms-flex-preferred-size: 25%;\n  -webkit-flex-basis: 25%;\n  flex-basis: 25%;\n  max-width: 25%;\n}\n\n.col-xs-4 {\n  -ms-flex-preferred-size: 33.333%;\n  -webkit-flex-basis: 33.333%;\n  flex-basis: 33.333%;\n  max-width: 33.333%;\n}\n\n.col-xs-5 {\n  -ms-flex-preferred-size: 41.667%;\n  -webkit-flex-basis: 41.667%;\n  flex-basis: 41.667%;\n  max-width: 41.667%;\n}\n\n.col-xs-6 {\n  -ms-flex-preferred-size: 50%;\n  -webkit-flex-basis: 50%;\n  flex-basis: 50%;\n  max-width: 50%;\n}\n\n.col-xs-7 {\n  -ms-flex-preferred-size: 58.333%;\n  -webkit-flex-basis: 58.333%;\n  flex-basis: 58.333%;\n  max-width: 58.333%;\n}\n\n.col-xs-8 {\n  -ms-flex-preferred-size: 66.667%;\n  -webkit-flex-basis: 66.667%;\n  flex-basis: 66.667%;\n  max-width: 66.667%;\n}\n\n.col-xs-9 {\n  -ms-flex-preferred-size: 75%;\n  -webkit-flex-basis: 75%;\n  flex-basis: 75%;\n  max-width: 75%;\n}\n\n.col-xs-10 {\n  -ms-flex-preferred-size: 83.333%;\n  -webkit-flex-basis: 83.333%;\n  flex-basis: 83.333%;\n  max-width: 83.333%;\n}\n\n.col-xs-11 {\n  -ms-flex-preferred-size: 91.667%;\n  -webkit-flex-basis: 91.667%;\n  flex-basis: 91.667%;\n  max-width: 91.667%;\n}\n\n.col-xs-12 {\n  -ms-flex-preferred-size: 100%;\n  -webkit-flex-basis: 100%;\n  flex-basis: 100%;\n  max-width: 100%;\n}\n\n.col-xs-offset-1 {\n  margin-left: 8.333%;\n}\n\n.col-xs-offset-2 {\n  margin-left: 16.667%;\n}\n\n.col-xs-offset-3 {\n  margin-left: 25%;\n}\n\n.col-xs-offset-4 {\n  margin-left: 33.333%;\n}\n\n.col-xs-offset-5 {\n  margin-left: 41.667%;\n}\n\n.col-xs-offset-6 {\n  margin-left: 50%;\n}\n\n.col-xs-offset-7 {\n  margin-left: 58.333%;\n}\n\n.col-xs-offset-8 {\n  margin-left: 66.667%;\n}\n\n.col-xs-offset-9 {\n  margin-left: 75%;\n}\n\n.col-xs-offset-10 {\n  margin-left: 83.333%;\n}\n\n.col-xs-offset-11 {\n  margin-left: 91.667%;\n}\n\n.start-xs {\n  -webkit-justify-content: flex-start;\n  -ms-flex-pack: start;\n  -webkit-box-pack: start;\n  justify-content: flex-start;\n  text-align: start;\n}\n\n.center-xs {\n  -webkit-justify-content: center;\n  -ms-flex-pack: center;\n  -webkit-box-pack: center;\n  justify-content: center;\n  text-align: center;\n}\n\n.end-xs {\n  -webkit-justify-content: flex-end;\n  -ms-flex-pack: end;\n  -webkit-box-pack: end;\n  justify-content: flex-end;\n  text-align: end;\n}\n\n.top-xs {\n  -webkit-align-items: flex-start;\n  -ms-flex-align: start;\n  -webkit-box-align: start;\n  align-items: flex-start;\n}\n\n.middle-xs {\n  -webkit-align-items: center;\n  -ms-flex-align: center;\n  -webkit-box-align: center;\n  align-items: center;\n}\n\n.bottom-xs {\n  -webkit-align-items: flex-end;\n  -ms-flex-align: end;\n  -webkit-box-align: end;\n  align-items: flex-end;\n}\n\n.around-xs {\n  -webkit-justify-content: space-around;\n  -ms-flex-pack: distribute;\n  justify-content: space-around;\n}\n\n.between-xs {\n  -webkit-justify-content: space-between;\n  -ms-flex-pack: justify;\n  -webkit-box-pack: justify;\n  justify-content: space-between;\n}\n\n.first-xs {\n  -webkit-order: -1;\n  -ms-flex-order: -1;\n  -webkit-box-ordinal-group: 0;\n  order: -1;\n}\n\n.last-xs {\n  -webkit-order: 1;\n  -ms-flex-order: 1;\n  -webkit-box-ordinal-group: 2;\n  order: 1;\n}\n\n@media only screen and (min-width: 48em) {\n  .container {\n    width: 46rem;\n  }\n\n  .col-sm,\n  .col-sm-1,\n  .col-sm-2,\n  .col-sm-3,\n  .col-sm-4,\n  .col-sm-5,\n  .col-sm-6,\n  .col-sm-7,\n  .col-sm-8,\n  .col-sm-9,\n  .col-sm-10,\n  .col-sm-11,\n  .col-sm-12 {\n    box-sizing: border-box;\n    -webkit-flex: 0 0 auto;\n    -ms-flex: 0 0 auto;\n    -webkit-box-flex: 0;\n    flex: 0 0 auto;\n    padding-right: 1rem;\n    padding-left: 1rem;\n  }\n\n  .col-sm {\n    -webkit-flex-grow: 1;\n    -ms-flex-positive: 1;\n    -webkit-box-flex: 1;\n    flex-grow: 1;\n    -ms-flex-preferred-size: 0;\n    -webkit-flex-basis: 0;\n    flex-basis: 0;\n    max-width: 100%;\n  }\n\n  .col-sm-1 {\n    -ms-flex-preferred-size: 8.333%;\n    -webkit-flex-basis: 8.333%;\n    flex-basis: 8.333%;\n    max-width: 8.333%;\n  }\n\n  .col-sm-2 {\n    -ms-flex-preferred-size: 16.667%;\n    -webkit-flex-basis: 16.667%;\n    flex-basis: 16.667%;\n    max-width: 16.667%;\n  }\n\n  .col-sm-3 {\n    -ms-flex-preferred-size: 25%;\n    -webkit-flex-basis: 25%;\n    flex-basis: 25%;\n    max-width: 25%;\n  }\n\n  .col-sm-4 {\n    -ms-flex-preferred-size: 33.333%;\n    -webkit-flex-basis: 33.333%;\n    flex-basis: 33.333%;\n    max-width: 33.333%;\n  }\n\n  .col-sm-5 {\n    -ms-flex-preferred-size: 41.667%;\n    -webkit-flex-basis: 41.667%;\n    flex-basis: 41.667%;\n    max-width: 41.667%;\n  }\n\n  .col-sm-6 {\n    -ms-flex-preferred-size: 50%;\n    -webkit-flex-basis: 50%;\n    flex-basis: 50%;\n    max-width: 50%;\n  }\n\n  .col-sm-7 {\n    -ms-flex-preferred-size: 58.333%;\n    -webkit-flex-basis: 58.333%;\n    flex-basis: 58.333%;\n    max-width: 58.333%;\n  }\n\n  .col-sm-8 {\n    -ms-flex-preferred-size: 66.667%;\n    -webkit-flex-basis: 66.667%;\n    flex-basis: 66.667%;\n    max-width: 66.667%;\n  }\n\n  .col-sm-9 {\n    -ms-flex-preferred-size: 75%;\n    -webkit-flex-basis: 75%;\n    flex-basis: 75%;\n    max-width: 75%;\n  }\n\n  .col-sm-10 {\n    -ms-flex-preferred-size: 83.333%;\n    -webkit-flex-basis: 83.333%;\n    flex-basis: 83.333%;\n    max-width: 83.333%;\n  }\n\n  .col-sm-11 {\n    -ms-flex-preferred-size: 91.667%;\n    -webkit-flex-basis: 91.667%;\n    flex-basis: 91.667%;\n    max-width: 91.667%;\n  }\n\n  .col-sm-12 {\n    -ms-flex-preferred-size: 100%;\n    -webkit-flex-basis: 100%;\n    flex-basis: 100%;\n    max-width: 100%;\n  }\n\n  .col-sm-offset-1 {\n    margin-left: 8.333%;\n  }\n\n  .col-sm-offset-2 {\n    margin-left: 16.667%;\n  }\n\n  .col-sm-offset-3 {\n    margin-left: 25%;\n  }\n\n  .col-sm-offset-4 {\n    margin-left: 33.333%;\n  }\n\n  .col-sm-offset-5 {\n    margin-left: 41.667%;\n  }\n\n  .col-sm-offset-6 {\n    margin-left: 50%;\n  }\n\n  .col-sm-offset-7 {\n    margin-left: 58.333%;\n  }\n\n  .col-sm-offset-8 {\n    margin-left: 66.667%;\n  }\n\n  .col-sm-offset-9 {\n    margin-left: 75%;\n  }\n\n  .col-sm-offset-10 {\n    margin-left: 83.333%;\n  }\n\n  .col-sm-offset-11 {\n    margin-left: 91.667%;\n  }\n\n  .start-sm {\n    -webkit-justify-content: flex-start;\n    -ms-flex-pack: start;\n    -webkit-box-pack: start;\n    justify-content: flex-start;\n    text-align: start;\n  }\n\n  .center-sm {\n    -webkit-justify-content: center;\n    -ms-flex-pack: center;\n    -webkit-box-pack: center;\n    justify-content: center;\n    text-align: center;\n  }\n\n  .end-sm {\n    -webkit-justify-content: flex-end;\n    -ms-flex-pack: end;\n    -webkit-box-pack: end;\n    justify-content: flex-end;\n    text-align: end;\n  }\n\n  .top-sm {\n    -webkit-align-items: flex-start;\n    -ms-flex-align: start;\n    -webkit-box-align: start;\n    align-items: flex-start;\n  }\n\n  .middle-sm {\n    -webkit-align-items: center;\n    -ms-flex-align: center;\n    -webkit-box-align: center;\n    align-items: center;\n  }\n\n  .bottom-sm {\n    -webkit-align-items: flex-end;\n    -ms-flex-align: end;\n    -webkit-box-align: end;\n    align-items: flex-end;\n  }\n\n  .around-sm {\n    -webkit-justify-content: space-around;\n    -ms-flex-pack: distribute;\n    justify-content: space-around;\n  }\n\n  .between-sm {\n    -webkit-justify-content: space-between;\n    -ms-flex-pack: justify;\n    -webkit-box-pack: justify;\n    justify-content: space-between;\n  }\n\n  .first-sm {\n    -webkit-order: -1;\n    -ms-flex-order: -1;\n    -webkit-box-ordinal-group: 0;\n    order: -1;\n  }\n\n  .last-sm {\n    -webkit-order: 1;\n    -ms-flex-order: 1;\n    -webkit-box-ordinal-group: 2;\n    order: 1;\n  }\n}\n\n@media only screen and (min-width: 62em) {\n  .container {\n    width: 61rem;\n  }\n\n  .col-md,\n  .col-md-1,\n  .col-md-2,\n  .col-md-3,\n  .col-md-4,\n  .col-md-5,\n  .col-md-6,\n  .col-md-7,\n  .col-md-8,\n  .col-md-9,\n  .col-md-10,\n  .col-md-11,\n  .col-md-12 {\n    box-sizing: border-box;\n    -webkit-flex: 0 0 auto;\n    -ms-flex: 0 0 auto;\n    -webkit-box-flex: 0;\n    flex: 0 0 auto;\n    padding-right: 1rem;\n    padding-left: 1rem;\n  }\n\n  .col-md {\n    -webkit-flex-grow: 1;\n    -ms-flex-positive: 1;\n    -webkit-box-flex: 1;\n    flex-grow: 1;\n    -ms-flex-preferred-size: 0;\n    -webkit-flex-basis: 0;\n    flex-basis: 0;\n    max-width: 100%;\n  }\n\n  .col-md-1 {\n    -ms-flex-preferred-size: 8.333%;\n    -webkit-flex-basis: 8.333%;\n    flex-basis: 8.333%;\n    max-width: 8.333%;\n  }\n\n  .col-md-2 {\n    -ms-flex-preferred-size: 16.667%;\n    -webkit-flex-basis: 16.667%;\n    flex-basis: 16.667%;\n    max-width: 16.667%;\n  }\n\n  .col-md-3 {\n    -ms-flex-preferred-size: 25%;\n    -webkit-flex-basis: 25%;\n    flex-basis: 25%;\n    max-width: 25%;\n  }\n\n  .col-md-4 {\n    -ms-flex-preferred-size: 33.333%;\n    -webkit-flex-basis: 33.333%;\n    flex-basis: 33.333%;\n    max-width: 33.333%;\n  }\n\n  .col-md-5 {\n    -ms-flex-preferred-size: 41.667%;\n    -webkit-flex-basis: 41.667%;\n    flex-basis: 41.667%;\n    max-width: 41.667%;\n  }\n\n  .col-md-6 {\n    -ms-flex-preferred-size: 50%;\n    -webkit-flex-basis: 50%;\n    flex-basis: 50%;\n    max-width: 50%;\n  }\n\n  .col-md-7 {\n    -ms-flex-preferred-size: 58.333%;\n    -webkit-flex-basis: 58.333%;\n    flex-basis: 58.333%;\n    max-width: 58.333%;\n  }\n\n  .col-md-8 {\n    -ms-flex-preferred-size: 66.667%;\n    -webkit-flex-basis: 66.667%;\n    flex-basis: 66.667%;\n    max-width: 66.667%;\n  }\n\n  .col-md-9 {\n    -ms-flex-preferred-size: 75%;\n    -webkit-flex-basis: 75%;\n    flex-basis: 75%;\n    max-width: 75%;\n  }\n\n  .col-md-10 {\n    -ms-flex-preferred-size: 83.333%;\n    -webkit-flex-basis: 83.333%;\n    flex-basis: 83.333%;\n    max-width: 83.333%;\n  }\n\n  .col-md-11 {\n    -ms-flex-preferred-size: 91.667%;\n    -webkit-flex-basis: 91.667%;\n    flex-basis: 91.667%;\n    max-width: 91.667%;\n  }\n\n  .col-md-12 {\n    -ms-flex-preferred-size: 100%;\n    -webkit-flex-basis: 100%;\n    flex-basis: 100%;\n    max-width: 100%;\n  }\n\n  .col-md-offset-1 {\n    margin-left: 8.333%;\n  }\n\n  .col-md-offset-2 {\n    margin-left: 16.667%;\n  }\n\n  .col-md-offset-3 {\n    margin-left: 25%;\n  }\n\n  .col-md-offset-4 {\n    margin-left: 33.333%;\n  }\n\n  .col-md-offset-5 {\n    margin-left: 41.667%;\n  }\n\n  .col-md-offset-6 {\n    margin-left: 50%;\n  }\n\n  .col-md-offset-7 {\n    margin-left: 58.333%;\n  }\n\n  .col-md-offset-8 {\n    margin-left: 66.667%;\n  }\n\n  .col-md-offset-9 {\n    margin-left: 75%;\n  }\n\n  .col-md-offset-10 {\n    margin-left: 83.333%;\n  }\n\n  .col-md-offset-11 {\n    margin-left: 91.667%;\n  }\n\n  .start-md {\n    -webkit-justify-content: flex-start;\n    -ms-flex-pack: start;\n    -webkit-box-pack: start;\n    justify-content: flex-start;\n    text-align: start;\n  }\n\n  .center-md {\n    -webkit-justify-content: center;\n    -ms-flex-pack: center;\n    -webkit-box-pack: center;\n    justify-content: center;\n    text-align: center;\n  }\n\n  .end-md {\n    -webkit-justify-content: flex-end;\n    -ms-flex-pack: end;\n    -webkit-box-pack: end;\n    justify-content: flex-end;\n    text-align: end;\n  }\n\n  .top-md {\n    -webkit-align-items: flex-start;\n    -ms-flex-align: start;\n    -webkit-box-align: start;\n    align-items: flex-start;\n  }\n\n  .middle-md {\n    -webkit-align-items: center;\n    -ms-flex-align: center;\n    -webkit-box-align: center;\n    align-items: center;\n  }\n\n  .bottom-md {\n    -webkit-align-items: flex-end;\n    -ms-flex-align: end;\n    -webkit-box-align: end;\n    align-items: flex-end;\n  }\n\n  .around-md {\n    -webkit-justify-content: space-around;\n    -ms-flex-pack: distribute;\n    justify-content: space-around;\n  }\n\n  .between-md {\n    -webkit-justify-content: space-between;\n    -ms-flex-pack: justify;\n    -webkit-box-pack: justify;\n    justify-content: space-between;\n  }\n\n  .first-md {\n    -webkit-order: -1;\n    -ms-flex-order: -1;\n    -webkit-box-ordinal-group: 0;\n    order: -1;\n  }\n\n  .last-md {\n    -webkit-order: 1;\n    -ms-flex-order: 1;\n    -webkit-box-ordinal-group: 2;\n    order: 1;\n  }\n}\n\n@media only screen and (min-width: 75em) {\n  .container {\n    width: 71rem;\n  }\n\n  .col-lg,\n  .col-lg-1,\n  .col-lg-2,\n  .col-lg-3,\n  .col-lg-4,\n  .col-lg-5,\n  .col-lg-6,\n  .col-lg-7,\n  .col-lg-8,\n  .col-lg-9,\n  .col-lg-10,\n  .col-lg-11,\n  .col-lg-12 {\n    box-sizing: border-box;\n    -webkit-flex: 0 0 auto;\n    -ms-flex: 0 0 auto;\n    -webkit-box-flex: 0;\n    flex: 0 0 auto;\n    padding-right: 1rem;\n    padding-left: 1rem;\n  }\n\n  .col-lg {\n    -webkit-flex-grow: 1;\n    -ms-flex-positive: 1;\n    -webkit-box-flex: 1;\n    flex-grow: 1;\n    -ms-flex-preferred-size: 0;\n    -webkit-flex-basis: 0;\n    flex-basis: 0;\n    max-width: 100%;\n  }\n\n  .col-lg-1 {\n    -ms-flex-preferred-size: 8.333%;\n    -webkit-flex-basis: 8.333%;\n    flex-basis: 8.333%;\n    max-width: 8.333%;\n  }\n\n  .col-lg-2 {\n    -ms-flex-preferred-size: 16.667%;\n    -webkit-flex-basis: 16.667%;\n    flex-basis: 16.667%;\n    max-width: 16.667%;\n  }\n\n  .col-lg-3 {\n    -ms-flex-preferred-size: 25%;\n    -webkit-flex-basis: 25%;\n    flex-basis: 25%;\n    max-width: 25%;\n  }\n\n  .col-lg-4 {\n    -ms-flex-preferred-size: 33.333%;\n    -webkit-flex-basis: 33.333%;\n    flex-basis: 33.333%;\n    max-width: 33.333%;\n  }\n\n  .col-lg-5 {\n    -ms-flex-preferred-size: 41.667%;\n    -webkit-flex-basis: 41.667%;\n    flex-basis: 41.667%;\n    max-width: 41.667%;\n  }\n\n  .col-lg-6 {\n    -ms-flex-preferred-size: 50%;\n    -webkit-flex-basis: 50%;\n    flex-basis: 50%;\n    max-width: 50%;\n  }\n\n  .col-lg-7 {\n    -ms-flex-preferred-size: 58.333%;\n    -webkit-flex-basis: 58.333%;\n    flex-basis: 58.333%;\n    max-width: 58.333%;\n  }\n\n  .col-lg-8 {\n    -ms-flex-preferred-size: 66.667%;\n    -webkit-flex-basis: 66.667%;\n    flex-basis: 66.667%;\n    max-width: 66.667%;\n  }\n\n  .col-lg-9 {\n    -ms-flex-preferred-size: 75%;\n    -webkit-flex-basis: 75%;\n    flex-basis: 75%;\n    max-width: 75%;\n  }\n\n  .col-lg-10 {\n    -ms-flex-preferred-size: 83.333%;\n    -webkit-flex-basis: 83.333%;\n    flex-basis: 83.333%;\n    max-width: 83.333%;\n  }\n\n  .col-lg-11 {\n    -ms-flex-preferred-size: 91.667%;\n    -webkit-flex-basis: 91.667%;\n    flex-basis: 91.667%;\n    max-width: 91.667%;\n  }\n\n  .col-lg-12 {\n    -ms-flex-preferred-size: 100%;\n    -webkit-flex-basis: 100%;\n    flex-basis: 100%;\n    max-width: 100%;\n  }\n\n  .col-lg-offset-1 {\n    margin-left: 8.333%;\n  }\n\n  .col-lg-offset-2 {\n    margin-left: 16.667%;\n  }\n\n  .col-lg-offset-3 {\n    margin-left: 25%;\n  }\n\n  .col-lg-offset-4 {\n    margin-left: 33.333%;\n  }\n\n  .col-lg-offset-5 {\n    margin-left: 41.667%;\n  }\n\n  .col-lg-offset-6 {\n    margin-left: 50%;\n  }\n\n  .col-lg-offset-7 {\n    margin-left: 58.333%;\n  }\n\n  .col-lg-offset-8 {\n    margin-left: 66.667%;\n  }\n\n  .col-lg-offset-9 {\n    margin-left: 75%;\n  }\n\n  .col-lg-offset-10 {\n    margin-left: 83.333%;\n  }\n\n  .col-lg-offset-11 {\n    margin-left: 91.667%;\n  }\n\n  .start-lg {\n    -webkit-justify-content: flex-start;\n    -ms-flex-pack: start;\n    -webkit-box-pack: start;\n    justify-content: flex-start;\n    text-align: start;\n  }\n\n  .center-lg {\n    -webkit-justify-content: center;\n    -ms-flex-pack: center;\n    -webkit-box-pack: center;\n    justify-content: center;\n    text-align: center;\n  }\n\n  .end-lg {\n    -webkit-justify-content: flex-end;\n    -ms-flex-pack: end;\n    -webkit-box-pack: end;\n    justify-content: flex-end;\n    text-align: end;\n  }\n\n  .top-lg {\n    -webkit-align-items: flex-start;\n    -ms-flex-align: start;\n    -webkit-box-align: start;\n    align-items: flex-start;\n  }\n\n  .middle-lg {\n    -webkit-align-items: center;\n    -ms-flex-align: center;\n    -webkit-box-align: center;\n    align-items: center;\n  }\n\n  .bottom-lg {\n    -webkit-align-items: flex-end;\n    -ms-flex-align: end;\n    -webkit-box-align: end;\n    align-items: flex-end;\n  }\n\n  .around-lg {\n    -webkit-justify-content: space-around;\n    -ms-flex-pack: distribute;\n    justify-content: space-around;\n  }\n\n  .between-lg {\n    -webkit-justify-content: space-between;\n    -ms-flex-pack: justify;\n    -webkit-box-pack: justify;\n    justify-content: space-between;\n  }\n\n  .first-lg {\n    -webkit-order: -1;\n    -ms-flex-order: -1;\n    -webkit-box-ordinal-group: 0;\n    order: -1;\n  }\n\n  .last-lg {\n    -webkit-order: 1;\n    -ms-flex-order: 1;\n    -webkit-box-ordinal-group: 2;\n    order: 1;\n  }\n}", ""]);
-	
-	// exports
-
-
-/***/ },
-/* 247 */
+/* 240 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"white":"#fff","gray":"#292929","openSans":"'Open Sans'"};
 
 /***/ },
-/* 248 */
+/* 241 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 249 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26475,7 +26147,7 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(160).Link;
 	
-	var Header = __webpack_require__(250);
+	var Header = __webpack_require__(243);
 	
 	var HomeContainer = React.createClass({
 	  displayName: 'HomeContainer',
@@ -26505,7 +26177,7 @@
 	module.exports = HomeContainer;
 
 /***/ },
-/* 250 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26513,10 +26185,10 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(160).Link;
 	
-	var Navigation = __webpack_require__(251);
-	var LogoBracket = __webpack_require__(280);
+	var Navigation = __webpack_require__(244);
+	var LogoBracket = __webpack_require__(273);
 	
-	var styles = __webpack_require__(282);
+	var styles = __webpack_require__(275);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26542,19 +26214,19 @@
 	module.exports = Header;
 
 /***/ },
-/* 251 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(160).Link;
-	var Transition = __webpack_require__(252);
+	var Transition = __webpack_require__(245);
 	
-	var Login = __webpack_require__(259);
+	var Login = __webpack_require__(252);
 	
-	var styles = __webpack_require__(278);
-	var transitions = __webpack_require__(279);
+	var styles = __webpack_require__(271);
+	var transitions = __webpack_require__(272);
 	
 	var Navigation = React.createClass({
 	  displayName: 'Navigation',
@@ -26611,13 +26283,13 @@
 	module.exports = Navigation;
 
 /***/ },
-/* 252 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(253);
+	module.exports = __webpack_require__(246);
 
 /***/ },
-/* 253 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26638,8 +26310,8 @@
 	
 	var assign = __webpack_require__(39);
 	
-	var ReactTransitionGroup = __webpack_require__(254);
-	var ReactCSSTransitionGroupChild = __webpack_require__(256);
+	var ReactTransitionGroup = __webpack_require__(247);
+	var ReactCSSTransitionGroupChild = __webpack_require__(249);
 	
 	function createTransitionTimeoutPropValidator(transitionType) {
 	  var timeoutPropName = 'transition' + transitionType + 'Timeout';
@@ -26705,7 +26377,7 @@
 	module.exports = ReactCSSTransitionGroup;
 
 /***/ },
-/* 254 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26722,7 +26394,7 @@
 	'use strict';
 	
 	var React = __webpack_require__(2);
-	var ReactTransitionChildMapping = __webpack_require__(255);
+	var ReactTransitionChildMapping = __webpack_require__(248);
 	
 	var assign = __webpack_require__(39);
 	var emptyFunction = __webpack_require__(15);
@@ -26915,7 +26587,7 @@
 	module.exports = ReactTransitionGroup;
 
 /***/ },
-/* 255 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27018,7 +26690,7 @@
 	module.exports = ReactTransitionChildMapping;
 
 /***/ },
-/* 256 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27038,8 +26710,8 @@
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(3);
 	
-	var CSSCore = __webpack_require__(257);
-	var ReactTransitionEvents = __webpack_require__(258);
+	var CSSCore = __webpack_require__(250);
+	var ReactTransitionEvents = __webpack_require__(251);
 	
 	var onlyChild = __webpack_require__(156);
 	
@@ -27188,7 +26860,7 @@
 	module.exports = ReactCSSTransitionGroupChild;
 
 /***/ },
-/* 257 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27291,7 +26963,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 258 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27405,12 +27077,12 @@
 	module.exports = ReactTransitionEvents;
 
 /***/ },
-/* 259 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _login = __webpack_require__(260);
+	var _login = __webpack_require__(253);
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
@@ -27422,11 +27094,11 @@
 	
 	var connect = _require.connect;
 	
-	var InputEmail = __webpack_require__(262);
-	var InputPassword = __webpack_require__(274);
-	var Button = __webpack_require__(275);
+	var InputEmail = __webpack_require__(255);
+	var InputPassword = __webpack_require__(267);
+	var Button = __webpack_require__(268);
 	
-	var styles = __webpack_require__(277);
+	var styles = __webpack_require__(270);
 	
 	var FormLogin = React.createClass({
 	  displayName: 'FormLogin',
@@ -27485,7 +27157,7 @@
 	})(FormLogin);
 
 /***/ },
-/* 260 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27502,9 +27174,12 @@
 	exports.setUserProfile = setUserProfile;
 	exports.requestUserLogin = requestUserLogin;
 	exports.getUserProfile = getUserProfile;
-	var Firebase = __webpack_require__(261);
+	var Firebase = __webpack_require__(254);
 	var ref = new Firebase('https://test-openbracket.firebaseio.com');
 	
+	var _require = __webpack_require__(160);
+	
+	var browserHistory = _require.browserHistory;
 	function loginUserRequest() {
 	  return {
 	    type: 'LOGIN_USER_REQUEST',
@@ -27563,6 +27238,7 @@
 	      password: user.password
 	    }).then(function (authData) {
 	      dispatch(loginUserSuccess(authData));
+	      browserHistory.push('/map');
 	      return authData.uid;
 	    }).then(function (uid) {
 	      return dispatch(getUserProfile(uid));
@@ -27584,7 +27260,7 @@
 	}
 
 /***/ },
-/* 261 */
+/* 254 */
 /***/ function(module, exports) {
 
 	/*! @license Firebase v2.4.0
@@ -27868,14 +27544,14 @@
 
 
 /***/ },
-/* 262 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createInputWithValidation = __webpack_require__(263);
+	var createInputWithValidation = __webpack_require__(256);
 	
-	var _require = __webpack_require__(273);
+	var _require = __webpack_require__(266);
 	
 	var validateEmail = _require.validateEmail;
 	
@@ -27887,7 +27563,7 @@
 	}, validateEmail);
 
 /***/ },
-/* 263 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27896,8 +27572,8 @@
 	
 	var React = __webpack_require__(1);
 	
-	var InputCustom = __webpack_require__(264);
-	var Feedback = __webpack_require__(270);
+	var InputCustom = __webpack_require__(257);
+	var Feedback = __webpack_require__(263);
 	
 	/**
 	 * Creates an input component with validation.
@@ -27972,17 +27648,17 @@
 	};
 
 /***/ },
-/* 264 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var Label = __webpack_require__(265);
-	var Input = __webpack_require__(267);
+	var Label = __webpack_require__(258);
+	var Input = __webpack_require__(260);
 	
-	var styles = __webpack_require__(269);
+	var styles = __webpack_require__(262);
 	
 	var InputCustom = React.createClass({
 	  displayName: 'InputCustom',
@@ -28006,14 +27682,14 @@
 	module.exports = InputCustom;
 
 /***/ },
-/* 265 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(266);
+	var styles = __webpack_require__(259);
 	
 	var Label = React.createClass({
 	  displayName: 'Label',
@@ -28030,20 +27706,20 @@
 	module.exports = Label;
 
 /***/ },
-/* 266 */
+/* 259 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 267 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(268);
+	var styles = __webpack_require__(261);
 	
 	var Input = React.createClass({
 	  displayName: 'Input',
@@ -28104,21 +27780,21 @@
 	module.exports = Input;
 
 /***/ },
-/* 268 */
+/* 261 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"grayMedium":"#333333","tealLight":"#abc2c1","disabled":"input__disabled___3CqTr"};
 
 /***/ },
-/* 269 */
+/* 262 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"white":"#fff","green":"#53BDBA","grayMedium":"#333333","teal":"#50afad","tealLight":"#abc2c1","openSans":"'Open Sans'","input":"input-custom__input___1SMcg"};
 
 /***/ },
-/* 270 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28126,9 +27802,9 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(1);
-	var classNames = __webpack_require__(271);
+	var classNames = __webpack_require__(264);
 	
-	var styles = __webpack_require__(272);
+	var styles = __webpack_require__(265);
 	
 	/**
 	 * Component that provides feedback to the user.
@@ -28145,23 +27821,31 @@
 	    return {
 	      isError: false,
 	      isVisible: false,
+	      placement: 'below',
 	      message: 'Hi! I\'m a message!'
 	    };
 	  },
 	  propTypes: {
 	    isError: React.PropTypes.bool,
 	    isVisible: React.PropTypes.bool,
+	    placement: React.PropTypes.string,
 	    message: React.PropTypes.string.isRequired
 	  },
 	  render: function render() {
 	    var _classNames;
 	
-	    var classes = classNames(styles.feedback, styles.left, (_classNames = {}, _defineProperty(_classNames, styles.error, this.props.isError), _defineProperty(_classNames, styles.hidden, !this.props.isVisible), _defineProperty(_classNames, styles.visible, this.props.isVisible), _classNames));
+	    var _props = this.props;
+	    var message = _props.message;
+	    var isError = _props.isError;
+	    var isVisible = _props.isVisible;
+	    var placement = _props.placement;
+	
+	    var feedbackStyles = classNames(styles.feedback, (_classNames = {}, _defineProperty(_classNames, styles.left, placement === 'left'), _defineProperty(_classNames, styles.right, placement === 'right'), _defineProperty(_classNames, styles.above, placement === 'above'), _defineProperty(_classNames, styles.below, placement === 'below'), _defineProperty(_classNames, styles.error, isError), _defineProperty(_classNames, styles.hidden, !isVisible), _defineProperty(_classNames, styles.visible, isVisible), _classNames));
 	
 	    return React.createElement(
 	      'span',
-	      { className: classes },
-	      this.props.message
+	      { className: feedbackStyles },
+	      message
 	    );
 	  }
 	});
@@ -28169,7 +27853,7 @@
 	module.exports = Feedback;
 
 /***/ },
-/* 271 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -28223,14 +27907,14 @@
 
 
 /***/ },
-/* 272 */
+/* 265 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"tealLight":"#abc2c1","errorRed":"#A01739","feedback":"feedback__feedback___24-in","bottom":"feedback__bottom___qusGH","left":"feedback__left___1Kk9_","error":"feedback__error___3jzmr","visible":"feedback__visible___fieGd","hidden":"feedback__hidden___2AWQr"};
+	module.exports = {"tealLight":"#abc2c1","errorRed":"#A01739","feedback":"feedback__feedback___24-in","above":"feedback__above___1-QCn","below":"feedback__below___2NbbG","right":"feedback__right___3iEyB","left":"feedback__left___1Kk9_","error":"feedback__error___3jzmr","visible":"feedback__visible___fieGd","hidden":"feedback__hidden___2AWQr"};
 
 /***/ },
-/* 273 */
+/* 266 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -28249,22 +27933,25 @@
 	
 	var validateUsername = validate(/^[a-zA-Z0-9_]{3,18}$/);
 	
+	var validatePostalcode = validate(/^[0-9]{3,18}$/);
+	
 	module.exports = {
 	  validateEmail: validateEmail,
 	  validatePassword: validatePassword,
 	  validateName: validateName,
-	  validateUsername: validateUsername
+	  validateUsername: validateUsername,
+	  validatePostalcode: validatePostalcode
 	};
 
 /***/ },
-/* 274 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createInputWithValidation = __webpack_require__(263);
+	var createInputWithValidation = __webpack_require__(256);
 	
-	var _require = __webpack_require__(273);
+	var _require = __webpack_require__(266);
 	
 	var validatePassword = _require.validatePassword;
 	
@@ -28274,14 +27961,14 @@
 	}, validatePassword);
 
 /***/ },
-/* 275 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(276);
+	var styles = __webpack_require__(269);
 	
 	var Button = React.createClass({
 	  displayName: 'Button',
@@ -28305,42 +27992,42 @@
 	module.exports = Button;
 
 /***/ },
-/* 276 */
+/* 269 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"button":"button__button___lmpwR","medium":"button__medium___BLI7l","small":"button__small___35LKs"};
 
 /***/ },
-/* 277 */
+/* 270 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"login":"form-login__login___JGlTK"};
 
 /***/ },
-/* 278 */
+/* 271 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"gray":"#292929","green":"#53BDBA","openSans":"'Open Sans'","navigation":"navigation__navigation___3HY9m","hidden":"navigation__hidden___16Br8"};
 
 /***/ },
-/* 279 */
+/* 272 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"enter":"transitions__enter___fDjhL","enterActive":"transitions__enterActive___2b5NO","leave":"transitions__leave___3Hz9Z","leaveActive":"transitions__leaveActive___17LGo"};
 
 /***/ },
-/* 280 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	
-	var styles = __webpack_require__(281);
+	var styles = __webpack_require__(274);
 	
 	var LogoBracket = React.createClass({
 	  displayName: 'LogoBracket',
@@ -28366,21 +28053,21 @@
 	module.exports = LogoBracket;
 
 /***/ },
-/* 281 */
+/* 274 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"bracket":"logo-bracket__bracket___BoE48","name":"logo-bracket__name___3A5m3"};
 
 /***/ },
-/* 282 */
+/* 275 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 	module.exports = {"white":"#fff","pink":"#DF345E","museo":"'museo_slab500'","header":"header__header___2m9dq","logged-in":"header__logged-in___1lUh-","h1":"header__h1___sw9yB","link":"header__link___jgkK5"};
 
 /***/ },
-/* 283 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28391,7 +28078,11 @@
 	
 	var connect = _require.connect;
 	
-	var SignUpForm = __webpack_require__(284);
+	var _require2 = __webpack_require__(160);
+	
+	var browserHistory = _require2.browserHistory;
+	
+	var SignUpForm = __webpack_require__(277);
 	
 	var SignUpContainer = React.createClass({
 	  displayName: 'SignUpContainer',
@@ -28425,7 +28116,7 @@
 	module.exports = connect(null, mapDispatchToProps)(SignUpContainer);
 
 /***/ },
-/* 284 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28440,13 +28131,13 @@
 	
 	var connect = _require.connect;
 	
-	var styles = __webpack_require__(285);
+	var styles = __webpack_require__(278);
 	
 	// COMPONENTS
-	var InputEmail = __webpack_require__(262);
-	var InputUsername = __webpack_require__(286);
-	var InputName = __webpack_require__(287);
-	var createCheckboxListWithValidation = __webpack_require__(288);
+	var InputEmail = __webpack_require__(255);
+	var InputUsername = __webpack_require__(279);
+	var InputName = __webpack_require__(280);
+	var createCheckboxListWithValidation = __webpack_require__(281);
 	var InputCheckboxList = createCheckboxListWithValidation({}, {
 	  checkboxes: [{
 	    id: 'social',
@@ -28462,16 +28153,16 @@
 	    label: 'Networking'
 	  }]
 	});
-	var createCheckboxWithValidation = __webpack_require__(291);
+	var createCheckboxWithValidation = __webpack_require__(286);
 	var InputCheckbox = createCheckboxWithValidation({}, {
 	  name: 'conduct',
 	  isChecked: true,
 	  value: 'conduct',
 	  label: 'I agree to the Code of Awesome'
 	});
-	var InputPassword = __webpack_require__(274);
-	// var InputLocation = require('../input-location/input-location.js');
-	var Button = __webpack_require__(275);
+	var InputPassword = __webpack_require__(267);
+	var InputLocation = __webpack_require__(287);
+	var Button = __webpack_require__(268);
 	
 	var FormSignUp = React.createClass({
 	  displayName: 'FormSignUp',
@@ -28508,7 +28199,7 @@
 	  render: function render() {
 	    return React.createElement(
 	      'form',
-	      { className: 'ob-signup-form', noValidate: true },
+	      { className: styles.form, noValidate: true },
 	      React.createElement(
 	        'h2',
 	        null,
@@ -28535,10 +28226,20 @@
 	          React.createElement(
 	            'h2',
 	            null,
+	            'Where are you located?'
+	          ),
+	          React.createElement(InputLocation, { ref: 'location' })
+	        ),
+	        React.createElement(
+	          'fieldset',
+	          null,
+	          React.createElement(
+	            'h2',
+	            null,
 	            'What opportunities are you looking for?'
 	          ),
 	          React.createElement(InputCheckboxList, {
-	            limit: 1
+	            ref: 'opportunities'
 	          })
 	        ),
 	        React.createElement(
@@ -28564,20 +28265,21 @@
 	module.exports = FormSignUp;
 
 /***/ },
-/* 285 */
+/* 278 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+	module.exports = {"form":"form-sign-up__form___QEb8p"};
 
 /***/ },
-/* 286 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createInputWithValidation = __webpack_require__(263);
+	var createInputWithValidation = __webpack_require__(256);
 	
-	var _require = __webpack_require__(273);
+	var _require = __webpack_require__(266);
 	
 	var validateUsername = _require.validateUsername;
 	
@@ -28589,14 +28291,14 @@
 	}, validateUsername);
 
 /***/ },
-/* 287 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createInputWithValidation = __webpack_require__(263);
+	var createInputWithValidation = __webpack_require__(256);
 	
-	var _require = __webpack_require__(273);
+	var _require = __webpack_require__(266);
 	
 	var validateName = _require.validateName;
 	
@@ -28608,7 +28310,7 @@
 	}, validateName);
 
 /***/ },
-/* 288 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28617,8 +28319,8 @@
 	
 	var React = __webpack_require__(1);
 	
-	var InputCheckboxList = __webpack_require__(289);
-	var Feedback = __webpack_require__(270);
+	var InputCheckboxList = __webpack_require__(282);
+	var Feedback = __webpack_require__(263);
 	
 	module.exports = function createCheckboxWithValidation(initialState, defaultProps) {
 	  return React.createClass({
@@ -28629,7 +28331,11 @@
 	      }, initialState);
 	    },
 	    getDefaultProps: function getDefaultProps() {
-	      return defaultProps;
+	      return _extends({}, defaultProps, {
+	        message: 'Select at least one',
+	        error: 'You must select at least one option',
+	        limit: 1
+	      });
 	    },
 	    propTypes: {
 	      checklist: React.PropTypes.array
@@ -28641,9 +28347,7 @@
 	        return checkbox.name;
 	      });
 	
-	      var isValid = checked.length;
-	
-	      console.log('CHECKLIST: ', this.inputs, checked, isValid);
+	      var isValid = checked.length >= this.props.limit;
 	
 	      if (isValid) {
 	        this.setState({
@@ -28693,15 +28397,21 @@
 	};
 
 /***/ },
-/* 289 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
+	var _inputCheckboxList = __webpack_require__(283);
+	
+	var _inputCheckboxList2 = _interopRequireDefault(_inputCheckboxList);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	var React = __webpack_require__(1);
-	var InputCheckbox = __webpack_require__(290);
+	var InputCheckbox = __webpack_require__(284);
 	
 	var CheckboxList = React.createClass({
 	  displayName: 'CheckboxList',
@@ -28719,7 +28429,7 @@
 	
 	    return React.createElement(
 	      'ul',
-	      null,
+	      { className: _inputCheckboxList2.default.list },
 	      checkboxes.map(function (checkbox, index) {
 	        var key = 'checkbox_' + index;
 	
@@ -28739,26 +28449,42 @@
 	module.exports = CheckboxList;
 
 /***/ },
-/* 290 */
+/* 283 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"list":"input-checkbox-list__list___MrK9Y"};
+
+/***/ },
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
+	var _inputCheckbox = __webpack_require__(285);
+	
+	var _inputCheckbox2 = _interopRequireDefault(_inputCheckbox);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
 	var React = __webpack_require__(1);
-	var classNames = __webpack_require__(271);
+	var classnames = __webpack_require__(264);
 	
 	var InputCheckbox = React.createClass({
 	  displayName: 'InputCheckbox',
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      isChecked: true
+	      isChecked: false
 	    };
 	  },
 	  getDefaultProps: function getDefaultProps() {
 	    return {
 	      id: 'checkbox',
-	      isChecked: false
+	      isChecked: false,
+	      isDisabled: false
 	    };
 	  },
 	  propTypes: {
@@ -28781,24 +28507,29 @@
 	    }
 	  },
 	  render: function render() {
+	    var _classnames;
+	
 	    var _props = this.props;
 	    var name = _props.name;
 	    var id = _props.id;
 	    var value = _props.value;
 	    var label = _props.label;
-	    var checked = _props.checked;
+	    var isChecked = _props.isChecked;
+	    var isDisabled = _props.isDisabled;
 	    var returnValue = _props.returnValue;
+	
+	    var checkboxStyles = classnames(_inputCheckbox2.default.checkbox, (_classnames = {}, _defineProperty(_classnames, _inputCheckbox2.default.selected, !isDisabled && this.state.isChecked), _defineProperty(_classnames, _inputCheckbox2.default.disabled, isDisabled), _classnames));
 	
 	    return React.createElement(
 	      'label',
-	      { htmlFor: id },
+	      { className: checkboxStyles },
 	      React.createElement('input', {
 	        type: 'checkbox',
 	        name: name,
 	        classID: id,
 	        ref: returnValue,
 	        value: value,
-	        defaultChecked: this.props.isChecked,
+	        defaultChecked: isChecked,
 	        onChange: this.handleOnChange }),
 	      label
 	    );
@@ -28808,7 +28539,14 @@
 	module.exports = InputCheckbox;
 
 /***/ },
-/* 291 */
+/* 285 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"tealLight":"#abc2c1","grayLight":"#F5F5F5","grayMedium":"#333333","green":"#53BDBA","errorRed":"#A01739","checkbox":"input-checkbox__checkbox___11org","selected":"input-checkbox__selected___1udlA","disabled":"input-checkbox__disabled___3s_1X"};
+
+/***/ },
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28817,8 +28555,8 @@
 	
 	var React = __webpack_require__(1);
 	
-	var InputCheckbox = __webpack_require__(290);
-	var Feedback = __webpack_require__(270);
+	var InputCheckbox = __webpack_require__(284);
+	var Feedback = __webpack_require__(263);
 	
 	module.exports = function createCheckboxWithValidation(initialState, defaultProps, validation) {
 	  return React.createClass({
@@ -28887,7 +28625,222 @@
 	};
 
 /***/ },
-/* 292 */
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _inputLocation = __webpack_require__(288);
+	
+	var _inputLocation2 = _interopRequireDefault(_inputLocation);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	var React = __webpack_require__(1);
+	var classNames = __webpack_require__(264);
+	var PostalCode = __webpack_require__(289);
+	var Geolocation = __webpack_require__(290);
+	var Feedback = __webpack_require__(263);
+	
+	var LocationFinder = React.createClass({
+	  displayName: 'LocationFinder',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      isVisible: true,
+	      isValid: false,
+	      isError: false,
+	      isPostalcodeDisabled: false,
+	      isGeolocationDisabled: false,
+	      location: null,
+	      message: 'You can edit where your pin appears on the next page'
+	    };
+	  },
+	  propTypes: {
+	    defaultValue: React.PropTypes.string
+	  },
+	  disableGeolocation: function disableGeolocation() {
+	    this.setState({
+	      isPostalcodeDisabled: false,
+	      isGeolocationDisabled: true
+	    });
+	  },
+	  disablePostalcode: function disablePostalcode() {
+	    this.setState({
+	      isPostalcodeDisabled: true,
+	      isGeolocationDisabled: false
+	    });
+	  },
+	  isValid: function isValid() {
+	    // var isValidLocation = !(_.isEmpty(this.state.userLocation));
+	    // console.log('isValidLocation', isValidLocation, this.state.userLocation);
+	    // if (!isValidLocation) {
+	    //   this.setState({
+	    //     isValid: false,
+	    //     isError: true,
+	    //     userLocation: {},
+	    //     errorMessage: 'You must provide a location'
+	    //   });
+	    // } else {
+	    //   this.setState({
+	    //     isValid: true,
+	    //     isError: false
+	    //   });
+	    // }
+	
+	    // this.props.onValidation('location', {
+	    //   isValid: isValidLocation,
+	    //   value: this.state.userLocation
+	    // });
+	  },
+	  render: function render() {
+	    var message = this.state.isError ? this.state.errorMessage : this.state.message;
+	
+	    var classes = classNames(_inputLocation2.default.between, _defineProperty({}, _inputLocation2.default.disabled, this.state.isGeolocationDisabled || this.state.isPostalcodeDisabled));
+	
+	    return React.createElement(
+	      'div',
+	      { className: _inputLocation2.default.location },
+	      React.createElement(Feedback, {
+	        placement: 'left',
+	        isVisible: this.state.isVisible,
+	        isError: this.state.isError,
+	        message: message }),
+	      React.createElement(PostalCode, {
+	        ref: 'postalcode',
+	        handleFocus: this.disableGeolocation,
+	        isDisabled: this.state.isPostalcodeDisabled,
+	        defaultValue: this.props.defaultValue }),
+	      React.createElement(
+	        'span',
+	        { className: classes },
+	        'or'
+	      ),
+	      React.createElement(Geolocation, {
+	        ref: 'geolocation',
+	        handleClick: this.disablePostalcode,
+	        isDisabled: this.state.isGeolocationDisabled })
+	    );
+	  }
+	});
+	
+	module.exports = LocationFinder;
+
+/***/ },
+/* 288 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"location":"input-location__location___1Echc","between":"input-location__between___3k6_g","disabled":"input-location__disabled___2kCYx"};
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var createInputWithValidation = __webpack_require__(256);
+	
+	var _require = __webpack_require__(266);
+	
+	var validatePostalcode = _require.validatePostalcode;
+	
+	module.exports = createInputWithValidation({}, {
+	  type: 'text',
+	  label: 'Postalcode',
+	  message: ' ',
+	  error: 'Must be a valid postalcode'
+	}, validatePostalcode);
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var React = __webpack_require__(1);
+	var classNames = __webpack_require__(264);
+	var Checkbox = __webpack_require__(284);
+	
+	var Geolocation = React.createClass({
+	  displayName: 'Geolocation',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      location: null,
+	      isDisabled: false
+	    };
+	  },
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      id: 'geolocation',
+	      name: 'geolocation',
+	      value: 'geolocation',
+	      text: 'Use current location',
+	      isDisabled: false
+	    };
+	  },
+	  propTypes: {
+	    text: React.PropTypes.string
+	  },
+	  geolocate: function geolocate() {
+	    var _this = this;
+	
+	    var isChecked = this.input.checked;
+	
+	    var setGeolocation = function setGeolocation(position) {
+	      console.log(position.coords.latitude, position.coords.longitude);
+	      _this.setState({
+	        location: {
+	          latitude: position.coords.latitude,
+	          longitude: position.coords.longitude
+	        },
+	        isDisabled: false
+	      });
+	    };
+	
+	    var disableGeolocation = function disableGeolocation(error) {
+	      _this.setState({
+	        location: null,
+	        isDisabled: true
+	      });
+	    };
+	
+	    if (isChecked) {
+	      navigator.geolocation.getCurrentPosition(setGeolocation, disableGeolocation);
+	    }
+	  },
+	  isValid: function isValid() {
+	    return {
+	      name: this.props.name || this.props.type,
+	      isValid: this.state.location,
+	      value: this.state.location
+	    };
+	  },
+	  render: function render() {
+	    var _this2 = this;
+	
+	    return React.createElement(Checkbox, _extends({}, this.props, {
+	      label: 'Use current location',
+	      isDisabled: this.props.isDisabled || this.state.isDisabled,
+	      returnValue: function returnValue(node) {
+	        if (node != null) {
+	          _this2.input = node;
+	        }
+	      },
+	      onChange: this.geolocate
+	    }));
+	  }
+	});
+	
+	module.exports = Geolocation;
+
+/***/ },
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28909,7 +28862,7 @@
 	module.exports = LocationContainer;
 
 /***/ },
-/* 293 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28931,7 +28884,7 @@
 	module.exports = MapContainer;
 
 /***/ },
-/* 294 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28951,6 +28904,309 @@
 	});
 	
 	module.exports = ProfileContainer;
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _require = __webpack_require__(226);
+	
+	var createStore = _require.createStore;
+	var combineReducers = _require.combineReducers;
+	var applyMiddleware = _require.applyMiddleware;
+	
+	var thunk = __webpack_require__(295);
+	var logger = __webpack_require__(296);
+	
+	var one = __webpack_require__(297);
+	var user = __webpack_require__(298);
+	
+	var reducers = combineReducers({
+	  one: one,
+	  user: user
+	});
+	
+	var createStoreWithMiddleWare = applyMiddleware(thunk, logger())(createStore);
+	
+	module.exports = createStoreWithMiddleWare(reducers);
+
+/***/ },
+/* 295 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	function thunkMiddleware(_ref) {
+	  var dispatch = _ref.dispatch;
+	  var getState = _ref.getState;
+	
+	  return function (next) {
+	    return function (action) {
+	      return typeof action === 'function' ? action(dispatch, getState) : next(action);
+	    };
+	  };
+	}
+	
+	module.exports = thunkMiddleware;
+
+/***/ },
+/* 296 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var repeat = function repeat(str, times) {
+	  return new Array(times + 1).join(str);
+	};
+	var pad = function pad(num, maxLength) {
+	  return repeat("0", maxLength - num.toString().length) + num;
+	};
+	var formatTime = function formatTime(time) {
+	  return "@ " + pad(time.getHours(), 2) + ":" + pad(time.getMinutes(), 2) + ":" + pad(time.getSeconds(), 2) + "." + pad(time.getMilliseconds(), 3);
+	};
+	
+	// Use the new performance api to get better precision if available
+	var timer = typeof performance !== "undefined" && typeof performance.now === "function" ? performance : Date;
+	
+	/**
+	 * Creates logger with followed options
+	 *
+	 * @namespace
+	 * @property {object} options - options for logger
+	 * @property {string} options.level - console[level]
+	 * @property {boolean} options.duration - print duration of each action?
+	 * @property {boolean} options.timestamp - print timestamp with each action?
+	 * @property {object} options.colors - custom colors
+	 * @property {object} options.logger - implementation of the `console` API
+	 * @property {boolean} options.logErrors - should errors in action execution be caught, logged, and re-thrown?
+	 * @property {boolean} options.collapsed - is group collapsed?
+	 * @property {boolean} options.predicate - condition which resolves logger behavior
+	 * @property {function} options.stateTransformer - transform state before print
+	 * @property {function} options.actionTransformer - transform action before print
+	 * @property {function} options.errorTransformer - transform error before print
+	 */
+	
+	function createLogger() {
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var _options$level = options.level;
+	  var level = _options$level === undefined ? "log" : _options$level;
+	  var _options$logger = options.logger;
+	  var logger = _options$logger === undefined ? console : _options$logger;
+	  var _options$logErrors = options.logErrors;
+	  var logErrors = _options$logErrors === undefined ? true : _options$logErrors;
+	  var collapsed = options.collapsed;
+	  var predicate = options.predicate;
+	  var _options$duration = options.duration;
+	  var duration = _options$duration === undefined ? false : _options$duration;
+	  var _options$timestamp = options.timestamp;
+	  var timestamp = _options$timestamp === undefined ? true : _options$timestamp;
+	  var transformer = options.transformer;
+	  var _options$stateTransfo = options.stateTransformer;
+	  var // deprecated
+	  stateTransformer = _options$stateTransfo === undefined ? function (state) {
+	    return state;
+	  } : _options$stateTransfo;
+	  var _options$actionTransf = options.actionTransformer;
+	  var actionTransformer = _options$actionTransf === undefined ? function (actn) {
+	    return actn;
+	  } : _options$actionTransf;
+	  var _options$errorTransfo = options.errorTransformer;
+	  var errorTransformer = _options$errorTransfo === undefined ? function (error) {
+	    return error;
+	  } : _options$errorTransfo;
+	  var _options$colors = options.colors;
+	  var colors = _options$colors === undefined ? {
+	    title: function title() {
+	      return "#000000";
+	    },
+	    prevState: function prevState() {
+	      return "#9E9E9E";
+	    },
+	    action: function action() {
+	      return "#03A9F4";
+	    },
+	    nextState: function nextState() {
+	      return "#4CAF50";
+	    },
+	    error: function error() {
+	      return "#F20404";
+	    }
+	  } : _options$colors;
+	
+	  // exit if console undefined
+	
+	  if (typeof logger === "undefined") {
+	    return function () {
+	      return function (next) {
+	        return function (action) {
+	          return next(action);
+	        };
+	      };
+	    };
+	  }
+	
+	  if (transformer) {
+	    console.error("Option 'transformer' is deprecated, use stateTransformer instead");
+	  }
+	
+	  var logBuffer = [];
+	  function printBuffer() {
+	    logBuffer.forEach(function (logEntry, key) {
+	      var started = logEntry.started;
+	      var startedTime = logEntry.startedTime;
+	      var action = logEntry.action;
+	      var prevState = logEntry.prevState;
+	      var error = logEntry.error;
+	      var took = logEntry.took;
+	      var nextState = logEntry.nextState;
+	
+	      var nextEntry = logBuffer[key + 1];
+	      if (nextEntry) {
+	        nextState = nextEntry.prevState;
+	        took = nextEntry.started - started;
+	      }
+	      // message
+	      var formattedAction = actionTransformer(action);
+	      var isCollapsed = typeof collapsed === "function" ? collapsed(function () {
+	        return nextState;
+	      }, action) : collapsed;
+	
+	      var formattedTime = formatTime(startedTime);
+	      var titleCSS = colors.title ? "color: " + colors.title(formattedAction) + ";" : null;
+	      var title = "action " + (timestamp ? formattedTime : "") + " " + formattedAction.type + " " + (duration ? "(in " + took.toFixed(2) + " ms)" : "");
+	
+	      // render
+	      try {
+	        if (isCollapsed) {
+	          if (colors.title) logger.groupCollapsed("%c " + title, titleCSS);else logger.groupCollapsed(title);
+	        } else {
+	          if (colors.title) logger.group("%c " + title, titleCSS);else logger.group(title);
+	        }
+	      } catch (e) {
+	        logger.log(title);
+	      }
+	
+	      if (colors.prevState) logger[level]("%c prev state", "color: " + colors.prevState(prevState) + "; font-weight: bold", prevState);else logger[level]("prev state", prevState);
+	
+	      if (colors.action) logger[level]("%c action", "color: " + colors.action(formattedAction) + "; font-weight: bold", formattedAction);else logger[level]("action", formattedAction);
+	
+	      if (error) {
+	        if (colors.error) logger[level]("%c error", "color: " + colors.error(error, prevState) + "; font-weight: bold", error);else logger[level]("error", error);
+	      }
+	
+	      if (colors.nextState) logger[level]("%c next state", "color: " + colors.nextState(nextState) + "; font-weight: bold", nextState);else logger[level]("next state", nextState);
+	
+	      try {
+	        logger.groupEnd();
+	      } catch (e) {
+	        logger.log("—— log end ——");
+	      }
+	    });
+	    logBuffer.length = 0;
+	  }
+	
+	  return function (_ref) {
+	    var getState = _ref.getState;
+	    return function (next) {
+	      return function (action) {
+	        // exit early if predicate function returns false
+	        if (typeof predicate === "function" && !predicate(getState, action)) {
+	          return next(action);
+	        }
+	
+	        var logEntry = {};
+	        logBuffer.push(logEntry);
+	
+	        logEntry.started = timer.now();
+	        logEntry.startedTime = new Date();
+	        logEntry.prevState = stateTransformer(getState());
+	        logEntry.action = action;
+	
+	        var returnedValue = undefined;
+	        if (logErrors) {
+	          try {
+	            returnedValue = next(action);
+	          } catch (e) {
+	            logEntry.error = errorTransformer(e);
+	          }
+	        } else {
+	          returnedValue = next(action);
+	        }
+	
+	        logEntry.took = timer.now() - logEntry.started;
+	        logEntry.nextState = stateTransformer(getState());
+	
+	        printBuffer();
+	
+	        if (logEntry.error) throw logEntry.error;
+	        return returnedValue;
+	      };
+	    };
+	  };
+	}
+	
+	module.exports = createLogger;
+
+/***/ },
+/* 297 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = function () {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var action = arguments[1];
+	
+	  return state;
+	};
+
+/***/ },
+/* 298 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	module.exports = function () {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case 'LOGIN_USER_REQUEST':
+	      return _extends({}, state, {
+	        isRequesting: true
+	      });
+	      break;
+	
+	    case 'LOGIN_USER_SUCCESS':
+	      return _extends({}, state, {
+	        isRequesting: false,
+	        isError: false,
+	        loggedIn: true,
+	        authData: action.payload
+	      });
+	      break;
+	
+	    case 'LOGIN_USER_FAILURE':
+	      return _extends({}, state, {
+	        authData: {},
+	        isRequesting: false,
+	        isError: true,
+	        error: action.payload,
+	        loggedIn: false
+	      });
+	      break;
+	
+	    case 'SET_USER_PROFILE':
+	      return _extends({}, state, action.payload);
+	
+	    default:
+	      return state;
+	  }
+	};
 
 /***/ }
 /******/ ]);

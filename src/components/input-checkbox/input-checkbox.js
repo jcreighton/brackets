@@ -1,16 +1,19 @@
 var React = require('react');
-var classNames = require('classnames');
+var classnames = require('classnames');
+
+import styles from './input-checkbox.css';
 
 var InputCheckbox = React.createClass({
   getInitialState: function() {
     return {
-      isChecked: true
+      isChecked: false
     }
   },
   getDefaultProps: function() {
     return {
       id: 'checkbox',
-      isChecked: false
+      isChecked: false,
+      isDisabled: false
     };
   },
   propTypes: {
@@ -33,17 +36,25 @@ var InputCheckbox = React.createClass({
     }
   },
   render: function() {
-    const { name, id, value, label, checked, returnValue } = this.props;
+    const { name, id, value, label, isChecked, isDisabled, returnValue } = this.props;
+
+    let checkboxStyles = classnames(
+      styles.checkbox,
+      {
+        [styles.selected]: !isDisabled && this.state.isChecked,
+        [styles.disabled]: isDisabled
+      }
+    );
 
     return (
-      <label htmlFor={id}>
+      <label className={checkboxStyles}>
         <input
           type="checkbox"
           name={name}
           classID={id}
           ref={returnValue}
           value={value}
-          defaultChecked={this.props.isChecked}
+          defaultChecked={isChecked}
           onChange={this.handleOnChange} />
           {label}
       </label>

@@ -5,25 +5,31 @@
   color: tealLight;
 }
 
-.bottom {
+.above {
 
 }
 
+.below {
+
+}
+
+.right {
+  flex: 0 0 100px;
+  order: 100;
+}
+
 .left {
-  position: relative;
-  top: 0;
-  left: 0;
-  display: inline-block;
+  flex: 0 0 100px;
 }
 
 .error {
   color: errorRed;
 }
 
-.left.visible {
+.visible {
   visibility: visible;
 }
 
-.left.hidden {
+.hidden {
   visibility: hidden;
 }

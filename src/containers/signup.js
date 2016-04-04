@@ -1,5 +1,6 @@
 var React = require('react');
 var { connect } = require('react-redux');
+var { browserHistory } = require('react-router');
 
 var SignUpForm = require('../components/form-sign-up/form-sign-up');
 

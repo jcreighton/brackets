@@ -1,5 +1,5 @@
 var createInputWithValidation = require('../input-with-validation/input-with-validation.js');
-var { validatePostalCode } = require('../../utils/validation.js');
+var { validatePostalcode } = require('../../utils/validation.js');
 
 module.exports = createInputWithValidation(
   {},
@@ -9,5 +9,5 @@ module.exports = createInputWithValidation(
     message: ' ',
     error: 'Must be a valid postalcode'
   },
-  validatePostalCode
+  validatePostalcode
 );
