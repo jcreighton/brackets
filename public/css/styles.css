@@ -96,7 +96,6 @@ input[type="checkbox"] {
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
   height: 40px;
   padding: 8px;
   font-family: 'Open Sans';
@@ -148,7 +147,6 @@ input[type="checkbox"] {
   border: 1px solid #53BDBA;
   text-transform: uppercase;
   text-align: center;
-  align-self: center;
 }
 
 .button__button___lmpwR:hover {
@@ -247,11 +245,43 @@ input[type="checkbox"] {
 .header__link___jgkK5:visited {
   color: #DF345E;
 }.form-sign-up__form___QEb8p {
-
+  display: flex;
 }
 
 .form-sign-up__form___QEb8p fieldset {
   border: none;
+}
+
+.form-sign-up__column___1dlhc {
+  display: inline-flex;
+  flex-flow: column nowrap;
+  flex: 0 0 650px;
+  margin-left: 50px;
+}
+
+.form-sign-up__column___1dlhc h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+}
+
+.form-sign-up__column___1dlhc:last-child {
+  margin-top: 86px;
+}
+
+.form-sign-up__conduct___rUOY4 {
+  width: 560px;
+}
+
+.form-sign-up__conduct___rUOY4 p {
+  font-size: 16px;
+  font-weight: 100;
+  letter-spacing: .6;
+}
+
+.form-sign-up__button___qA4FG {
+  margin-top: 48px;
 }.input-checkbox-list__list___MrK9Y {
   display: inline-flex;
   margin: 0;
@@ -274,7 +304,7 @@ input[type="checkbox"] {
   text-transform: uppercase;
   background-color: #333333;
   border: 1px solid #53BDBA;
-  padding: 20px 40px;
+  padding: 20px;
 }
 
 .input-checkbox__checkbox___11org input {
@@ -304,14 +334,13 @@ input[type="checkbox"] {
 .input-location__location___1Echc {
   display: flex;
   align-items: center;
-}
-
-.input-location__between___3k6_g {
-  margin: 0 30px;
+  justify-content: space-between;
 }
 
 .input-location__disabled___2kCYx {
   opacity: .2;
 }
-
+.input-geolocation__geolocation___LhvIA {
+  align-self: flex-end;
+}
 /*# sourceMappingURL=styles.css.map*/

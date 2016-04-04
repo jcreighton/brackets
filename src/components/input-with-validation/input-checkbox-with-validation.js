@@ -13,7 +13,9 @@ module.exports = function createCheckboxWithValidation(initialState, defaultProp
       }
     },
     getDefaultProps: function() {
-      return defaultProps;
+      return {
+        ...defaultProps
+      };
     },
     propTypes: {
       name: React.PropTypes.string,
@@ -46,10 +48,16 @@ module.exports = function createCheckboxWithValidation(initialState, defaultProp
     render: function() {
       const { message, error } = this.props;
       const { isError, isValid } = this.state;
-
+      console.log(message);
       return (
-        <div>
-          <Feedback {...this.props} {...this.state} isVisible={isError} message={isValid ? message : error} />
+        <div style={{display: 'flex'}}>
+          <Feedback
+            {...this.props}
+            {...this.state}
+            placement={'left'}
+            isVisible={isError}
+            message={isError ? error : message}
+          />
           <InputCheckbox
             {...this.props}
             returnValue={(node) => {

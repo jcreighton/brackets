@@ -11,6 +11,7 @@ var createCheckboxListWithValidation = require('../input-with-validation/input-c
 var InputCheckboxList = createCheckboxListWithValidation(
   {},
   {
+    isVisible: true,
     checkboxes: [
       {
         id: 'social',
@@ -34,9 +35,10 @@ var InputCheckbox = createCheckboxWithValidation(
   {},
   {
     name: 'conduct',
-    isChecked: true,
+    isChecked: false,
     value: 'conduct',
-    label: 'I agree to the Code of Awesome'
+    error: 'You must agree to the Code of Conduct',
+    label: 'I agree to the Code of Conduct'
   }
 );
 var InputPassword = require('../input-password/input-password.js');
@@ -72,8 +74,8 @@ var FormSignUp = React.createClass({
   render: function() {
     return (
       <form className={styles.form} noValidate>
-        <h2>Welcome! Let's get your account set up!</h2>
-        <div className="profile-information">
+        <div className={styles.column}>
+          <h2>Welcome! Let's get your account set up!</h2>
           <fieldset>
             <InputName ref="name" />
             <InputEmail ref="email" />
@@ -92,11 +94,16 @@ var FormSignUp = React.createClass({
               ref="opportunities"
             />
           </fieldset>
+        </div>
+        <div className={styles.column}>
           <fieldset>
-            <h3>Code of Awesome</h3>
+            <h3>Code of Conduct</h3>
+            <div className={styles.conduct}>
+              <p>Throwup on your pillow. Eat a plant, kill a hand ignore the squirrels, you'll never catch them anyway. Hate dog find empty spot in cupboard and sleep all day sit by the fire eat prawns daintily with a claw then lick paws clean wash down prawns with a lap of carnation milk then retire to the warmest spot on the couch to claw at the fabric before taking a catnap so spread kitty litter all over house but inspect anything brought into the house. Chirp at birds kitty loves pigs chase imaginary bugs, so knock over christmas tree, or need to chase tail. Scream at teh bath hide head under blanket so no one can see, for meowing non stop for food paw at beetle and eat it before it gets away. Put butt in owner's face paw at your fat belly and spot something, big eyes, big eyes, crouch, shake butt, prepare to pounce but eat a plant, kill a hand, yet chase dog then run away. Get video posted to internet for chasing red dot mark territory. Bathe private parts with tongue then lick owner's face.</p>
+            </div>
             <InputCheckbox ref="conduct" />
           </fieldset>
-          <Button onClick={this.validateForm}>Start making connections</Button>
+          <Button className={styles.button} onClick={this.validateForm}>Start making connections</Button>
           </div>
       </form>
     );

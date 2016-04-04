@@ -3,8 +3,6 @@ var React = require('react');
 var InputCustom = require('../input-custom/input-custom.js');
 var Feedback = require('../feedback/feedback.js');
 
-
-
 /**
  * Creates an input component with validation.
  * @prop initialState

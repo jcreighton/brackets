@@ -1,7 +1,39 @@
 .form {
-
+  display: flex;
 }
 
 .form fieldset {
   border: none;
+}
+
+.column {
+  display: inline-flex;
+  flex-flow: column nowrap;
+  flex: 0 0 650px;
+  margin-left: 50px;
+}
+
+.column h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+}
+
+.column:last-child {
+  margin-top: 86px;
+}
+
+.conduct {
+  width: 560px;
+}
+
+.conduct p {
+  font-size: 16px;
+  font-weight: 100;
+  letter-spacing: .6;
+}
+
+.button {
+  margin-top: 48px;
 }

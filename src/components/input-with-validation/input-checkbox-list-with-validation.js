@@ -15,7 +15,7 @@ module.exports = function createCheckboxWithValidation(initialState, defaultProp
     getDefaultProps: function() {
       return {
         ...defaultProps,
-        message: 'Select at least one',
+        message: 'Select at least one option',
         error: 'You must select at least one option',
         limit: 1
       };
@@ -49,14 +49,14 @@ module.exports = function createCheckboxWithValidation(initialState, defaultProp
       };
     },
     render: function() {
-      const { message, error } = this.props;
+      const { message, error, isVisible } = this.props;
       const { isError, isValid } = this.state;
 
       this.inputs = [];
 
       return (
-        <div>
-          <Feedback {...this.props} {...this.state} placement={'left'} isVisible={isError} message={isValid ? message : error} />
+        <div style={{display: 'flex'}}>
+          <Feedback {...this.props} {...this.state} placement={'left'} isVisible={isVisible || isValid} message={isError ? error : message} />
           <InputCheckboxList
             {...this.props}
             returnValue={(node) => {

@@ -1,6 +1,7 @@
 var React = require('react');
+import classnames from 'classnames';
 
-var styles = require('./button.css');
+import styles from './button.css';
 
 var Button = React.createClass({
   propTypes: {
@@ -11,8 +12,13 @@ var Button = React.createClass({
     this.props.onClick();
   },
   render: function() {
+    let buttonStyles = classnames(
+      styles.button,
+      this.props.className
+    );
+
     return (
-      <div className={styles.button} onClick={this.handleOnClick}>
+      <div className={buttonStyles} onClick={this.handleOnClick}>
         {this.props.children}
       </div>
     )

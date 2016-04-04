@@ -2,6 +2,8 @@ var React = require('react');
 var classNames = require('classnames');
 var Checkbox = require('../input-checkbox/input-checkbox.js');
 
+import styles from './input-geolocation.css';
+
 var Geolocation = React.createClass({
   getInitialState: function() {
     return {
@@ -14,12 +16,16 @@ var Geolocation = React.createClass({
       id: 'geolocation',
       name: 'geolocation',
       value: 'geolocation',
-      text: 'Use current location',
+      label: 'Current location',
       isDisabled: false
     };
   },
   propTypes: {
-    text: React.PropTypes.string
+    id: React.PropTypes.string,
+    name: React.PropTypes.string,
+    value: React.PropTypes.string,
+    label: React.PropTypes.string,
+    isDisabled: React.PropTypes.bool
   },
   geolocate: function() {
     let isChecked = this.input.checked;
@@ -55,18 +61,19 @@ var Geolocation = React.createClass({
   },
   render: function() {
     return (
-      <Checkbox
-        {...this.props}
-        label={'Use current location'}
-        isDisabled={this.props.isDisabled || this.state.isDisabled}
-        returnValue={(node) => {
-            if (node != null) {
-              this.input = node
+      <div className={styles.geolocation}>
+        <Checkbox
+          {...this.props}
+          isDisabled={this.props.isDisabled || this.state.isDisabled}
+          returnValue={(node) => {
+              if (node != null) {
+                this.input = node
+              }
             }
           }
-        }
-        onChange={this.geolocate}
-      />
+          onChange={this.geolocate}
+        />
+      </div>
     );
   }
 });

@@ -81,6 +81,7 @@ var LocationFinder = React.createClass({
         <span className={classes}>or</span>
         <Geolocation
           ref="geolocation"
+          className={styles.geolocation}
           handleClick={this.disablePostalcode}
           isDisabled={this.state.isGeolocationDisabled} />
       </div>

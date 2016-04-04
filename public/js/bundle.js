@@ -54,7 +54,7 @@
 	
 	var Provider = _require.Provider;
 	
-	var configureStore = __webpack_require__(294);
+	var configureStore = __webpack_require__(295);
 	
 	var renderTarget = document;
 	
@@ -19685,9 +19685,9 @@
 	var App = __webpack_require__(218);
 	var Home = __webpack_require__(242);
 	var SignUp = __webpack_require__(276);
-	var Location = __webpack_require__(291);
-	var UserMap = __webpack_require__(292);
-	var Profile = __webpack_require__(293);
+	var Location = __webpack_require__(292);
+	var UserMap = __webpack_require__(293);
+	var Profile = __webpack_require__(294);
 	
 	module.exports = React.createElement(
 	  Router,
@@ -27966,9 +27966,17 @@
 
 	'use strict';
 	
-	var React = __webpack_require__(1);
+	var _classnames = __webpack_require__(264);
 	
-	var styles = __webpack_require__(269);
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _button = __webpack_require__(269);
+	
+	var _button2 = _interopRequireDefault(_button);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var React = __webpack_require__(1);
 	
 	var Button = React.createClass({
 	  displayName: 'Button',
@@ -27981,9 +27989,11 @@
 	    this.props.onClick();
 	  },
 	  render: function render() {
+	    var buttonStyles = (0, _classnames2.default)(_button2.default.button, this.props.className);
+	
 	    return React.createElement(
 	      'div',
-	      { className: styles.button, onClick: this.handleOnClick },
+	      { className: buttonStyles, onClick: this.handleOnClick },
 	      this.props.children
 	    );
 	  }
@@ -28139,6 +28149,7 @@
 	var InputName = __webpack_require__(280);
 	var createCheckboxListWithValidation = __webpack_require__(281);
 	var InputCheckboxList = createCheckboxListWithValidation({}, {
+	  isVisible: true,
 	  checkboxes: [{
 	    id: 'social',
 	    name: 'social',
@@ -28156,9 +28167,10 @@
 	var createCheckboxWithValidation = __webpack_require__(286);
 	var InputCheckbox = createCheckboxWithValidation({}, {
 	  name: 'conduct',
-	  isChecked: true,
+	  isChecked: false,
 	  value: 'conduct',
-	  label: 'I agree to the Code of Awesome'
+	  error: 'You must agree to the Code of Conduct',
+	  label: 'I agree to the Code of Conduct'
 	});
 	var InputPassword = __webpack_require__(267);
 	var InputLocation = __webpack_require__(287);
@@ -28201,13 +28213,13 @@
 	      'form',
 	      { className: styles.form, noValidate: true },
 	      React.createElement(
-	        'h2',
-	        null,
-	        'Welcome! Let\'s get your account set up!'
-	      ),
-	      React.createElement(
 	        'div',
-	        { className: 'profile-information' },
+	        { className: styles.column },
+	        React.createElement(
+	          'h2',
+	          null,
+	          'Welcome! Let\'s get your account set up!'
+	        ),
 	        React.createElement(
 	          'fieldset',
 	          null,
@@ -28241,20 +28253,33 @@
 	          React.createElement(InputCheckboxList, {
 	            ref: 'opportunities'
 	          })
-	        ),
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: styles.column },
 	        React.createElement(
 	          'fieldset',
 	          null,
 	          React.createElement(
 	            'h3',
 	            null,
-	            'Code of Awesome'
+	            'Code of Conduct'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: styles.conduct },
+	            React.createElement(
+	              'p',
+	              null,
+	              'Throwup on your pillow. Eat a plant, kill a hand ignore the squirrels, you\'ll never catch them anyway. Hate dog find empty spot in cupboard and sleep all day sit by the fire eat prawns daintily with a claw then lick paws clean wash down prawns with a lap of carnation milk then retire to the warmest spot on the couch to claw at the fabric before taking a catnap so spread kitty litter all over house but inspect anything brought into the house. Chirp at birds kitty loves pigs chase imaginary bugs, so knock over christmas tree, or need to chase tail. Scream at teh bath hide head under blanket so no one can see, for meowing non stop for food paw at beetle and eat it before it gets away. Put butt in owner\'s face paw at your fat belly and spot something, big eyes, big eyes, crouch, shake butt, prepare to pounce but eat a plant, kill a hand, yet chase dog then run away. Get video posted to internet for chasing red dot mark territory. Bathe private parts with tongue then lick owner\'s face.'
+	            )
 	          ),
 	          React.createElement(InputCheckbox, { ref: 'conduct' })
 	        ),
 	        React.createElement(
 	          Button,
-	          { onClick: this.validateForm },
+	          { className: styles.button, onClick: this.validateForm },
 	          'Start making connections'
 	        )
 	      )
@@ -28269,7 +28294,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"form":"form-sign-up__form___QEb8p"};
+	module.exports = {"form":"form-sign-up__form___QEb8p","column":"form-sign-up__column___1dlhc","conduct":"form-sign-up__conduct___rUOY4","button":"form-sign-up__button___qA4FG"};
 
 /***/ },
 /* 279 */
@@ -28332,7 +28357,7 @@
 	    },
 	    getDefaultProps: function getDefaultProps() {
 	      return _extends({}, defaultProps, {
-	        message: 'Select at least one',
+	        message: 'Select at least one option',
 	        error: 'You must select at least one option',
 	        limit: 1
 	      });
@@ -28373,6 +28398,7 @@
 	      var _props = this.props;
 	      var message = _props.message;
 	      var error = _props.error;
+	      var isVisible = _props.isVisible;
 	      var _state = this.state;
 	      var isError = _state.isError;
 	      var isValid = _state.isValid;
@@ -28381,8 +28407,8 @@
 	
 	      return React.createElement(
 	        'div',
-	        null,
-	        React.createElement(Feedback, _extends({}, this.props, this.state, { isVisible: isError, message: isValid ? message : error })),
+	        { style: { display: 'flex' } },
+	        React.createElement(Feedback, _extends({}, this.props, this.state, { placement: 'left', isVisible: isVisible || isValid, message: isError ? error : message })),
 	        React.createElement(InputCheckboxList, _extends({}, this.props, {
 	          returnValue: function returnValue(node) {
 	            if (node != null) {
@@ -28567,7 +28593,7 @@
 	      }, initialState);
 	    },
 	    getDefaultProps: function getDefaultProps() {
-	      return defaultProps;
+	      return _extends({}, defaultProps);
 	    },
 	    propTypes: {
 	      name: React.PropTypes.string,
@@ -28607,10 +28633,15 @@
 	      var isError = _state.isError;
 	      var isValid = _state.isValid;
 	
+	      console.log(message);
 	      return React.createElement(
 	        'div',
-	        null,
-	        React.createElement(Feedback, _extends({}, this.props, this.state, { isVisible: isError, message: isValid ? message : error })),
+	        { style: { display: 'flex' } },
+	        React.createElement(Feedback, _extends({}, this.props, this.state, {
+	          placement: 'left',
+	          isVisible: isError,
+	          message: isError ? error : message
+	        })),
 	        React.createElement(InputCheckbox, _extends({}, this.props, {
 	          returnValue: function returnValue(node) {
 	            if (node != null) {
@@ -28720,6 +28751,7 @@
 	      ),
 	      React.createElement(Geolocation, {
 	        ref: 'geolocation',
+	        className: _inputLocation2.default.geolocation,
 	        handleClick: this.disablePostalcode,
 	        isDisabled: this.state.isGeolocationDisabled })
 	    );
@@ -28733,7 +28765,7 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-	module.exports = {"location":"input-location__location___1Echc","between":"input-location__between___3k6_g","disabled":"input-location__disabled___2kCYx"};
+	module.exports = {"location":"input-location__location___1Echc","disabled":"input-location__disabled___2kCYx"};
 
 /***/ },
 /* 289 */
@@ -28762,6 +28794,12 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
+	var _inputGeolocation = __webpack_require__(291);
+	
+	var _inputGeolocation2 = _interopRequireDefault(_inputGeolocation);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	var React = __webpack_require__(1);
 	var classNames = __webpack_require__(264);
 	var Checkbox = __webpack_require__(284);
@@ -28780,12 +28818,16 @@
 	      id: 'geolocation',
 	      name: 'geolocation',
 	      value: 'geolocation',
-	      text: 'Use current location',
+	      label: 'Current location',
 	      isDisabled: false
 	    };
 	  },
 	  propTypes: {
-	    text: React.PropTypes.string
+	    id: React.PropTypes.string,
+	    name: React.PropTypes.string,
+	    value: React.PropTypes.string,
+	    label: React.PropTypes.string,
+	    isDisabled: React.PropTypes.bool
 	  },
 	  geolocate: function geolocate() {
 	    var _this = this;
@@ -28824,16 +28866,19 @@
 	  render: function render() {
 	    var _this2 = this;
 	
-	    return React.createElement(Checkbox, _extends({}, this.props, {
-	      label: 'Use current location',
-	      isDisabled: this.props.isDisabled || this.state.isDisabled,
-	      returnValue: function returnValue(node) {
-	        if (node != null) {
-	          _this2.input = node;
-	        }
-	      },
-	      onChange: this.geolocate
-	    }));
+	    return React.createElement(
+	      'div',
+	      { className: _inputGeolocation2.default.geolocation },
+	      React.createElement(Checkbox, _extends({}, this.props, {
+	        isDisabled: this.props.isDisabled || this.state.isDisabled,
+	        returnValue: function returnValue(node) {
+	          if (node != null) {
+	            _this2.input = node;
+	          }
+	        },
+	        onChange: this.geolocate
+	      }))
+	    );
 	  }
 	});
 	
@@ -28841,6 +28886,13 @@
 
 /***/ },
 /* 291 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+	module.exports = {"geolocation":"input-geolocation__geolocation___LhvIA"};
+
+/***/ },
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28862,7 +28914,7 @@
 	module.exports = LocationContainer;
 
 /***/ },
-/* 292 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28884,7 +28936,7 @@
 	module.exports = MapContainer;
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28906,7 +28958,7 @@
 	module.exports = ProfileContainer;
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28917,11 +28969,11 @@
 	var combineReducers = _require.combineReducers;
 	var applyMiddleware = _require.applyMiddleware;
 	
-	var thunk = __webpack_require__(295);
-	var logger = __webpack_require__(296);
+	var thunk = __webpack_require__(296);
+	var logger = __webpack_require__(297);
 	
-	var one = __webpack_require__(297);
-	var user = __webpack_require__(298);
+	var one = __webpack_require__(298);
+	var user = __webpack_require__(299);
 	
 	var reducers = combineReducers({
 	  one: one,
@@ -28933,7 +28985,7 @@
 	module.exports = createStoreWithMiddleWare(reducers);
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -28952,7 +29004,7 @@
 	module.exports = thunkMiddleware;
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29150,7 +29202,7 @@
 	module.exports = createLogger;
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29163,7 +29215,7 @@
 	};
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports) {
 
 	'use strict';
