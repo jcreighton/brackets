@@ -5,6 +5,7 @@ var fs = require('fs');
 
 module.exports = {
   entry: [
+    'react-hot-loader/patch',
     'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
     './src/client.js'
   ],
@@ -18,10 +19,12 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
+        include: path.join(__dirname, 'src'),
         exclude: /node_modules/,
         loader: 'babel',
         query: { 
-          presets: ['react-hmre', 'react', 'stage-0', 'es2015'] 
+          presets: ['react', 'stage-0', 'es2015'],
+          plugins: ['react-hot-loader/babel']
         }
       },
       {
@@ -46,13 +49,20 @@ module.exports = {
   },
 
   resolve: {
+    root: [
+      path.join(__dirname, 'src'),
+      path.join(__dirname, 'node_modules'),
+    ],
     extensions: ['', '.js']
   },
 
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
+    // new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    // new webpack.NoErrorsPlugin(),
+    new webpack.DefinePlugin({
+      'NODE_ENV': JSON.stringify('development')
+    })
   ],
 
   node: {

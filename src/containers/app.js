@@ -1,6 +1,5 @@
 var React = require('react');
 var { connect } = require('react-redux');
-var { browserHistory } = require('react-router');
 
 require('normalize.css/normalize.css');
 require('../shared/global.css');
