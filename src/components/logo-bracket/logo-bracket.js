@@ -7,7 +7,7 @@ var LogoBracket = React.createClass({
     return (
       <div>
         <span className={styles.bracket}>[</span>
-        <span className={styles.name}>Open Bracket</span>
+        <span className={styles.name}>Open Brackets</span>
       </div>
     )
   }

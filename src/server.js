@@ -1,33 +1,50 @@
 require('babel-core/register');
-var hook = require('css-modules-require-hook');
+const hook = require('css-modules-require-hook');
 hook({
   generateScopedName: '[name]__[local]___[hash:base64:5]',
 });
 
-var express = require('express');
-var React = require('react');
-var Router = require('react-router');
-var match = require('react-router/lib/match');
-var RouterContext = require('react-router/lib/RouterContext');
-var ReactDOM = require('react-dom/server');
-var routes = require('./routes.js');
-var { Provider } = require('react-redux');
-var configureStore = require('./store/configureStore.js');
+const path = require('path');
+const express = require('express');
+const React = require('react');
+const Router = require('react-router');
+const match = require('react-router/lib/match');
+const RouterContext = require('react-router/lib/RouterContext');
+const ReactDOM = require('react-dom/server');
+const routes = require('./routes.js');
+const { Provider } = require('react-redux');
+const configureStore = require('./store/configureStore.js');
+const webpack = require('webpack');
+const webpackConfig = require('../webpack.config');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
 // Create an express instance and set a port variable
-var app = express();
-var port = process.env.PORT || 3000;
+const app = express();
+const port = process.env.PORT || 3000;
 
 // Set app port
 app.set('port', port);
 
 // Start server
-var server = app.listen(port, function() {
+const server = app.listen(port, function() {
   console.log('Listening on port ' + port);
 });
 
 // Set /public as the static content dir
-app.use('/', express.static('/Users/jenncreighton/personal/brackets/public'));
+const publicPath = path.resolve(__dirname, '..', 'public');
+app.use('/', express.static(publicPath));
+
+const compiler = webpack(webpackConfig);
+app.use(webpackDevMiddleware(compiler, {
+  publicPath: webpackConfig.output.publicPath,
+  stats: { colors: true },
+  noInfo: true
+}));
+
+app.use(webpackHotMiddleware(compiler, {
+  log: console.log, path: '/__webpack_hmr', heartbeat: 1000
+}));
 
 app.get('*', function(req, res) {
   const location = req.url;

@@ -1,12 +1,17 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var path = require('path');
 var fs = require('fs');
 
 module.exports = {
-  entry: './src/client.js',
+  entry: [
+    'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
+    './src/client.js'
+  ],
   output: {
-    filename: 'js/bundle.js',
-    path: __dirname + '/public/'
+    filename: 'bundle.js',
+    path: path.join(__dirname, 'public'),
+    publicPath: '/'
   },
 
   module: {
@@ -14,12 +19,16 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel', query: { presets: ['react', 'stage-0', 'es2015'] } },
+        loader: 'babel',
+        query: { 
+          presets: ['react-hmre', 'react', 'stage-0', 'es2015'] 
+        }
+      },
       {
         test: /\.css$/,
         exclude: /flexboxgrid|normalize\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader',
-        'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]')
+        loaders: ['style-loader',
+        'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]']
       },
       {
         test: /\.css$/,
@@ -36,24 +45,21 @@ module.exports = {
     ]
   },
 
-  // postcss: [
-  //   require('autoprefixer-core')
-  // ],
-
   resolve: {
-    // modulesDirectories: ['node_modules', 'components'],
     extensions: ['', '.js']
   },
 
   plugins: [
-    new ExtractTextPlugin('css/styles.css', { allChunks: true })
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
   ],
 
   node: {
-    fs: "empty"
+    fs: 'empty'
   },
 
   cache: false,
 
-  devtool: 'source-map'
+  devtool: 'eval-source-map'
 };

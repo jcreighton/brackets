@@ -19,9 +19,9 @@ var InputCheckboxList = createCheckboxListWithValidation(
         label: 'Social'
       },
       {
-        id: 'mentor',
-        name: 'mentor',
-        label: 'Mentor'
+        id: 'mentorship',
+        name: 'mentorship',
+        label: 'Mentorship'
       },
       {
         id: 'networking',

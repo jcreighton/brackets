@@ -75,14 +75,14 @@ var LocationFinder = React.createClass({
           message={message} />
         <PostalCode
           ref="postalcode"
-          handleFocus={this.disableGeolocation}
+          onFocus={this.disableGeolocation}
           isDisabled={this.state.isPostalcodeDisabled}
           defaultValue={this.props.defaultValue}  />
         <span className={classes}>or</span>
         <Geolocation
           ref="geolocation"
           className={styles.geolocation}
-          handleClick={this.disablePostalcode}
+          onClick={this.disablePostalcode}
           isDisabled={this.state.isGeolocationDisabled} />
       </div>
     );
