@@ -1,0 +1,13 @@
+.list {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+}
+
+.list li {
+  margin-right: 40px;
+}
+
+.list li:last-child {
+  margin-right: 0;
+}

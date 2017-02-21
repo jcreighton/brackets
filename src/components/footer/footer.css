@@ -1,0 +1,12 @@
+@value white from './colors.css';
+
+.footer {
+  height: 60px;
+  text-align: center;
+}
+
+.footer span{
+  color: white;
+  display: block;
+  margin: 30px;
+}

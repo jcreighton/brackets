@@ -1,0 +1,17 @@
+@value white, green, grayMedium, teal, tealLight from '../../shared/colors.css';
+@value openSans from '../../shared/typography.css';
+
+.input {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  padding: 8px;
+  font-family: openSans;
+  font-size: 14px;
+  font-weight: 300;
+  color: teal;
+  background-color: grayMedium;
+  border: 1px solid green;
+}

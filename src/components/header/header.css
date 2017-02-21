@@ -1,0 +1,28 @@
+@value white, pink from '../../shared/colors.css';
+@value museo from '../../shared/typography.css';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  padding: 0 30px;
+  background-color: white;
+  font-family: museo;
+}
+
+.logged-in {
+  background-color: white;
+}
+
+.h1 {
+  color: pink;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.link:visited {
+  color: pink;
+}

@@ -1,0 +1,24 @@
+.button {
+  background-color: #53BDBA;
+  font-size: 16px;
+  line-height: 24px;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #53BDBA;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.button:hover {
+  color: #53BDBA;
+  background-color: #F5F5F5;
+}
+
+.medium {
+  width: 80px;
+}
+
+.small {
+  width: 60px;
+}

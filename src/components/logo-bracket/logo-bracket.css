@@ -1,0 +1,11 @@
+.bracket {
+  font-size: 42px;
+  color: green;
+}
+
+.name {
+  font-size: 32px;
+  position: relative;
+  top: -2px;
+  left: 0px;
+}

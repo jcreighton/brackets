@@ -1,0 +1,30 @@
+@value gray, green from '../../shared/colors.css';
+@value openSans from '../../shared/typography.css';
+
+.navigation {
+  font-family: openSans, sans-serif;
+  display: flex;
+}
+
+.navigation ul {
+  display: flex;
+}
+
+.navigation li {
+  display: block;
+  color: gray;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  flex: 1 0 auto;
+  align-self: center;
+  padding: 0 30px 0 0;
+}
+
+.navigation li:hover {
+  color: green;
+}
+
+.hidden {
+  color: red;
+}

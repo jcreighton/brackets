@@ -1,0 +1,6 @@
+.login {
+  display: flex;
+  justify-content: space-between;
+  width: 640px;
+  margin: 0;
+}

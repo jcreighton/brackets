@@ -1,0 +1,35 @@
+@value tealLight, errorRed from '../../shared/colors.css';
+
+.feedback {
+  font-size: 12px;
+  color: tealLight;
+}
+
+.above {
+
+}
+
+.below {
+
+}
+
+.right {
+  flex: 0 0 100px;
+  order: 100;
+}
+
+.left {
+  flex: 0 0 100px;
+}
+
+.error {
+  color: errorRed;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
+}

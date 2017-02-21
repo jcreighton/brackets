@@ -1,0 +1,48 @@
+@value white, gray from './colors.css';
+@value openSans from './typography.css';
+
+:global body {
+  font-family: openSans;
+  color: white;
+  background-color: gray;
+}
+
+h1 {
+  font-family: @museo;
+  font-size: 32px;
+  font-weight: 400;
+}
+
+h2 {
+  font-weight: 300;
+}
+
+p {
+  font-size: 14px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul li {
+  list-style: none;
+}
+
+span {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+::-webkit-input-placeholder {
+  font-size: 12px;
+  padding: 2px 0 0 10px;
+}
